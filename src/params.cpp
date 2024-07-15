@@ -8,6 +8,15 @@
 #include <bits/stdc++.h>
 #include <assert.h>
 
+/**
+ * @brief Splits a string into a vector of words based on whitespace.
+ *
+ * This function takes a string and splits it into individual words using whitespace
+ * as the delimiter. Each word is stored in a vector of strings.
+ *
+ * @param s The input string to be split.
+ * @return A vector of strings containing the words from the input string.
+ */
 static std::vector<std::string> split(const std::string &s){
     std::vector<std::string> tokens;
     std::string token;
