@@ -42,6 +42,7 @@ class Params{
         int m_pk_folds = 0;
 
         std::string m_output_prefix = "run";
+        std::string m_ipk;
 
         std::unordered_map<int,bool> m_pk_dumps;
         std::unordered_map<int,bool> m_particle_dumps;
@@ -67,5 +68,7 @@ class Params{
         double omega_radiation() const;
         double omega_matter() const;
         double omega_nu() const;
+
+        const std::string& ipk() const;
 };
 #endif

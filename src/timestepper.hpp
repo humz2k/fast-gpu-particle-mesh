@@ -9,8 +9,6 @@ class Timestepper{
         double m_a;
         double m_z;
         double m_deltaT;
-        //double m_adot;
-        //double m_fscal;
     public:
         Timestepper(const Params& params);
 

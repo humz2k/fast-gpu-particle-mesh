@@ -81,6 +81,8 @@ Params::Params(std::string filename) : m_params_filename(filename){
             }
         } else if (tokens[0] == "PK_FOLDS"){
             m_pk_folds = std::stoi(tokens[1]);
+        } else if (tokens[0] == "IPK"){
+            m_ipk = tokens[1];
         }
     }
 
@@ -134,6 +136,7 @@ void Params::dump(){
     std::cout << "\n";
 
     std::cout << "PK_FOLDS " << m_pk_folds << "\n";
+    std::cout << "IPK " << m_ipk << "\n";
 
     std::cout << "###################################" << "\n";
     std::cout << "omega_baryon " << m_omega_baryon << "\n";
@@ -203,4 +206,8 @@ double Params::omega_matter() const{
 
 double Params::omega_nu() const{
     return m_omega_nu;
+}
+
+const std::string& Params::ipk() const{
+    return m_ipk;
 }
