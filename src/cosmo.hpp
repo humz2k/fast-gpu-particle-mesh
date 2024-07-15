@@ -4,19 +4,7 @@
 #include "params.hpp"
 #include <string>
 #include <vector>
-
-class PowerSpectrum {
-  private:
-    double m_k_min;
-    double m_k_max;
-    int m_k_bins;
-    double m_k_delta;
-
-    std::vector<double> m_h_values;
-
-  public:
-    PowerSpectrum(const std::string& file);
-};
+#include "power_spectrum.hpp"
 
 class Cosmo {
   private:
@@ -45,6 +33,8 @@ class Cosmo {
     Cosmo(const Params& params);
     double delta(double z) const;
     double dot_delta(double z) const;
+    double gf(double z);
+    double g_dot(double z);
 };
 
 #endif

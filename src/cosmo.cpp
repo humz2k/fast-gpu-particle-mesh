@@ -4,27 +4,6 @@
 #include <assert.h>
 #include <math.h>
 
-PowerSpectrum::PowerSpectrum(const std::string& filename) {
-    LOG_DEBUG("reading ipk %s", filename.c_str());
-
-    double header[20];
-    FILE* ptr = fopen(filename.c_str(), "rb");
-    assert(ptr);
-
-    assert(fread(header, sizeof(header), 1, ptr) == 1);
-
-    m_k_min = header[0];
-    m_k_max = header[1];
-    m_k_bins = header[2];
-    m_k_delta = header[3];
-
-    m_h_values.resize(m_k_bins + 20);
-    assert(fread(m_h_values.data(), sizeof(double), m_k_bins, ptr) ==
-           (size_t)m_k_bins);
-
-    fclose(ptr);
-}
-
 Cosmo::Cosmo(const Params& params)
     : m_params(params), m_initial_pk(m_params.ipk()) {}
 
@@ -284,4 +263,18 @@ void Cosmo::update_growth_factor(double z) {
     m_gf = dplus / ystart[0];
     m_g_dot = ddot / ystart[0];
     m_last_growth_z = z;
+}
+
+double Cosmo::gf(double z){
+    if (m_last_growth_z != z){
+      update_growth_factor(z);
+    }
+    return m_gf;
+}
+
+double Cosmo::g_dot(double z){
+    if (m_last_growth_z != z){
+      update_growth_factor(z);
+    }
+    return m_g_dot;
 }
