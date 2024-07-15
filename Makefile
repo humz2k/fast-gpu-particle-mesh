@@ -15,8 +15,8 @@ CUDA_CC ?= nvcc
 # MPI_CXX ?= mpicxx
 MPI_CXX ?= g++
 
-MPI_OBJECT_FLAGS ?= -I$(CUDA_DIR)/include $(FGPM_INCLUDE) -fPIC -O3 -fopenmp -g -Wall
-NVCC_OBJECT_FLAGS ?= -lcufft -lineinfo -Xptxas -v -Xcompiler -fPIC,-O3,-fopenmp,-g,-Wall, $(CUDA_ARCH_FLAGS) $(FGPM_INCLUDE)
+MPI_OBJECT_FLAGS ?= -std=c++17 -I$(CUDA_DIR)/include $(FGPM_INCLUDE) -fPIC -O3 -fopenmp -g -Wall -Wpedantic -Werror
+NVCC_OBJECT_FLAGS ?= -std=c++17 -lcufft -lineinfo -Xptxas -v -Xcompiler -fPIC,-O3,-fopenmp,-g,-Wall,-Wpedantic,-Werror, $(CUDA_ARCH_FLAGS) $(FGPM_INCLUDE)
 
 FGPM_SOURCES := $(shell find $(FGPM_SRC_DIR) -name '*.cpp') $(shell find $(FGPM_SRC_DIR) -name '*.cu')
 FGPM_OBJECTS_1 := $(FGPM_SOURCES:%.cpp=%.o)
