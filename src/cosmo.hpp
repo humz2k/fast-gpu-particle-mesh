@@ -3,13 +3,13 @@
 
 #include "params.hpp"
 
-class Cosmo{
-    private:
-        const Params& m_params;
-        double* pk = NULL;
+class Cosmo {
+  private:
+    const Params& m_params;
+    double* pk = NULL;
 
-    public:
-        Cosmo(const Params& params);
+  public:
+    Cosmo(const Params& params);
 };
 
 #endif
