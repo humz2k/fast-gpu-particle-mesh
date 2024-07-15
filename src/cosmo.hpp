@@ -27,17 +27,14 @@ class Cosmo {
     const Params& m_params;
     PowerSpectrum m_initial_pk;
 
-    void rkck(double* y, double* dydx, int n, double x, double h,
-		      double* yout, double* yerr,
-		      void (Cosmo::*derivs)(double, double*, double*));
-    void rkqs(double* y, double* dydx, int n, double *x, double htry,
-		      double eps,
-                      double* yscal, double *hdid, double *hnext, int *feval,
-                      void (Cosmo::*derivs)(double, double *, double *));
-    void odesolve(double* ystart, int nvar, double x1, double x2,
-			  double eps, double h1,
-                          void (Cosmo::*derivs)(double, double *, double *),
-			  bool print_stat);
+    void rkck(double* y, double* dydx, int n, double x, double h, double* yout,
+              double* yerr, void (Cosmo::*derivs)(double, double*, double*));
+    void rkqs(double* y, double* dydx, int n, double* x, double htry,
+              double eps, double* yscal, double* hdid, double* hnext,
+              int* feval, void (Cosmo::*derivs)(double, double*, double*));
+    void odesolve(double* ystart, int nvar, double x1, double x2, double eps,
+                  double h1, void (Cosmo::*derivs)(double, double*, double*),
+                  bool print_stat);
 
     void growths(double a, double* y, double* dydx);
     void update_growth_factor(double z);
