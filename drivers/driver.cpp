@@ -1,3 +1,4 @@
+#include "cosmo.hpp"
 #include "logging.hpp"
 #include "params.hpp"
 #include "timestepper.hpp"
@@ -8,6 +9,8 @@ int main() {
 
     Params params("test.params");
     Timestepper ts(params);
+    Cosmo cosmo(params);
 
+    LOG_MINIMAL("done!");
     return 0;
 }

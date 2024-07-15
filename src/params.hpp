@@ -31,21 +31,15 @@ class Params {
     double m_omega_nu = 0.0;   /**< Density parameter for neutrinos. */
     double m_hubble = 0.71;    /**< Hubble parameter. */
     double m_ss8 = 0.8;        /**< Normalization of the power spectrum. */
-    double m_ns =
-        0.963; /**< Spectral index of the primordial power spectrum. */
-    double m_w_de = -1.0; /**< Equation of state parameter for dark energy. */
-    double m_wa_de = 0.0; /**< Time variation of the equation of state parameter
-                             for dark energy. */
-    double m_T_cmb =
-        2.726; /**< Temperature of the cosmic microwave background. */
-    double m_neff_massless =
-        3.04; /**< Effective number of massless neutrino species. */
-    double m_neff_massive =
-        0.0; /**< Effective number of massive neutrino species. */
+    double m_ns = 0.963;       /**< Spectral idx of the primordial PK. */
+    double m_w_de = -1.0;   /**< Equation of state parameter for dark energy. */
+    double m_wa_de = 0.0;   /**< Time variation of eqn of state param for DE. */
+    double m_T_cmb = 2.726; /**< Temp of the CMB. */
+    double m_neff_massless = 3.04; /**< Eff. n of massless neutrino species. */
+    double m_neff_massive = 0.0;   /**< Eff. n of massive neutrino species. */
 
     double m_omega_baryon; /**< Density parameter for baryons. */
-    double m_omega_cb; /**< Combined density parameter for cold dark matter and
-                          baryons. */
+    double m_omega_cb; /**< Combined density parameter for CDM and baryons. */
     double m_omega_matter;    /**< Density parameter for matter. */
     double m_omega_radiation; /**< Density parameter for radiation. */
     double m_f_nu_massless;   /**< Fraction of massless neutrinos. */
@@ -56,10 +50,8 @@ class Params {
     std::string m_output_prefix = "run"; /**< Prefix for output files. */
     std::string m_ipk;                   /**< Input power spectrum file. */
 
-    std::unordered_map<int, bool>
-        m_pk_dumps; /**< Map indicating steps to dump power spectrum. */
-    std::unordered_map<int, bool>
-        m_particle_dumps; /**< Map indicating steps to dump particles. */
+    std::unordered_map<int, bool> m_pk_dumps;       /**< Steps to dump PK. */
+    std::unordered_map<int, bool> m_particle_dumps; /**< Steps to dump parts. */
 
   public:
     /**

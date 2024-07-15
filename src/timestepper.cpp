@@ -1,4 +1,5 @@
 #include "timestepper.hpp"
+#include "common.hpp"
 #include <math.h>
 
 Timestepper::Timestepper(const Params& _params) : m_params(_params) {
@@ -44,14 +45,14 @@ double Timestepper::a() const { return m_a; }
 
 void Timestepper::a(double new_a) {
     m_a = new_a;
-    m_z = (1.0 / m_a) - 1.0;
+    m_z = a2z(m_a);
 }
 
 double Timestepper::z() const { return m_z; }
 
 void Timestepper::z(double new_z) {
     m_z = new_z;
-    m_a = 1.0 / (new_z + 1.0);
+    m_a = z2a(new_z);
 }
 
 void Timestepper::advance_half_step() { a(a() + deltaT() * 0.5); }
