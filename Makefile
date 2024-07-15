@@ -16,7 +16,9 @@ CUDA_CC ?= nvcc
 MPI_CXX ?= g++
 
 MPI_OBJECT_FLAGS ?= -std=c++17 -I$(CUDA_DIR)/include $(FGPM_INCLUDE) -fPIC -O3 -fopenmp -g -Wall -Wpedantic -Werror -fsanitize=undefined -fsanitize=address -fsanitize=leak
-NVCC_OBJECT_FLAGS ?= -std=c++17 -lcufft -lineinfo -Xptxas -v -Xcompiler -fPIC,-O3,-fopenmp,-g,-Wall,-Wpedantic,-Werror, $(CUDA_ARCH_FLAGS) $(FGPM_INCLUDE)
+NVCC_OBJECT_FLAGS ?= -std=c++17 -lcufft -lineinfo -Xptxas -v -Xcompiler="-fPIC,-O3,-fopenmp,-g,-Wall,-Wpedantic,-Werror" $(CUDA_ARCH_FLAGS) $(FGPM_INCLUDE)
+
+CUDA_LINK_FLAGS ?= -L$(CUDA_DIR)/lib64 -lcudart -lcufft
 
 FGPM_SOURCES := $(shell find $(FGPM_SRC_DIR) -name '*.cpp') $(shell find $(FGPM_SRC_DIR) -name '*.cu')
 FGPM_OBJECTS_1 := $(FGPM_SOURCES:%.cpp=%.o)
@@ -35,7 +37,7 @@ main: build/driver
 $(FGPM_BUILD_DIR)/%: $(FGPM_BUILD_DIR)/$(FGPM_DRIVERS)/%.o $(FGPM_OUTPUTS)
 	echo $(FGPM_DRIVER_OBJECTS)
 	mkdir -p $(@D)
-	$(MPI_CXX) $^ $(MPI_OBJECT_FLAGS) $(GIT_FLAGS) -o $@
+	$(MPI_CXX) $^ $(MPI_OBJECT_FLAGS) $(CUDA_LINK_FLAGS) $(GIT_FLAGS) -o $@
 
 $(FGPM_BUILD_DIR)/%.o: %.cu $(FGPM_INCLUDE_FILES)
 	mkdir -p $(@D)
