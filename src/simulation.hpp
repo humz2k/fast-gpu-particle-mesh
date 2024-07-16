@@ -11,9 +11,9 @@ class Grid;
 
 class Grid {
   public:
-    Grid(const Params& params, int ng);
-    Grid();
-    virtual ~Grid();
+    Grid(const Params& params, int ng){};
+    Grid(){};
+    virtual ~Grid(){};
     virtual void solve() = 0;
     virtual void solve_gradient() = 0;
     virtual void CIC(const Particles& particles) = 0;
@@ -22,9 +22,9 @@ class Grid {
 
 class Particles {
   public:
-    Particles(const Params& params);
-    Particles();
-    virtual ~Particles();
+    Particles(const Params& params){};
+    Particles(){};
+    virtual ~Particles(){};
     virtual void update_positions() = 0;
     virtual void update_velocities(const Grid& grid) = 0;
 };
