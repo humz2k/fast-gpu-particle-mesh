@@ -38,10 +38,13 @@ void SimpleGrid<fft_t>::CIC(const Particles& particles) {}
 template<class fft_t>
 void SimpleGrid<fft_t>::generate_fourier_amplitudes(Cosmo& cosmo) {
     LOG_INFO("generating fourier amplitudes");
+
     int blockSize = BLOCKSIZE;
     int numBlocks = (m_size + (blockSize - 1)) / blockSize;
+
     launch_generate_real_random(m_d_grid, m_params.seed(), 0, m_size, numBlocks,
                                 blockSize);
+    fft.forward(m_d_grid);
 }
 
 template class SimpleGrid<complexDoubleDevice>;

@@ -21,6 +21,8 @@ class SerialFFT : public FFT<T>{
         ~SerialFFT();
         void forward(T* in, T* out);
         void backward(T* in, T* out);
+        void forward(T* in);
+        void backward(T* in);
 };
 
 #endif

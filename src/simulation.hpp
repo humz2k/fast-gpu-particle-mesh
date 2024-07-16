@@ -20,6 +20,8 @@ class FFT{
         virtual ~FFT(){};
         virtual void forward(T* in, T* out) = 0;
         virtual void backward(T* in, T* out) = 0;
+        virtual void forward(T* in) = 0;
+        virtual void backward(T* in) = 0;
 };
 
 class Grid {

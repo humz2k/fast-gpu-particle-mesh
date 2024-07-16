@@ -10,9 +10,9 @@
 typedef cufftDoubleComplex complexDoubleDevice;
 typedef cufftComplex complexFloatDevice;
 
-#define gpufftHandle cufftHandle
+typedef cufftHandle gpufftHandle;
 
-#define gpufftResult cufftResult
+typedef cufftResult gpufftResult;
 
 #define gpufftPlan1d cufftPlan1d
 
@@ -20,7 +20,7 @@ typedef cufftComplex complexFloatDevice;
 
 #define gpufftDestroy cufftDestroy
 
-#define gpufftType cufftType
+typedef cufftType gpufftType;
 
 #define GPUFFT_Z2Z CUFFT_Z2Z
 #define GPUFFT_C2C CUFFT_C2C
@@ -31,9 +31,9 @@ typedef cufftComplex complexFloatDevice;
 #define gpufftExecZ2Z cufftExecZ2Z
 #define gpufftExecC2C cufftExecC2C
 
-#define gpuEvent_t cudaEvent_t
+typedef cudaEvent_t gpuEvent_t;
 
-#define gpuStream_t cudaStream_t
+typedef cudaStream_t gpuStream_t;
 
 #define gpuEventDestroy cudaEventDestroy
 
@@ -66,7 +66,7 @@ typedef cufftComplex complexFloatDevice;
 #define gpuSuccess cudaSuccess
 #define gpuGetLastError cudaGetLastError
 #define gpuGetErrorString cudaGetErrorString
-#define gpuError_t cudaError_t
+typedef cudaError_t gpuError_t;
 #define gpuPeekAtLastError cudaPeekAtLastError
 
 #define gpuErrchk(ans)                                                         \

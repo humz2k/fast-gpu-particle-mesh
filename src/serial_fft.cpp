@@ -53,53 +53,31 @@ SerialFFT<T>::~SerialFFT(){
         LOG_ERROR("CUFFT error: %s",cufftResult_to_string(result));
         exit(1);
     }
-    //for (const auto& [key, value] : plans) {
-    //    LOG_DEBUG("destroying plan %d",key);
-    //    cufftDestroy(value);
-    //}
 }
-
-/*template<class T>
-gpufftHandle SerialFFT<T>::get_plan(int ng){
-    LOG_INFO("finding plan for %d",ng);
-    if (plans.find(ng) != plans.end()){
-        LOG_INFO("plan found for %d",ng);
-        return plans[ng];
-    }
-    LOG_INFO("plan not found for %d",ng);
-    gpufftHandle plan;
-    gpufftResult result = gpufftPlan3d(&plan, ng, ng, ng, find_type<T>());
-    if (result != CUFFT_SUCCESS){
-        LOG_ERROR("CUFFT error: %s",cufftResult_to_string(result));
-        exit(1);
-    }
-    plans[ng] = plan;
-    return plan;
-}*/
 
 template<class T>
-cufftResult exec_fft(gpufftHandle plan, T* in, T* out, int dir);
+gpufftResult exec_fft(gpufftHandle plan, T* in, T* out, int dir);
 
 template<>
-cufftResult exec_fft(gpufftHandle plan, complexDoubleDevice* in, complexDoubleDevice* out, int dir){
-    return cufftExecZ2Z(plan,in,out,dir);
+gpufftResult exec_fft(gpufftHandle plan, complexDoubleDevice* in, complexDoubleDevice* out, int dir){
+    return gpufftExecZ2Z(plan,in,out,dir);
 }
 
 template<>
-cufftResult exec_fft(gpufftHandle plan, complexFloatDevice* in, complexFloatDevice* out, int dir){
-    return cufftExecC2C(plan,in,out,dir);
+gpufftResult exec_fft(gpufftHandle plan, complexFloatDevice* in, complexFloatDevice* out, int dir){
+    return gpufftExecC2C(plan,in,out,dir);
 }
 
 template<class T>
 void SerialFFT<T>::fft(T* in, T* out, int direction){
-    LOG_INFO("doing %s fft (ng = %d)",(direction == CUFFT_FORWARD) ? "forward" : "backward",m_ng);
+    LOG_INFO("doing %s fft (ng = %d)",(direction == GPUFFT_FORWARD) ? "forward" : "backward",m_ng);
     gpufftResult result = exec_fft(m_plan,in,out,direction);
     if (result != CUFFT_SUCCESS){
         LOG_ERROR("CUFFT error: %s",cufftResult_to_string(result));
         exit(1);
     }
     gpuErrchk(gpuDeviceSynchronize());
-    LOG_INFO("done %s fft (ng = %d)",(direction == CUFFT_FORWARD) ? "forward" : "backward",m_ng);
+    LOG_INFO("done %s fft (ng = %d)",(direction == GPUFFT_FORWARD) ? "forward" : "backward",m_ng);
 }
 
 template<class T>
@@ -110,6 +88,16 @@ void SerialFFT<T>::forward(T* in, T* out){
 template<class T>
 void SerialFFT<T>::backward(T* in, T* out){
     this->fft(in,out,GPUFFT_INVERSE);
+}
+
+template<class T>
+void SerialFFT<T>::forward(T* in){
+    this->fft(in,in,GPUFFT_FORWARD);
+}
+
+template<class T>
+void SerialFFT<T>::backward(T* in){
+    this->fft(in,in,GPUFFT_INVERSE);
 }
 
 template class SerialFFT<complexDoubleDevice>;
