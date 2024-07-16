@@ -35,6 +35,7 @@ class Cosmo {
     double dot_delta(double z) const;
     double gf(double z);
     double g_dot(double z);
+    const PowerSpectrum& initial_pk();
 };
 
 #endif
