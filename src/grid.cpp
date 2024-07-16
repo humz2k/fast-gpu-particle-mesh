@@ -3,7 +3,7 @@
 #include "common.hpp"
 #include "rng_initializer.hpp"
 
-template<class fft_t>
+template <class fft_t>
 SimpleGrid<fft_t>::SimpleGrid(const Params& params, int ng)
     : m_ng(ng), m_params(params), fft(m_ng) {
     m_size = m_ng * m_ng * m_ng;
@@ -16,8 +16,7 @@ SimpleGrid<fft_t>::SimpleGrid(const Params& params, int ng)
     gpu_allocator.alloc(&m_d_z, m_size * sizeof(fft_t));
 }
 
-template<class fft_t>
-SimpleGrid<fft_t>::~SimpleGrid() {
+template <class fft_t> SimpleGrid<fft_t>::~SimpleGrid() {
     gpu_allocator.free(m_d_grad);
     gpu_allocator.free(m_d_greens);
     gpu_allocator.free(m_d_grid);
@@ -26,16 +25,14 @@ SimpleGrid<fft_t>::~SimpleGrid() {
     gpu_allocator.free(m_d_z);
 }
 
-template<class fft_t>
-void SimpleGrid<fft_t>::solve_gradient() {}
+template <class fft_t> void SimpleGrid<fft_t>::solve_gradient() {}
 
-template<class fft_t>
-void SimpleGrid<fft_t>::solve() {}
+template <class fft_t> void SimpleGrid<fft_t>::solve() {}
 
-template<class fft_t>
+template <class fft_t>
 void SimpleGrid<fft_t>::CIC(const Particles& particles) {}
 
-template<class fft_t>
+template <class fft_t>
 void SimpleGrid<fft_t>::generate_fourier_amplitudes(Cosmo& cosmo) {
     LOG_INFO("generating fourier amplitudes");
 

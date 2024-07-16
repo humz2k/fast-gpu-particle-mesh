@@ -9,19 +9,17 @@
 class Particles;
 class Grid;
 
-template<class T>
-class FFT;
+template <class T> class FFT;
 
-template<class T>
-class FFT{
-    public:
-        FFT(int ng){};
-        FFT(){};
-        virtual ~FFT(){};
-        virtual void forward(T* in, T* out) = 0;
-        virtual void backward(T* in, T* out) = 0;
-        virtual void forward(T* in) = 0;
-        virtual void backward(T* in) = 0;
+template <class T> class FFT {
+  public:
+    FFT(int ng){};
+    FFT(){};
+    virtual ~FFT(){};
+    virtual void forward(T* in, T* out) = 0;
+    virtual void backward(T* in, T* out) = 0;
+    virtual void forward(T* in) = 0;
+    virtual void backward(T* in) = 0;
 };
 
 class Grid {

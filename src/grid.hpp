@@ -1,11 +1,10 @@
 #ifndef _FGPM_GRID_HPP_
 #define _FGPM_GRID_HPP_
 
-#include "simulation.hpp"
 #include "serial_fft.hpp"
+#include "simulation.hpp"
 
-template<class fft_t>
-class SimpleGrid : public Grid {
+template <class fft_t> class SimpleGrid : public Grid {
   private:
     int m_ng;
     size_t m_size;
