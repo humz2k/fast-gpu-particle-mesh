@@ -23,7 +23,7 @@
  * @param blockSize The size of each block to use in the GPU kernel launch.
  */
 template <class T>
-void launch_generate_real_random(T* d_grid, int seed, MPIDist dist,
+void launch_generate_real_random(T* d_grid, int seed, const MPIDist dist,
                                  int numBlocks, int blockSize);
 
 #endif
