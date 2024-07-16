@@ -279,6 +279,4 @@ double Cosmo::g_dot(double z) {
     return m_g_dot;
 }
 
-const PowerSpectrum& Cosmo::initial_pk(){
-    return m_initial_pk;
-}
+const PowerSpectrum& Cosmo::initial_pk() { return m_initial_pk; }

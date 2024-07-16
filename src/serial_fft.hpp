@@ -9,6 +9,7 @@ template <class T> class SerialFFT : public FFT<T> {
     int m_ng;
     gpufftHandle m_plan;
     void fft(T* in, T* out, int direction);
+
   public:
     SerialFFT(int ng);
     ~SerialFFT();

@@ -1,8 +1,8 @@
 #include "allocators.hpp"
 #include "cosmo.hpp"
-#include "simple_grid.hpp"
 #include "logging.hpp"
 #include "params.hpp"
+#include "simple_grid.hpp"
 #include "simulation.hpp"
 #include "timestepper.hpp"
 
