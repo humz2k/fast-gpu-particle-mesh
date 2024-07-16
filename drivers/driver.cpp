@@ -16,7 +16,10 @@ int main() {
     Timestepper ts(params);
     Cosmo cosmo(params);
 
-    SimpleGrid grid(params);
+    SimpleGrid simple_grid(params, params.ng());
+    Grid& grid = simple_grid;
+
+    grid.generate_fourier_amplitudes(cosmo);
 
     void* test;
     gpu_allocator.alloc(&test, sizeof(float));

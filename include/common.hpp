@@ -20,4 +20,6 @@ static inline T a2z(T a){
 
 #define SIGN(a, b) ((b) >= 0.0 ? fabs(a) : -fabs(a))
 
+#define BLOCKSIZE 64
+
 #endif

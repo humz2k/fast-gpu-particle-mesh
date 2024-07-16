@@ -13,6 +13,7 @@ extern std::unordered_map<void*, size_t> cpu_allocations;
 static inline void
 show_alive_allocations(const std::unordered_map<void*, size_t>& allocations,
                        const char* name) {
+    #if LOGLEVEL > 3
     LOG_DEBUG(" ");
     LOG_DEBUG("##############################");
     if (allocations.size() == 0) {
@@ -25,6 +26,7 @@ show_alive_allocations(const std::unordered_map<void*, size_t>& allocations,
     }
     LOG_DEBUG("##############################");
     LOG_DEBUG(" ");
+    #endif
 }
 
 class GPUAllocator {
@@ -60,7 +62,7 @@ class GPUAllocator {
 
         show_alive_allocations(gpu_allocations, "GPU");
 
-        LOG_INFO("GPU Allocations (total = %lu bytes, current = %lu bytes)",
+        LOG_DEBUG("GPU Allocations (total = %lu bytes, current = %lu bytes)",
                  total_size, current_size);
 
         return 0;
@@ -78,7 +80,7 @@ class GPUAllocator {
 
         show_alive_allocations(gpu_allocations, "GPU");
 
-        LOG_INFO("GPU Allocations (total = %lu bytes, current = %lu bytes)",
+        LOG_DEBUG("GPU Allocations (total = %lu bytes, current = %lu bytes)",
                  total_size, current_size);
         return 0;
     }
@@ -120,7 +122,7 @@ class CPUAllocator {
 
         show_alive_allocations(cpu_allocations, "CPU");
 
-        LOG_INFO("CPU Allocations (total = %lu bytes, current = %lu bytes)",
+        LOG_DEBUG("CPU Allocations (total = %lu bytes, current = %lu bytes)",
                  total_size, current_size);
 
         return 0;
@@ -137,7 +139,7 @@ class CPUAllocator {
 
         show_alive_allocations(cpu_allocations, "CPU");
 
-        LOG_INFO("CPU Allocations (total = %lu bytes, current = %lu bytes)",
+        LOG_DEBUG("CPU Allocations (total = %lu bytes, current = %lu bytes)",
                  total_size, current_size);
         return 0;
     }

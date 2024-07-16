@@ -29,7 +29,7 @@
 #define LOG_TEXT_BOLDWHITE   "\033[1m\033[37m"      /* Bold White */
 
 #ifndef LOGLEVEL
-#define LOGLEVEL 4
+#define LOGLEVEL 3
 #endif
 
 #define _LOG(msg,msg_color,text_color,...) {printf("log<%s%s%s>(%s%s:%d%s): %s",msg_color,msg,LOG_TEXT_RESET,LOG_TEXT_BOLDCYAN,__FILENAME__,__LINE__,LOG_TEXT_RESET,text_color);printf(__VA_ARGS__);printf("%s\n",LOG_TEXT_RESET);}
