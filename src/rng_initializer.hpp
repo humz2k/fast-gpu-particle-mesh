@@ -2,6 +2,7 @@
 #define _FGPM_RNG_INITIALIZER_HPP_
 
 #include "gpu.hpp"
+#include "mpi_distribution.hpp"
 
 /**
  * @brief Launches a GPU kernel to generate real random numbers.
@@ -22,7 +23,7 @@
  * @param blockSize The size of each block to use in the GPU kernel launch.
  */
 template <class T>
-void launch_generate_real_random(T* d_grid, int seed, int offset, int size,
+void launch_generate_real_random(T* d_grid, int seed, MPIDist dist,
                                  int numBlocks, int blockSize);
 
 #endif
