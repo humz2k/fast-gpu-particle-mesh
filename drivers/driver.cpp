@@ -16,7 +16,7 @@ int main() {
     Timestepper ts(params);
     Cosmo cosmo(params);
 
-    SimpleGrid simple_grid(params, params.ng());
+    SimpleGrid<complexDoubleDevice> simple_grid(params, params.ng());
     Grid& grid = simple_grid;
 
     grid.generate_fourier_amplitudes(cosmo);

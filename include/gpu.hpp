@@ -12,6 +12,8 @@ typedef cufftComplex complexFloatDevice;
 
 #define gpufftHandle cufftHandle
 
+#define gpufftResult cufftResult
+
 #define gpufftPlan1d cufftPlan1d
 
 #define gpufftPlan3d cufftPlan3d

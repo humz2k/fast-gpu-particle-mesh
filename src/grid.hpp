@@ -2,7 +2,9 @@
 #define _FGPM_GRID_HPP_
 
 #include "simulation.hpp"
+#include "serial_fft.hpp"
 
+template<class fft_t>
 class SimpleGrid : public Grid {
   private:
     int m_ng;
@@ -10,10 +12,11 @@ class SimpleGrid : public Grid {
     const Params& m_params;
     float4* m_d_grad;
     float* m_d_greens;
-    cufftDoubleComplex* m_d_grid;
-    cufftDoubleComplex* m_d_x;
-    cufftDoubleComplex* m_d_y;
-    cufftDoubleComplex* m_d_z;
+    fft_t* m_d_grid;
+    fft_t* m_d_x;
+    fft_t* m_d_y;
+    fft_t* m_d_z;
+    SerialFFT<fft_t> fft;
 
   public:
     SimpleGrid(const Params& params, int ng);
