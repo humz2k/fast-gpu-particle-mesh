@@ -21,10 +21,6 @@ int main() {
 
     grid.generate_fourier_amplitudes(cosmo);
 
-    void* test;
-    gpu_allocator.alloc(&test, sizeof(float));
-    gpu_allocator.free(test);
-
     LOG_MINIMAL("done!");
     return 0;
 }
