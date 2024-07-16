@@ -13,8 +13,9 @@ template <class T> class FFT;
 /**
  * @brief Template class for performing Fast Fourier Transforms (FFT).
  *
- * This template class provides an interface for performing forward and backward FFTs.
- * It can be specialized for different types (e.g., complexDoubleDevice, complexFloatDevice).
+ * This template class provides an interface for performing forward and backward
+ * FFTs. It can be specialized for different types (e.g., complexDoubleDevice,
+ * complexFloatDevice).
  *
  * @tparam T The type of the elements in the FFT (e.g., complexDoubleDevice).
  */
@@ -72,8 +73,9 @@ template <class T> class FFT {
  * @class Grid
  * @brief Represents the simulation grid and manages related operations.
  *
- * The Grid class provides an interface for various grid-related operations, such as solving equations,
- * calculating gradients, and interacting with particles.
+ * The Grid class provides an interface for various grid-related operations,
+ * such as solving equations, calculating gradients, and interacting with
+ * particles.
  */
 class Grid {
   public:
@@ -106,14 +108,16 @@ class Grid {
     virtual void solve_gradient() = 0;
 
     /**
-     * @brief Assigns particle positions to the grid using Cloud-In-Cell (CIC) method.
+     * @brief Assigns particle positions to the grid using Cloud-In-Cell (CIC)
+     * method.
      *
      * @param particles The particles to be assigned to the grid.
      */
     virtual void CIC(const Particles& particles) = 0;
 
     /**
-     * @brief Generates Fourier amplitudes for the grid using cosmological parameters.
+     * @brief Generates Fourier amplitudes for the grid using cosmological
+     * parameters.
      *
      * @param cosmo The cosmological parameters.
      */
@@ -122,10 +126,11 @@ class Grid {
 
 /**
  * @class Particles
- * @brief Represents the particles in the simulation and manages their interactions.
+ * @brief Represents the particles in the simulation and manages their
+ * interactions.
  *
- * The Particles class provides an interface for particle-related operations, such as updating positions
- * and velocities based on grid data.
+ * The Particles class provides an interface for particle-related operations,
+ * such as updating positions and velocities based on grid data.
  */
 class Particles {
   public:

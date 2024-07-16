@@ -6,13 +6,15 @@
 /**
  * @brief Launches a GPU kernel to generate real random numbers.
  *
- * This function template launches a GPU kernel to fill a grid with real random numbers.
- * It takes a pointer to the device grid, a seed for random number generation, an offset,
- * the size of the grid, and the GPU execution configuration parameters (number of blocks
- * and block size).
+ * This function template launches a GPU kernel to fill a grid with real random
+ * numbers. It takes a pointer to the device grid, a seed for random number
+ * generation, an offset, the size of the grid, and the GPU execution
+ * configuration parameters (number of blocks and block size).
  *
- * @tparam T The type of the elements in the grid (e.g., complexDoubleDevice, complexFloatDevice).
- * @param d_grid Pointer to the device memory where random numbers will be stored.
+ * @tparam T The type of the elements in the grid (e.g., complexDoubleDevice,
+ * complexFloatDevice).
+ * @param d_grid Pointer to the device memory where random numbers will be
+ * stored.
  * @param seed The seed for the random number generator.
  * @param offset An offset to apply to the random number sequence.
  * @param size The number of random numbers to generate.
