@@ -265,16 +265,16 @@ void Cosmo::update_growth_factor(double z) {
     m_last_growth_z = z;
 }
 
-double Cosmo::gf(double z){
-    if (m_last_growth_z != z){
-      update_growth_factor(z);
+double Cosmo::gf(double z) {
+    if (m_last_growth_z != z) {
+        update_growth_factor(z);
     }
     return m_gf;
 }
 
-double Cosmo::g_dot(double z){
-    if (m_last_growth_z != z){
-      update_growth_factor(z);
+double Cosmo::g_dot(double z) {
+    if (m_last_growth_z != z) {
+        update_growth_factor(z);
     }
     return m_g_dot;
 }

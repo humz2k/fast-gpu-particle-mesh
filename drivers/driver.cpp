@@ -1,10 +1,10 @@
+#include "allocators.hpp"
 #include "cosmo.hpp"
+#include "grid.hpp"
 #include "logging.hpp"
 #include "params.hpp"
-#include "timestepper.hpp"
-#include "allocators.hpp"
 #include "simulation.hpp"
-#include "grid.hpp"
+#include "timestepper.hpp"
 
 int main() {
     gpuCall(gpuFree(0));
@@ -18,7 +18,8 @@ int main() {
 
     SimpleGrid grid(params);
 
-    void* test; gpu_allocator.alloc(&test,sizeof(float));
+    void* test;
+    gpu_allocator.alloc(&test, sizeof(float));
     gpu_allocator.free(test);
 
     LOG_MINIMAL("done!");

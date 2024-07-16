@@ -2,9 +2,9 @@
 #define _FGPM_COSMO_HPP_
 
 #include "params.hpp"
+#include "power_spectrum.hpp"
 #include <string>
 #include <vector>
-#include "power_spectrum.hpp"
 
 class Cosmo {
   private:

@@ -1,9 +1,9 @@
 #ifndef _FGPM_SIMULATION_HPP_
 #define _FGPM_SIMULATION_HPP_
 
+#include "params.hpp"
 #include <cuda_runtime.h>
 #include <cufft.h>
-#include "params.hpp"
 
 class Particles;
 class Grid;
@@ -18,11 +18,11 @@ class Grid {
     virtual void CIC(const Particles& particles) = 0;
 };
 
-class Particles{
-    public:
-        Particles(const Params& params);
-        Particles();
-        virtual ~Particles();
+class Particles {
+  public:
+    Particles(const Params& params);
+    Particles();
+    virtual ~Particles();
 };
 
 #endif

@@ -1,6 +1,6 @@
 #include "power_spectrum.hpp"
-#include <assert.h>
 #include "logging.hpp"
+#include <assert.h>
 
 PowerSpectrum::PowerSpectrum(const std::string& filename) {
     LOG_DEBUG("reading ipk %s", filename.c_str());

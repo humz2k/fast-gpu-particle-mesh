@@ -2,8 +2,8 @@
 
 #include "cosmo.hpp"
 #include "params.hpp"
-#include "timestepper.hpp"
 #include "simulation.hpp"
+#include "timestepper.hpp"
 
 /*class Particles {
   public:
