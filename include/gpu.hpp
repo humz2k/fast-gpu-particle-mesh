@@ -4,6 +4,7 @@
 #include <cuda_runtime.h>
 #include <cufft.h>
 
+#include "common.hpp"
 #include "logging.hpp"
 
 typedef cufftDoubleComplex complexDoubleDevice;
@@ -66,19 +67,35 @@ typedef cufftComplex complexFloatDevice;
 #define gpuError_t cudaError_t
 #define gpuPeekAtLastError cudaPeekAtLastError
 
-#define gpuErrchk(ans) { gpuAssert((ans), __FILE__, __LINE__); }
-inline void gpuAssert(gpuError_t code, const char *file, int line, bool abort=true)
-{
-   if (code != gpuSuccess)
-   {
-      LOG_ERROR("GPUassert: %s %s %d\n", gpuGetErrorString(code), file, line);
-      if (abort) exit(code);
-   }
+#define gpuErrchk(ans)                                                         \
+    { gpuAssert((ans), __FILE__, __LINE__); }
+
+inline void gpuAssert(gpuError_t code, const char* file, int line,
+                      bool abort = true) {
+    if (code != gpuSuccess) {
+        LOG_ERROR("GPUassert: %s %s %d\n", gpuGetErrorString(code), file, line);
+        if (abort)
+            exit(code);
+    }
 }
 
-#define gpuCall(func) {gpuErrchk(func);gpuErrchk(gpuDeviceSynchronize());}
+#define gpuCall(func)                                                          \
+    {                                                                          \
+        gpuErrchk(func);                                                       \
+        gpuErrchk(gpuDeviceSynchronize());                                     \
+    }
 
-#define gpuLaunch(kernel,numBlocks,blockSize,...) {LOG_INFO("launching %s<%d,%d>%s",TOSTRING(kernel),numBlocks,blockSize,TOSTRING((__VA_ARGS__)));kernel<<<numBlocks,blockSize>>>(__VA_ARGS__);gpuErrchk(gpuPeekAtLastError());}
+#define gpuLaunch(kernel, numBlocks, blockSize, ...)                           \
+    {                                                                          \
+        LOG_INFO("launching %s<%d,%d>%s", TOSTRING(kernel), numBlocks,         \
+                 blockSize, TOSTRING((__VA_ARGS__)));                          \
+        CPUTimer_t start = CPUTimer();                                         \
+        kernel<<<numBlocks, blockSize>>>(__VA_ARGS__);                         \
+        gpuErrchk(gpuPeekAtLastError());                                       \
+        gpuErrchk(gpuDeviceSynchronize());                                     \
+        CPUTimer_t end = CPUTimer();                                           \
+        LOG_INFO("%s took %llu us", TOSTRING(kernel), end - start);            \
+    }
 
 #define gpuMemcpyAsync cudaMemcpyAsync
 
