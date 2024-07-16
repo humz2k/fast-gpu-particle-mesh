@@ -15,8 +15,8 @@ CUDA_CC ?= nvcc
 # MPI_CXX ?= mpicxx
 MPI_CXX ?= g++
 
-MPI_OBJECT_FLAGS ?= -std=c++17 -I$(CUDA_DIR)/include $(FGPM_INCLUDE) -fPIC -O3 -fopenmp -g -Wall -Wpedantic -Werror -fsanitize=undefined -fsanitize=address -fsanitize=leak
-NVCC_OBJECT_FLAGS ?= -std=c++17 -lcufft -lineinfo -Xptxas -v -Xcompiler="-fPIC,-O3,-fopenmp,-g,-Wall,-Wpedantic,-Werror" $(CUDA_ARCH_FLAGS) $(FGPM_INCLUDE)
+MPI_OBJECT_FLAGS ?= -std=c++17 -I$(CUDA_DIR)/include $(FGPM_INCLUDE) -fPIC -O3 -fopenmp -g -Wall -Wpedantic -Werror
+NVCC_OBJECT_FLAGS ?= -std=c++17 -lcufft -lineinfo -Xptxas -v -Xcompiler="-fPIC,-O3,-fopenmp,-g,-Wall,-Werror" $(CUDA_ARCH_FLAGS) $(FGPM_INCLUDE)
 
 CUDA_LINK_FLAGS ?= -L$(CUDA_DIR)/lib64 -lcudart -lcufft
 
