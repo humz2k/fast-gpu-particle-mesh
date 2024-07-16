@@ -155,7 +155,7 @@ class Cosmo {
      *
      * @return Reference to the initial power spectrum.
      */
-    const PowerSpectrum& initial_pk();
+    const PowerSpectrum& initial_pk() const;
 };
 
 #endif

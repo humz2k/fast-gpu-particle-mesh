@@ -22,3 +22,15 @@ PowerSpectrum::PowerSpectrum(const std::string& filename) {
 
     fclose(ptr);
 }
+
+double PowerSpectrum::k_min() const { return m_k_min; }
+
+double PowerSpectrum::k_max() const { return m_k_max; }
+
+double PowerSpectrum::k_delta() const { return m_k_delta; }
+
+int PowerSpectrum::k_bins() const { return m_k_bins; }
+
+const std::vector<double>& PowerSpectrum::h_values() const {
+    return m_h_values;
+}
