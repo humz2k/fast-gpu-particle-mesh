@@ -1,6 +1,6 @@
 #include "allocators.hpp"
 #include "cosmo.hpp"
-#include "grid.hpp"
+#include "simple_grid.hpp"
 #include "logging.hpp"
 #include "params.hpp"
 #include "simulation.hpp"

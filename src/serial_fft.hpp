@@ -3,18 +3,12 @@
 
 #include "gpu.hpp"
 #include "simulation.hpp"
-//#include <unordered_map>
 
 template <class T> class SerialFFT : public FFT<T> {
   private:
     int m_ng;
-    // std::unordered_map<int,gpufftHandle> plans;
-
-    // gpufftHandle get_plan(int ng);
     gpufftHandle m_plan;
-
     void fft(T* in, T* out, int direction);
-
   public:
     SerialFFT(int ng);
     ~SerialFFT();
