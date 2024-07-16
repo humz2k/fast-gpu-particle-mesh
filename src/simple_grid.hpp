@@ -1,6 +1,7 @@
 #ifndef _FGPM_GRID_HPP_
 #define _FGPM_GRID_HPP_
 
+#include "mpi_distribution.hpp"
 #include "serial_fft.hpp"
 #include "simulation.hpp"
 
@@ -16,6 +17,7 @@ template <class fft_t> class SimpleGrid : public Grid {
     fft_t* m_d_y;
     fft_t* m_d_z;
     SerialFFT<fft_t> fft;
+    MPIDist dist;
 
   public:
     SimpleGrid(const Params& params, int ng);

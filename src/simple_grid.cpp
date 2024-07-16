@@ -5,7 +5,7 @@
 
 template <class fft_t>
 SimpleGrid<fft_t>::SimpleGrid(const Params& params, int ng)
-    : m_ng(ng), m_params(params), fft(m_ng) {
+    : m_ng(ng), m_params(params), fft(m_ng), dist(ng) {
     m_size = m_ng * m_ng * m_ng;
 
     gpu_allocator.alloc(&m_d_grad, m_size * sizeof(float4));
