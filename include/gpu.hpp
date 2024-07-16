@@ -26,6 +26,10 @@ __forceinline__ __host__ __device__ int3 operator/(int3 l, int3 r) {
     return make_int3(l.x / r.x, l.y / r.y, l.z / r.z);
 }
 
+__forceinline__ __host__ __device__ float3 operator*(float3 l, float r) {
+    return make_float3(l.x * r, l.y * r, l.z * r);
+}
+
 typedef cufftHandle gpufftHandle;
 
 typedef cufftResult gpufftResult;

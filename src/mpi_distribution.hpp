@@ -145,6 +145,29 @@ class MPIDist {
     __forceinline__ __host__ __device__ int global_grid_size() const {
         return m_ng * m_ng * m_ng;
     }
+
+    /**
+     * @brief Calculates the wave numbers (k-modes) for a given local index and
+     * spacing.
+     *
+     * This method converts a linear local index to 3D global coordinates and
+     * adjusts them based on the specified spacing to determine the wave numbers
+     * (k-modes). It handles the periodic boundary conditions by wrapping around
+     * the indices.
+     *
+     * @param local_idx The local index.
+     * @param d The spacing between grid points.
+     * @return A float3 containing the k-modes.
+     */
+    __forceinline__ __host__ __device__ float3 kmodes(int local_idx,
+                                                      float d) const {
+        int3 idx3d = global_coords(local_idx);
+        // periodic
+        float l = (idx3d.x > ((m_ng / 2) - 1)) ? -(m_ng - idx3d.x) : idx3d.x;
+        float m = (idx3d.y > ((m_ng / 2) - 1)) ? -(m_ng - idx3d.y) : idx3d.y;
+        float n = (idx3d.z > ((m_ng / 2) - 1)) ? -(m_ng - idx3d.z) : idx3d.z;
+        return make_float3(l, m, n) * d; // scale by grid spacing
+    }
 };
 
 #endif
