@@ -1,10 +1,6 @@
 #include "grid.hpp"
 #include "allocators.hpp"
 
-Grid::Grid(const Params& params) {}
-Grid::Grid() {}
-Grid::~Grid() {}
-
 SimpleGrid::SimpleGrid(const Params& params) : m_params(params) {
     int ng = m_params.ng();
     int size = ng * ng * ng;

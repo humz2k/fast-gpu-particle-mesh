@@ -23,6 +23,8 @@ class Particles {
     Particles(const Params& params);
     Particles();
     virtual ~Particles();
+    virtual void update_positions() = 0;
+    virtual void update_velocities(const Grid& grid) = 0;
 };
 
 #endif
