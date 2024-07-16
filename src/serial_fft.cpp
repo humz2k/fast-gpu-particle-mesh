@@ -91,9 +91,7 @@ template <class T> void SerialFFT<T>::backward(T* in) {
     this->fft(in, in, GPUFFT_INVERSE);
 }
 
-template <class T> int SerialFFT<T>::ng() const {
-    return m_ng;
-}
+template <class T> int SerialFFT<T>::ng() const { return m_ng; }
 
 template class SerialFFT<complexDoubleDevice>;
 template class SerialFFT<complexFloatDevice>;

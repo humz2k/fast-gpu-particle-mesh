@@ -10,6 +10,22 @@
 typedef cufftDoubleComplex complexDoubleDevice;
 typedef cufftComplex complexFloatDevice;
 
+__forceinline__ __host__ __device__ int3 operator+(int3 l, int3 r) {
+    return make_int3(l.x + r.x, l.y + r.y, l.z + r.z);
+}
+
+__forceinline__ __host__ __device__ int3 operator-(int3 l, int3 r) {
+    return make_int3(l.x - r.x, l.y - r.y, l.z - r.z);
+}
+
+__forceinline__ __host__ __device__ int3 operator*(int3 l, int3 r) {
+    return make_int3(l.x * r.x, l.y * r.y, l.z * r.z);
+}
+
+__forceinline__ __host__ __device__ int3 operator/(int3 l, int3 r) {
+    return make_int3(l.x / r.x, l.y / r.y, l.z / r.z);
+}
+
 typedef cufftHandle gpufftHandle;
 
 typedef cufftResult gpufftResult;

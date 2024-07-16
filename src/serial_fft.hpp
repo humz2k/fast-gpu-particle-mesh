@@ -6,16 +6,18 @@
 
 /**
  * @class SerialFFT
- * @brief Implements Fast Fourier Transform (FFT) operations for serial execution.
+ * @brief Implements Fast Fourier Transform (FFT) operations for serial
+ * execution.
  *
  * The SerialFFT class provides methods for performing forward and backward FFTs
- * in both in-place and out-of-place modes. It is derived from the FFT base class.
+ * in both in-place and out-of-place modes. It is derived from the FFT base
+ * class.
  *
  * @tparam T The type of the elements in the FFT (e.g., float, double).
  */
 template <class T> class SerialFFT : public FFT<T> {
   private:
-    int m_ng; /**< Size of the grid. */
+    int m_ng;            /**< Size of the grid. */
     gpufftHandle m_plan; /**< Handle for the FFT plan. */
 
     /**
