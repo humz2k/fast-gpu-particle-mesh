@@ -27,6 +27,7 @@ template <class fft_t> class SimpleGrid : public Grid {
     void CIC(const Particles& particles);
     void generate_fourier_amplitudes(Cosmo& cosmo);
     MPIDist dist() const;
+    std::vector<double> bin(int nbins) const;
 };
 
 #endif

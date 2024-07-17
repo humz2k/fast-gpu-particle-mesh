@@ -99,10 +99,11 @@ void launch_scale_amplitudes_by_power_spectrum(T* grid,
                                                int numBlocks, int blockSize) {
     const double* h_values = initial_pk.h_values().data();
 
-    double max_k = sqrt(pow(((((double)dist.ng())/2.0) * 2.0 * M_PI) / rl,3.0));
-    LOG_INFO("max k = %g",max_k);
-    if (max_k > initial_pk.k_max()){
-        LOG_ERROR("input ipk only goes to %g",initial_pk.k_max());
+    double max_k =
+        sqrt(pow(((((double)dist.ng()) / 2.0) * 2.0 * M_PI) / rl, 3.0));
+    LOG_INFO("max k = %g", max_k);
+    if (max_k > initial_pk.k_max()) {
+        LOG_ERROR("input ipk only goes to %g", initial_pk.k_max());
         exit(1);
     }
 

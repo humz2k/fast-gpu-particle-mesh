@@ -36,7 +36,8 @@ void launch_generate_real_random(T* d_grid, int seed, const MPIDist dist,
  *
  * @tparam T The type of the elements in the grid.
  * @param grid Pointer to the grid array whose amplitudes will be scaled.
- * @param initial_pk Reference to the PowerSpectrum object containing initial power spectrum values.
+ * @param initial_pk Reference to the PowerSpectrum object containing initial
+ * power spectrum values.
  * @param rl The size of the simulation box.
  * @param dist The MPIDist object containing distribution and grid information.
  * @param numBlocks The number of blocks to use in the CUDA kernel launch.

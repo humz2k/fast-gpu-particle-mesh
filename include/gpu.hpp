@@ -30,6 +30,22 @@ __forceinline__ __host__ __device__ float3 operator*(float3 l, float r) {
     return make_float3(l.x * r, l.y * r, l.z * r);
 }
 
+__forceinline__ __host__ __device__ float len2(float3 v) {
+    return v.x * v.x + v.y * v.y + v.z * v.z;
+}
+
+__forceinline__ __host__ __device__ float len(float3 v) {
+    return sqrtf(len2(v));
+}
+
+__forceinline__ __host__ __device__ double len2(complexDoubleDevice v) {
+    return v.x * v.x + v.y * v.y;
+}
+
+__forceinline__ __host__ __device__ float len2(complexFloatDevice v) {
+    return v.x * v.x + v.y * v.y;
+}
+
 #define make_complexDoubleDevice make_cuDoubleComplex
 #define make_complexFloatDevice make_cuFloatComplex
 

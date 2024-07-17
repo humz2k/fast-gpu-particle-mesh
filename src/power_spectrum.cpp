@@ -1,8 +1,8 @@
 #include "power_spectrum.hpp"
 #include "logging.hpp"
 #include <assert.h>
-#include <iostream>
 #include <fstream>
+#include <iostream>
 
 PowerSpectrum::PowerSpectrum(const std::string& filename) {
     LOG_DEBUG("reading ipk %s", filename.c_str());
@@ -44,7 +44,7 @@ void PowerSpectrum::to_csv(std::string filename) const {
 
     output << "k,v\n";
 
-    for (int i = 0; i < m_k_bins; i++){
+    for (int i = 0; i < m_k_bins; i++) {
         double k_bin = m_k_min + m_k_delta * (((float)i));
         double value = m_h_values[i];
         output << k_bin << "," << value << "\n";

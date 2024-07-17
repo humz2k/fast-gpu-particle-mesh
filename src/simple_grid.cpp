@@ -44,11 +44,19 @@ void SimpleGrid<fft_t>::generate_fourier_amplitudes(Cosmo& cosmo) {
 
     fft.forward(m_d_grid);
 
-    launch_scale_amplitudes_by_power_spectrum(m_d_grid, cosmo.initial_pk(), m_params.rl(), m_dist, numBlocks, blockSize);
+    launch_scale_amplitudes_by_power_spectrum(m_d_grid, cosmo.initial_pk(),
+                                              m_params.rl(), m_dist, numBlocks,
+                                              blockSize);
 }
 
-template <class fft_t>
-MPIDist SimpleGrid<fft_t>::dist() const { return m_dist; };
+template <class fft_t> MPIDist SimpleGrid<fft_t>::dist() const {
+    return m_dist;
+};
+
+template <class fft_t> std::vector<double> SimpleGrid<fft_t>::bin(int nbins) const {
+    std::vector<double> out;
+    return out;
+};
 
 template class SimpleGrid<complexDoubleDevice>;
 template class SimpleGrid<complexFloatDevice>;

@@ -2,8 +2,8 @@
 #define _FGPM_SIMULATION_HPP_
 
 #include "cosmo.hpp"
-#include "params.hpp"
 #include "mpi_distribution.hpp"
+#include "params.hpp"
 #include <cuda_runtime.h>
 #include <cufft.h>
 
@@ -130,6 +130,13 @@ class Grid {
      * @return The `MPIDist`.
      */
     virtual MPIDist dist() const = 0;
+
+    /**
+     * @brief Bins rho.
+     *
+     * @return The binned power spectrum.
+     */
+    virtual std::vector<double> bin(int nbins) const = 0;
 };
 
 /**
