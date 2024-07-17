@@ -62,6 +62,13 @@ class PowerSpectrum {
      * @return A const reference to the vector of power spectrum values.
      */
     const std::vector<double>& h_values() const;
+
+    /**
+     * @brief Writes the power spectrum to a CSV file.
+     *
+     * @param filename The filename to write to.
+     */
+    void to_csv(std::string filename) const;
 };
 
 #endif

@@ -15,6 +15,7 @@ int main() {
     Params params("test.params");
     Timestepper ts(params);
     Cosmo cosmo(params);
+    cosmo.initial_pk().to_csv("test.csv");
 
     SimpleGrid<complexDoubleDevice> simple_grid(params, params.ng());
     Grid& grid = simple_grid;
