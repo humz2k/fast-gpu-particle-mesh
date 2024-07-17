@@ -1,7 +1,7 @@
 #include "simple_grid.hpp"
 #include "allocators.hpp"
 #include "common.hpp"
-#include "rng_initializer.hpp"
+#include "initializer.hpp"
 
 template <class fft_t>
 SimpleGrid<fft_t>::SimpleGrid(const Params& params, int ng)

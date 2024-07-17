@@ -30,6 +30,19 @@ __forceinline__ __host__ __device__ float3 operator*(float3 l, float r) {
     return make_float3(l.x * r, l.y * r, l.z * r);
 }
 
+#define make_complexDoubleDevice make_cuDoubleComplex
+#define make_complexFloatDevice make_cuFloatComplex
+
+__forceinline__ __host__ __device__ complexDoubleDevice
+operator*(complexDoubleDevice l, double r) {
+    return make_complexDoubleDevice(l.x * r, l.y * r);
+}
+
+__forceinline__ __host__ __device__ complexFloatDevice
+operator*(complexFloatDevice l, double r) {
+    return make_complexFloatDevice(l.x * r, l.y * r);
+}
+
 typedef cufftHandle gpufftHandle;
 
 typedef cufftResult gpufftResult;
