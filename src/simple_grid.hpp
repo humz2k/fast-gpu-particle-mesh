@@ -26,7 +26,7 @@ template <class fft_t> class SimpleGrid : public Grid {
     void solve_gradient();
     void CIC(const Particles& particles);
     void generate_fourier_amplitudes(Cosmo& cosmo);
-    void generate_displacement_ic(Cosmo& cosmo, Timestepper& ts);
+    const float3* generate_displacement_ic_grad(Cosmo& cosmo, Timestepper& ts);
     MPIDist dist() const;
     std::vector<double> bin(int nbins) const;
     double k_min() const;

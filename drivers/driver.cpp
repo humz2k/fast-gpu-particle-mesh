@@ -20,7 +20,7 @@ int main() {
     SimpleGrid<complexDoubleDevice> simple_grid(params, params.ng());
     Grid& grid = simple_grid;
 
-    grid.generate_displacement_ic(cosmo,ts);
+    grid.generate_displacement_ic_grad(cosmo,ts);
 
     //PowerSpectrum pk(grid,10);
     //pk.to_csv("test2.csv");

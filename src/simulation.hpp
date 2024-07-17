@@ -125,7 +125,7 @@ class Grid {
      */
     virtual void generate_fourier_amplitudes(Cosmo& cosmo) = 0;
 
-    virtual void generate_displacement_ic(Cosmo& cosmo, Timestepper& ts) = 0;
+    virtual const float3* generate_displacement_ic_grad(Cosmo& cosmo, Timestepper& ts) = 0;
 
     /**
      * @brief Returns the `MPIDist` of the grid.
