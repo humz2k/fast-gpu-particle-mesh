@@ -6,6 +6,7 @@
 #include <cstdio>
 #include <iostream>
 #include <unordered_map>
+#include <cassert>
 
 /**
  * @brief Displays the current alive allocations.
@@ -185,7 +186,7 @@ class CPUAllocator {
      * @return 0 on success.
      */
     template <class T> inline int alloc(T** ptr, size_t sz) {
-        assert(*ptr = malloc(sz));
+        assert(*ptr = (T*)malloc(sz));
         LOG_DEBUG("allocated %lu bytes on CPU for %p", sz, (void*)*ptr);
 
         total_size += sz;
@@ -217,7 +218,7 @@ class CPUAllocator {
         current_size -= sz;
 
         cpu_allocations.erase(ptr);
-        free(ptr);
+        ::free(ptr);
 
         show_alive_allocations(cpu_allocations, "CPU");
 
