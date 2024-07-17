@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+class Grid;
+
 /**
  * @class PowerSpectrum
  * @brief Represents the power spectrum used in cosmological simulations.
@@ -27,6 +29,8 @@ class PowerSpectrum {
      * @param file The filename from which to load the power spectrum data.
      */
     PowerSpectrum(const std::string& file);
+
+    PowerSpectrum(const Grid& grid, int nbins);
 
     /**
      * @brief Gets the minimum wave number.

@@ -137,6 +137,9 @@ class Grid {
      * @return The binned power spectrum.
      */
     virtual std::vector<double> bin(int nbins) const = 0;
+
+    virtual double k_min() const = 0;
+    virtual double k_max() const = 0;
 };
 
 /**

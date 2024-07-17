@@ -2,6 +2,7 @@
 #include "allocators.hpp"
 #include "common.hpp"
 #include "initializer.hpp"
+#include "pk_bins.hpp"
 
 template <class fft_t>
 SimpleGrid<fft_t>::SimpleGrid(const Params& params, int ng)
@@ -53,8 +54,38 @@ template <class fft_t> MPIDist SimpleGrid<fft_t>::dist() const {
     return m_dist;
 };
 
+template <class fft_t> double SimpleGrid<fft_t>::k_min() const {
+    return (2.0 * M_PI)/m_params.rl();
+};
+
+template <class fft_t> double SimpleGrid<fft_t>::k_max() const {
+    double d = (2.0 * M_PI)/m_params.rl();
+    double ng = m_dist.ng();
+    return sqrt(3.0 * (ng/2.0)* (ng/2.0) * d * d);
+};
+
 template <class fft_t> std::vector<double> SimpleGrid<fft_t>::bin(int nbins) const {
+    int blockSize = BLOCKSIZE;
+    int numBlocks = (m_size + (blockSize - 1)) / blockSize;
+
+    double rl = m_params.rl();
+    double k_delta = ((k_max()-k_min())/((double)nbins));
+
+    double2* d_bins; gpu_allocator.alloc(&d_bins,sizeof(double2) * nbins);
+    launch_bin_power(m_d_grid,d_bins, k_min(), k_delta, nbins, rl, m_dist, numBlocks, blockSize);
+
+    double2* h_bins; cpu_allocator.alloc(&h_bins, sizeof(double2) * nbins);
+    gpuMemcpy(h_bins,d_bins,sizeof(double2) * nbins,gpuMemcpyDeviceToHost);
+
+    gpu_allocator.free(d_bins);
+
     std::vector<double> out;
+    out.resize(nbins);
+
+    for (int i = 0; i < nbins; i++){
+        out[i] = h_bins[i].x / h_bins[i].y;
+    }
+    cpu_allocator.free(h_bins);
     return out;
 };
 

@@ -22,6 +22,9 @@ int main() {
 
     grid.generate_fourier_amplitudes(cosmo);
 
+    PowerSpectrum pk(grid,10);
+    pk.to_csv("test2.csv");
+
     LOG_MINIMAL("done!");
     return 0;
 }

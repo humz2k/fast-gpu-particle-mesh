@@ -50,8 +50,7 @@ __forceinline__ __device__ double interp_power_spectrum(int idx, double* in,
 
     // k modes and magnitude
     float3 kmodes = dist.kmodes(idx, (2.0f * M_PI) / rl);
-    double k_mag =
-        sqrt(kmodes.x * kmodes.x + kmodes.y * kmodes.y + kmodes.z * kmodes.z);
+    double k_mag = len(kmodes);
 
     // bins for interpolation
     int left_bin = (int)(k_mag / k_delta);
@@ -87,7 +86,6 @@ __global__ void scale_amplitudes_by_power_spectrum(T* __restrict grid,
     int idx = threadIdx.x + blockDim.x * blockIdx.x;
     if (idx >= dist.local_grid_size())
         return;
-
     grid[idx] = grid[idx] *
                 sqrt(interp_power_spectrum(idx, in, k_delta, k_min, rl, dist));
 }
