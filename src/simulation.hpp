@@ -3,8 +3,8 @@
 
 #include "cosmo.hpp"
 #include "mpi_distribution.hpp"
-#include "timestepper.hpp"
 #include "params.hpp"
+#include "timestepper.hpp"
 #include <cuda_runtime.h>
 #include <cufft.h>
 
@@ -132,7 +132,8 @@ class Grid {
      * @param ts The time stepper used in the simulation.
      * @return Pointer to the generated displacement gradient.
      */
-    virtual const float3* generate_displacement_ic_grad(Cosmo& cosmo, Timestepper& ts) = 0;
+    virtual const float3* generate_displacement_ic_grad(Cosmo& cosmo,
+                                                        Timestepper& ts) = 0;
 
     /**
      * @brief Returns the `MPIDist` of the grid.

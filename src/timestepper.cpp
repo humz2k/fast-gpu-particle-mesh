@@ -3,11 +3,12 @@
 #include "logging.hpp"
 #include <math.h>
 
-Timestepper::Timestepper(const Params& _params) : m_params(_params), m_z(m_params.z_ini()), m_a(z2a(m_z)) {
+Timestepper::Timestepper(const Params& _params)
+    : m_params(_params), m_z(m_params.z_ini()), m_a(z2a(m_z)) {
     m_deltaT =
         (((1.0 / (m_params.z_fin() + 1.0)) - (1.0 / (m_params.z_ini() + 1.0))) /
          (double)m_params.nsteps());
-    LOG_INFO("a = %g, z = %g",a(),z());
+    LOG_INFO("a = %g, z = %g", a(), z());
 }
 
 double Timestepper::omega_nu_massive() const {
@@ -57,6 +58,12 @@ void Timestepper::z(double new_z) {
     m_a = z2a(new_z);
 }
 
-void Timestepper::advance_half_step() { a(a() + deltaT() * 0.5); LOG_INFO("a = %g, z = %g",a(),z()); }
+void Timestepper::advance_half_step() {
+    a(a() + deltaT() * 0.5);
+    LOG_INFO("a = %g, z = %g", a(), z());
+}
 
-void Timestepper::reverse_half_step() { a(a() - deltaT() * 0.5); LOG_INFO("a = %g, z = %g",a(),z()); }
+void Timestepper::reverse_half_step() {
+    a(a() - deltaT() * 0.5);
+    LOG_INFO("a = %g, z = %g", a(), z());
+}

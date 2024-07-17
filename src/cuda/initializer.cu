@@ -126,52 +126,79 @@ template void launch_scale_amplitudes_by_power_spectrum<complexFloatDevice>(
     complexFloatDevice*, const PowerSpectrum& inital_pk, double, const MPIDist,
     int, int);
 
-template<class T>
-__global__ void transform_density_field(const T* d_grid, T* d_x, T* d_y, T* d_z, double delta, double rl, double a, MPIDist dist){
+template <class T>
+__global__ void transform_density_field(const T* d_grid, T* d_x, T* d_y, T* d_z,
+                                        double delta, double rl, double a,
+                                        MPIDist dist) {
     int idx = blockDim.x * blockIdx.x + threadIdx.x;
-    if (idx >= dist.local_grid_size())return;
+    if (idx >= dist.local_grid_size())
+        return;
 
-    float3 kmodes = dist.kmodes(idx,(2.0*M_PI)/rl);
+    float3 kmodes = dist.kmodes(idx, (2.0 * M_PI) / rl);
 
     double k2 = len2(kmodes);
-    double k2mul = (k2 == 0.0) ? 0.0 : (1.0/k2);
-    double mul = (1.0/delta) * k2mul;
+    double k2mul = (k2 == 0.0) ? 0.0 : (1.0 / k2);
+    double mul = (1.0 / delta) * k2mul;
 
     T current = d_grid[idx] * mul;
     T sx = current * kmodes.x;
     T sy = current * kmodes.y;
     T sz = current * kmodes.z;
 
-    T out_x; out_x.x = sx.y; out_x.y = -sx.x;
-    T out_y; out_y.x = sy.y; out_y.y = -sy.x;
-    T out_z; out_z.x = sz.y; out_z.y = -sz.x;
+    T out_x;
+    out_x.x = sx.y;
+    out_x.y = -sx.x;
+    T out_y;
+    out_y.x = sy.y;
+    out_y.y = -sy.x;
+    T out_z;
+    out_z.x = sz.y;
+    out_z.y = -sz.x;
 
     d_x[idx] = out_x;
     d_y[idx] = out_y;
     d_z[idx] = out_z;
 }
 
-template<class T>
-void launch_transform_density_field(T* d_grid, T* d_x, T* d_y, T* d_z, double delta, double rl, double a, MPIDist dist, int numBlocks, int blockSize){
-    gpuLaunch(transform_density_field,numBlocks,blockSize,d_grid,d_x,d_y,d_z,delta,rl,a,dist);
+template <class T>
+void launch_transform_density_field(T* d_grid, T* d_x, T* d_y, T* d_z,
+                                    double delta, double rl, double a,
+                                    MPIDist dist, int numBlocks,
+                                    int blockSize) {
+    gpuLaunch(transform_density_field, numBlocks, blockSize, d_grid, d_x, d_y,
+              d_z, delta, rl, a, dist);
 }
 
-template void launch_transform_density_field<complexDoubleDevice>(complexDoubleDevice*,complexDoubleDevice*,complexDoubleDevice*,complexDoubleDevice*,double,double,double,MPIDist,int,int);
-template void launch_transform_density_field<complexFloatDevice>(complexFloatDevice*,complexFloatDevice*,complexFloatDevice*,complexFloatDevice*,double,double,double,MPIDist,int,int);
+template void launch_transform_density_field<complexDoubleDevice>(
+    complexDoubleDevice*, complexDoubleDevice*, complexDoubleDevice*,
+    complexDoubleDevice*, double, double, double, MPIDist, int, int);
+template void launch_transform_density_field<complexFloatDevice>(
+    complexFloatDevice*, complexFloatDevice*, complexFloatDevice*,
+    complexFloatDevice*, double, double, double, MPIDist, int, int);
 
-template<class T>
-__global__ void combine_density_vectors(float3* d_grad, T* d_x, T* d_y, T* d_z, MPIDist dist){
+template <class T>
+__global__ void combine_density_vectors(float3* d_grad, T* d_x, T* d_y, T* d_z,
+                                        MPIDist dist) {
     int idx = blockDim.x * blockIdx.x + threadIdx.x;
-    if (idx >= dist.local_grid_size())return;
+    if (idx >= dist.local_grid_size())
+        return;
     double ng = dist.ng();
-    double scale = 1.0/(ng*ng*ng);
-    d_grad[idx] = make_float3(d_x[idx].x * scale, d_y[idx].x * scale, d_z[idx].x * scale);
+    double scale = 1.0 / (ng * ng * ng);
+    d_grad[idx] =
+        make_float3(d_x[idx].x * scale, d_y[idx].x * scale, d_z[idx].x * scale);
 }
 
-template<class T>
-void launch_combine_density_vectors(float3* d_grad, T* d_x, T* d_y, T* d_z, MPIDist dist, int numBlocks, int blockSize){
-    gpuLaunch(combine_density_vectors,numBlocks,blockSize,d_grad,d_x,d_y,d_z,dist);
+template <class T>
+void launch_combine_density_vectors(float3* d_grad, T* d_x, T* d_y, T* d_z,
+                                    MPIDist dist, int numBlocks,
+                                    int blockSize) {
+    gpuLaunch(combine_density_vectors, numBlocks, blockSize, d_grad, d_x, d_y,
+              d_z, dist);
 }
 
-template void launch_combine_density_vectors<complexDoubleDevice>(float3*,complexDoubleDevice*,complexDoubleDevice*,complexDoubleDevice*,MPIDist,int,int);
-template void launch_combine_density_vectors<complexFloatDevice>(float3*,complexFloatDevice*,complexFloatDevice*,complexFloatDevice*,MPIDist,int,int);
+template void launch_combine_density_vectors<complexDoubleDevice>(
+    float3*, complexDoubleDevice*, complexDoubleDevice*, complexDoubleDevice*,
+    MPIDist, int, int);
+template void launch_combine_density_vectors<complexFloatDevice>(
+    float3*, complexFloatDevice*, complexFloatDevice*, complexFloatDevice*,
+    MPIDist, int, int);

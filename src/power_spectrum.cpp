@@ -26,7 +26,10 @@ PowerSpectrum::PowerSpectrum(const std::string& filename) {
     fclose(ptr);
 }
 
-PowerSpectrum::PowerSpectrum(const Grid& grid, int nbins) : m_k_min(grid.k_min()), m_k_max(grid.k_max()), m_k_bins(nbins), m_k_delta((m_k_max - m_k_min)/((double)m_k_bins)), m_h_values(grid.bin(nbins)){
+PowerSpectrum::PowerSpectrum(const Grid& grid, int nbins)
+    : m_k_min(grid.k_min()), m_k_max(grid.k_max()), m_k_bins(nbins),
+      m_k_delta((m_k_max - m_k_min) / ((double)m_k_bins)),
+      m_h_values(grid.bin(nbins)) {
     m_k_min += m_k_delta * 0.5;
     m_k_max += m_k_delta * 0.5;
 }

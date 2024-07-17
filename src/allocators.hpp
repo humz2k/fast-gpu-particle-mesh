@@ -3,10 +3,10 @@
 
 #include "gpu.hpp"
 #include "logging.hpp"
+#include <cassert>
 #include <cstdio>
 #include <iostream>
 #include <unordered_map>
-#include <cassert>
 
 /**
  * @brief Displays the current alive allocations.

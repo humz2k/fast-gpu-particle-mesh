@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include "allocators.hpp"
 #include "gpu.hpp"
 #include "logging.hpp"
@@ -6,11 +5,12 @@
 #include "pk_bins.hpp"
 #include "power_spectrum.hpp"
 #include <cassert>
+#include <stdio.h>
 #include <vector>
 
 __forceinline__ __device__ double get_pk_cic_filter(int idx, MPIDist dist) {
-    double d = ((2*M_PI)/(((double)(dist.ng()))));
-    float3 kmodes = dist.kmodes(idx,d);
+    double d = ((2 * M_PI) / (((double)(dist.ng()))));
+    float3 kmodes = dist.kmodes(idx, d);
     float filt1 = sinf(0.5f * kmodes.x) / (0.5 * kmodes.x);
     filt1 = filt1 * filt1;
     filt1 = __frcp_rn(filt1 * filt1);
@@ -41,7 +41,8 @@ __global__ void bin_power(const T* d_grid, double2* d_bins, double k_min,
                           double k_delta, int n_k_bins, double rl,
                           MPIDist dist) {
     int idx = blockDim.x * blockIdx.x + threadIdx.x;
-    if (idx >= dist.local_grid_size())return;
+    if (idx >= dist.local_grid_size())
+        return;
 
     int3 global_coords = dist.global_coords(idx);
 
@@ -61,8 +62,9 @@ __global__ void bin_power(const T* d_grid, double2* d_bins, double k_min,
 
     assert((k_bin_idx >= 0) && (k_bin_idx < n_k_bins));
 
-    double scale = ((rl*rl*rl)/((double)ng*ng*ng)) * (1.0/((double)ng*ng*ng));
-    double val = len2(d_grid[idx]) * scale * get_pk_cic_filter(idx,dist);
+    double scale = ((rl * rl * rl) / ((double)ng * ng * ng)) *
+                   (1.0 / ((double)ng * ng * ng));
+    double val = len2(d_grid[idx]) * scale * get_pk_cic_filter(idx, dist);
 
     atomicAdd(&(d_bins[k_bin_idx].x), val);
     atomicAdd(&(d_bins[k_bin_idx].y), 1.0);

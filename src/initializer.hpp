@@ -57,10 +57,14 @@ void launch_scale_amplitudes_by_power_spectrum(T* grid,
  * includes scaling and interpolation operations.
  *
  * @tparam T The type of the elements in the grid.
- * @param d_grid Pointer to the device memory where the original density field is stored.
- * @param d_x Pointer to the device memory where the transformed density field along the x-axis will be stored.
- * @param d_y Pointer to the device memory where the transformed density field along the y-axis will be stored.
- * @param d_z Pointer to the device memory where the transformed density field along the z-axis will be stored.
+ * @param d_grid Pointer to the device memory where the original density field
+ * is stored.
+ * @param d_x Pointer to the device memory where the transformed density field
+ * along the x-axis will be stored.
+ * @param d_y Pointer to the device memory where the transformed density field
+ * along the y-axis will be stored.
+ * @param d_z Pointer to the device memory where the transformed density field
+ * along the z-axis will be stored.
  * @param delta The D+ value used in the transformation.
  * @param rl The size of the simulation box.
  * @param a The scale factor.
@@ -68,8 +72,10 @@ void launch_scale_amplitudes_by_power_spectrum(T* grid,
  * @param numBlocks The number of blocks to use in the CUDA kernel launch.
  * @param blockSize The size of each block to use in the CUDA kernel launch.
  */
-template<class T>
-void launch_transform_density_field(T* d_grid, T* d_x, T* d_y, T* d_z, double delta, double rl, double a, MPIDist dist, int numBlocks, int blockSize);
+template <class T>
+void launch_transform_density_field(T* d_grid, T* d_x, T* d_y, T* d_z,
+                                    double delta, double rl, double a,
+                                    MPIDist dist, int numBlocks, int blockSize);
 
 /**
  * @brief Launches a CUDA kernel to combine density vectors.
@@ -79,15 +85,20 @@ void launch_transform_density_field(T* d_grid, T* d_x, T* d_y, T* d_z, double de
  * resulting vector field is stored in the provided device memory.
  *
  * @tparam T The type of the elements in the grid.
- * @param d_grad Pointer to the device memory where the resulting gradient vectors will be stored.
- * @param d_x Pointer to the device memory where the density field along the x-axis is stored.
- * @param d_y Pointer to the device memory where the density field along the y-axis is stored.
- * @param d_z Pointer to the device memory where the density field along the z-axis is stored.
+ * @param d_grad Pointer to the device memory where the resulting gradient
+ * vectors will be stored.
+ * @param d_x Pointer to the device memory where the density field along the
+ * x-axis is stored.
+ * @param d_y Pointer to the device memory where the density field along the
+ * y-axis is stored.
+ * @param d_z Pointer to the device memory where the density field along the
+ * z-axis is stored.
  * @param dist The MPIDist object containing distribution and grid information.
  * @param numBlocks The number of blocks to use in the CUDA kernel launch.
  * @param blockSize The size of each block to use in the CUDA kernel launch.
  */
-template<class T>
-void launch_combine_density_vectors(float3* d_grad, T* d_x, T* d_y, T* d_z, MPIDist dist, int numBlocks, int blockSize);
+template <class T>
+void launch_combine_density_vectors(float3* d_grad, T* d_x, T* d_y, T* d_z,
+                                    MPIDist dist, int numBlocks, int blockSize);
 
 #endif
