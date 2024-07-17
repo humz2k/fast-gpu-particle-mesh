@@ -14,8 +14,8 @@
 class Timestepper {
   private:
     const Params& m_params; /**< Reference to the simulation parameters. */
-    double m_a;             /**< Scale factor. */
     double m_z;             /**< Redshift. */
+    double m_a;             /**< Scale factor. */
     double m_deltaT;        /**< Time step size. */
   public:
     /**

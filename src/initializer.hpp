@@ -49,4 +49,10 @@ void launch_scale_amplitudes_by_power_spectrum(T* grid,
                                                double rl, const MPIDist dist,
                                                int numBlocks, int blockSize);
 
+template<class T>
+void launch_transform_density_field(T* d_grid, T* d_x, T* d_y, T* d_z, double delta, double rl, double a, MPIDist dist, int numBlocks, int blockSize);
+
+template<class T>
+void launch_combine_density_vectors(float3* d_grad, T* d_x, T* d_y, T* d_z, MPIDist dist, int numBlocks, int blockSize);
+
 #endif

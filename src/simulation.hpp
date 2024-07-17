@@ -3,6 +3,7 @@
 
 #include "cosmo.hpp"
 #include "mpi_distribution.hpp"
+#include "timestepper.hpp"
 #include "params.hpp"
 #include <cuda_runtime.h>
 #include <cufft.h>
@@ -123,6 +124,8 @@ class Grid {
      * @param cosmo The cosmological parameters.
      */
     virtual void generate_fourier_amplitudes(Cosmo& cosmo) = 0;
+
+    virtual void generate_displacement_ic(Cosmo& cosmo, Timestepper& ts) = 0;
 
     /**
      * @brief Returns the `MPIDist` of the grid.

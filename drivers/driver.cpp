@@ -20,10 +20,10 @@ int main() {
     SimpleGrid<complexDoubleDevice> simple_grid(params, params.ng());
     Grid& grid = simple_grid;
 
-    grid.generate_fourier_amplitudes(cosmo);
+    grid.generate_displacement_ic(cosmo,ts);
 
-    PowerSpectrum pk(grid,10);
-    pk.to_csv("test2.csv");
+    //PowerSpectrum pk(grid,10);
+    //pk.to_csv("test2.csv");
 
     LOG_MINIMAL("done!");
     return 0;
