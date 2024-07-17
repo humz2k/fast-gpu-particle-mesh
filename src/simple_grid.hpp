@@ -17,7 +17,7 @@ template <class fft_t> class SimpleGrid : public Grid {
     fft_t* m_d_y;
     fft_t* m_d_z;
     SerialFFT<fft_t> fft;
-    MPIDist dist;
+    MPIDist m_dist;
 
   public:
     SimpleGrid(const Params& params, int ng);
@@ -26,6 +26,7 @@ template <class fft_t> class SimpleGrid : public Grid {
     void solve_gradient();
     void CIC(const Particles& particles);
     void generate_fourier_amplitudes(Cosmo& cosmo);
+    MPIDist dist() const;
 };
 
 #endif

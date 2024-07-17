@@ -5,7 +5,7 @@
 
 template <class fft_t>
 SimpleGrid<fft_t>::SimpleGrid(const Params& params, int ng)
-    : m_ng(ng), m_params(params), fft(m_ng), dist(ng) {
+    : m_ng(ng), m_params(params), fft(m_ng), m_dist(ng) {
     m_size = m_ng * m_ng * m_ng;
 
     gpu_allocator.alloc(&m_d_grad, m_size * sizeof(float4));
@@ -39,13 +39,16 @@ void SimpleGrid<fft_t>::generate_fourier_amplitudes(Cosmo& cosmo) {
     int blockSize = BLOCKSIZE;
     int numBlocks = (m_size + (blockSize - 1)) / blockSize;
 
-    launch_generate_real_random(m_d_grid, m_params.seed(), dist, numBlocks,
+    launch_generate_real_random(m_d_grid, m_params.seed(), m_dist, numBlocks,
                                 blockSize);
 
     fft.forward(m_d_grid);
 
-    launch_scale_amplitudes_by_power_spectrum(m_d_grid, cosmo.initial_pk(), m_params.rl(), dist, numBlocks, blockSize);
+    launch_scale_amplitudes_by_power_spectrum(m_d_grid, cosmo.initial_pk(), m_params.rl(), m_dist, numBlocks, blockSize);
 }
+
+template <class fft_t>
+MPIDist SimpleGrid<fft_t>::dist() const { return m_dist; };
 
 template class SimpleGrid<complexDoubleDevice>;
 template class SimpleGrid<complexFloatDevice>;
