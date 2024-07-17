@@ -1,11 +1,11 @@
+#include "allocators.hpp"
 #include "gpu.hpp"
 #include "initializer.hpp"
 #include "logging.hpp"
 #include "power_spectrum.hpp"
-#include "allocators.hpp"
-#include <vector>
 #include <curand.h>
 #include <curand_kernel.h>
+#include <vector>
 
 template <class T>
 __global__ void generate_real_random(T* __restrict grid, int seed,
@@ -93,21 +93,36 @@ __global__ void scale_amplitudes_by_power_spectrum(T* __restrict grid,
 }
 
 template <class T>
-void launch_scale_amplitudes_by_power_spectrum(T* grid, const PowerSpectrum& initial_pk,
+void launch_scale_amplitudes_by_power_spectrum(T* grid,
+                                               const PowerSpectrum& initial_pk,
                                                double rl, const MPIDist dist,
                                                int numBlocks, int blockSize) {
     const double* h_values = initial_pk.h_values().data();
-    double* d_values; gpu_allocator.alloc(&d_values,sizeof(double) * initial_pk.h_values().size());
-    gpuCall(gpuMemcpy(d_values,h_values,sizeof(double) * initial_pk.h_values().size(),gpuMemcpyHostToDevice));
 
+    double max_k = sqrt(pow(((((double)dist.ng())/2.0) * 2.0 * M_PI) / rl,3.0));
+    LOG_INFO("max k = %g",max_k);
+    if (max_k > initial_pk.k_max()){
+        LOG_ERROR("input ipk only goes to %g",initial_pk.k_max());
+        exit(1);
+    }
 
+    double* d_values;
+    gpu_allocator.alloc(&d_values,
+                        sizeof(double) * initial_pk.h_values().size());
+    gpuCall(gpuMemcpy(d_values, h_values,
+                      sizeof(double) * initial_pk.h_values().size(),
+                      gpuMemcpyHostToDevice));
+
+    gpuLaunch(scale_amplitudes_by_power_spectrum, numBlocks, blockSize, grid,
+              d_values, initial_pk.k_delta(), initial_pk.k_min(), rl, dist);
 
     gpu_allocator.free(d_values);
 }
 
 template void launch_scale_amplitudes_by_power_spectrum<complexDoubleDevice>(
-    complexDoubleDevice*, const PowerSpectrum& inital_pk, double, const MPIDist, int,
-    int);
+    complexDoubleDevice*, const PowerSpectrum& inital_pk, double, const MPIDist,
+    int, int);
+
 template void launch_scale_amplitudes_by_power_spectrum<complexFloatDevice>(
-    complexFloatDevice*, const PowerSpectrum& inital_pk, double, const MPIDist, int,
-    int);
+    complexFloatDevice*, const PowerSpectrum& inital_pk, double, const MPIDist,
+    int, int);

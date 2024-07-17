@@ -41,7 +41,10 @@ void SimpleGrid<fft_t>::generate_fourier_amplitudes(Cosmo& cosmo) {
 
     launch_generate_real_random(m_d_grid, m_params.seed(), dist, numBlocks,
                                 blockSize);
+
     fft.forward(m_d_grid);
+
+    launch_scale_amplitudes_by_power_spectrum(m_d_grid, cosmo.initial_pk(), m_params.rl(), dist, numBlocks, blockSize);
 }
 
 template class SimpleGrid<complexDoubleDevice>;
