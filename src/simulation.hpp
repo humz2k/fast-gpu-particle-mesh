@@ -125,6 +125,13 @@ class Grid {
      */
     virtual void generate_fourier_amplitudes(Cosmo& cosmo) = 0;
 
+    /**
+     * @brief Generates displacement initial conditions gradient.
+     *
+     * @param cosmo The cosmological parameters.
+     * @param ts The time stepper used in the simulation.
+     * @return Pointer to the generated displacement gradient.
+     */
     virtual const float3* generate_displacement_ic_grad(Cosmo& cosmo, Timestepper& ts) = 0;
 
     /**
@@ -141,7 +148,18 @@ class Grid {
      */
     virtual std::vector<double> bin(int nbins) const = 0;
 
+    /**
+     * @brief Returns the minimum k value.
+     *
+     * @return The minimum k value.
+     */
     virtual double k_min() const = 0;
+
+    /**
+     * @brief Returns the maximum k value.
+     *
+     * @return The maximum k value.
+     */
     virtual double k_max() const = 0;
 };
 

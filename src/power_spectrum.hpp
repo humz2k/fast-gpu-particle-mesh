@@ -24,12 +24,18 @@ class PowerSpectrum {
 
   public:
     /**
-     * @brief Constructs a PowerSpectrum object and loads data from a file.
+     * @brief Constructs a PowerSpectrum object from a stored binary file.
      *
      * @param file The filename from which to load the power spectrum data.
      */
     PowerSpectrum(const std::string& file);
 
+    /**
+     * @brief Constructs a PowerSpectrum object from a grid.
+     *
+     * @param grid The grid to construct from.
+     * @param nbins The number of bins in the resulting PowerSpectrum.
+     */
     PowerSpectrum(const Grid& grid, int nbins);
 
     /**
