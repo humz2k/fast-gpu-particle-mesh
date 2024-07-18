@@ -18,15 +18,7 @@ int main() {
     Cosmo cosmo(params);
     cosmo.initial_pk().to_csv("test.csv");
 
-    SimpleParticles particles(params,cosmo,ts);
-
-    //SimpleGrid<complexDoubleDevice> simple_grid(params, params.ng());
-    //Grid& grid = simple_grid;
-
-    //grid.generate_displacement_ic(cosmo, ts);
-
-    // PowerSpectrum pk(grid,10);
-    // pk.to_csv("test2.csv");
+    SimpleParticles particles(params, cosmo, ts);
 
     LOG_MINIMAL("done!");
     return 0;

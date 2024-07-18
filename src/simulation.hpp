@@ -8,7 +8,7 @@
 #include <cuda_runtime.h>
 #include <cufft.h>
 
-template<class T> class Particles;
+template <class T> class Particles;
 class Grid;
 template <class T> class FFT;
 
@@ -132,8 +132,8 @@ class Grid {
      * @param ts The time stepper used in the simulation.
      * @return Pointer to the generated displacement gradient.
      */
-    virtual void generate_displacement_ic(Cosmo& cosmo,
-                                                        Timestepper& ts, Particles<float3>& particles) = 0;
+    virtual void generate_displacement_ic(Cosmo& cosmo, Timestepper& ts,
+                                          Particles<float3>& particles) = 0;
 
     /**
      * @brief Returns the `MPIDist` of the grid.
@@ -174,8 +174,7 @@ class Grid {
  *
  *  * @tparam T The type of the elements of the particles (e.g. `float3`)
  */
-template<class T>
-class Particles {
+template <class T> class Particles {
   public:
     /**
      * @brief Constructs a Particles object with the given parameters.
