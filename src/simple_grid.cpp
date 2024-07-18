@@ -31,7 +31,7 @@ template <class fft_t> void SimpleGrid<fft_t>::solve_gradient() {}
 template <class fft_t> void SimpleGrid<fft_t>::solve() {}
 
 template <class fft_t>
-void SimpleGrid<fft_t>::CIC(const Particles& particles) {}
+void SimpleGrid<fft_t>::CIC(const Particles<float3>& particles) {}
 
 template <class fft_t>
 void SimpleGrid<fft_t>::generate_fourier_amplitudes(Cosmo& cosmo) {
@@ -51,9 +51,9 @@ void SimpleGrid<fft_t>::generate_fourier_amplitudes(Cosmo& cosmo) {
 }
 
 template <class fft_t>
-const float3*
-SimpleGrid<fft_t>::generate_displacement_ic_grad(Cosmo& cosmo,
-                                                 Timestepper& ts) {
+void
+SimpleGrid<fft_t>::generate_displacement_ic(Cosmo& cosmo,
+                                                 Timestepper& ts, Particles<float3>& particles) {
     LOG_INFO("generating displacement ic");
 
     int blockSize = BLOCKSIZE;
@@ -73,7 +73,6 @@ SimpleGrid<fft_t>::generate_displacement_ic_grad(Cosmo& cosmo,
     launch_combine_density_vectors(m_d_grad, m_d_x, m_d_y, m_d_z, m_dist,
                                    numBlocks, blockSize);
 
-    return m_d_grad;
 }
 
 template <class fft_t> MPIDist SimpleGrid<fft_t>::dist() const {

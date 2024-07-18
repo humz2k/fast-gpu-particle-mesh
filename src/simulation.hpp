@@ -8,7 +8,7 @@
 #include <cuda_runtime.h>
 #include <cufft.h>
 
-class Particles;
+template<class T> class Particles;
 class Grid;
 template <class T> class FFT;
 
@@ -115,7 +115,7 @@ class Grid {
      *
      * @param particles The particles to be assigned to the grid.
      */
-    virtual void CIC(const Particles& particles) = 0;
+    virtual void CIC(const Particles<float3>& particles) = 0;
 
     /**
      * @brief Generates Fourier amplitudes for the grid using cosmological
@@ -132,8 +132,8 @@ class Grid {
      * @param ts The time stepper used in the simulation.
      * @return Pointer to the generated displacement gradient.
      */
-    virtual const float3* generate_displacement_ic_grad(Cosmo& cosmo,
-                                                        Timestepper& ts) = 0;
+    virtual void generate_displacement_ic(Cosmo& cosmo,
+                                                        Timestepper& ts, Particles<float3>& particles) = 0;
 
     /**
      * @brief Returns the `MPIDist` of the grid.
@@ -171,7 +171,10 @@ class Grid {
  *
  * The Particles class provides an interface for particle-related operations,
  * such as updating positions and velocities based on grid data.
+ *
+ *  * @tparam T The type of the elements of the particles (e.g. `float3`)
  */
+template<class T>
 class Particles {
   public:
     /**
@@ -179,7 +182,7 @@ class Particles {
      *
      * @param params The simulation parameters.
      */
-    Particles(const Params& params){};
+    Particles(const Params& params, Cosmo& cosmo, Timestepper& ts){};
 
     /**
      * @brief Default constructor for Particles.

@@ -3,6 +3,7 @@
 #include "logging.hpp"
 #include "params.hpp"
 #include "simple_grid.hpp"
+#include "simple_particles.hpp"
 #include "simulation.hpp"
 #include "timestepper.hpp"
 
@@ -17,10 +18,12 @@ int main() {
     Cosmo cosmo(params);
     cosmo.initial_pk().to_csv("test.csv");
 
-    SimpleGrid<complexDoubleDevice> simple_grid(params, params.ng());
-    Grid& grid = simple_grid;
+    SimpleParticles particles(params,cosmo,ts);
 
-    grid.generate_displacement_ic_grad(cosmo, ts);
+    //SimpleGrid<complexDoubleDevice> simple_grid(params, params.ng());
+    //Grid& grid = simple_grid;
+
+    //grid.generate_displacement_ic(cosmo, ts);
 
     // PowerSpectrum pk(grid,10);
     // pk.to_csv("test2.csv");
