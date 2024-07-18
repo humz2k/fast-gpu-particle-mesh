@@ -28,6 +28,14 @@ int main() {
     PowerSpectrum ic_power(grid, 10);
     ic_power.to_csv("test2.csv");
 
+    particles.update_positions(ts,0.5f);
+    grid.CIC(particles);
+
+    //grid.forward();
+
+    //PowerSpectrum power2(grid, 10);
+    //power2.to_csv("test3.csv");
+
     LOG_MINIMAL("done!");
     return 0;
 }

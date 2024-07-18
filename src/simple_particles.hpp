@@ -14,7 +14,7 @@ class SimpleParticles : public Particles<float3> {
     SimpleParticles(const Params& params, Cosmo& cosmo, Timestepper& ts);
     ~SimpleParticles();
 
-    void update_positions();
+    void update_positions(Timestepper& ts, float frac);
     void update_velocities(const Grid& grid);
 
     float3* pos();

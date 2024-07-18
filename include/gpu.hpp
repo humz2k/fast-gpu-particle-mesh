@@ -34,6 +34,10 @@ __forceinline__ __host__ __device__ float3 operator+(float3 l, float3 r) {
     return make_float3(l.x + r.x, l.y + r.y, l.z + r.z);
 }
 
+__forceinline__ __host__ __device__ float3 operator+(float3 l, float r) {
+    return make_float3(l.x + r, l.y + r, l.z + r);
+}
+
 __forceinline__ __host__ __device__ float3 fmod(float3 l, float r) {
     return make_float3(fmod(l.x, r), fmod(l.y, r), fmod(l.z, r));
 }

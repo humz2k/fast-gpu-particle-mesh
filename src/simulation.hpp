@@ -199,7 +199,7 @@ template <class T> class Particles {
     /**
      * @brief Updates the positions of the particles.
      */
-    virtual void update_positions() = 0;
+    virtual void update_positions(Timestepper& ts, float frac) = 0;
 
     /**
      * @brief Updates the velocities of the particles based on the grid data.

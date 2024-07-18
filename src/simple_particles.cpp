@@ -2,6 +2,7 @@
 #include "allocators.hpp"
 #include "gpu.hpp"
 #include "simple_grid.hpp"
+#include "particle_actions.hpp"
 
 SimpleParticles::SimpleParticles(const Params& params, Cosmo& cosmo,
                                  Timestepper& ts)
@@ -21,7 +22,12 @@ SimpleParticles::~SimpleParticles() {
     gpu_allocator.free(m_vel);
 }
 
-void SimpleParticles::update_positions() {}
+void SimpleParticles::update_positions(Timestepper& ts, float frac) {
+    int blockSize = BLOCKSIZE;
+    int numBlocks = (nlocal() + (blockSize - 1))/blockSize;
+    float prefactor = ((ts.deltaT())/(ts.a() * ts.a() * ts.adot())) * frac;
+    launch_update_positions_kernel(m_pos,m_vel,prefactor,m_params.ng(),nlocal(),numBlocks,blockSize);
+}
 
 void SimpleParticles::update_velocities(const Grid& grid) {}
 

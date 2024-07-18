@@ -66,3 +66,14 @@ template void launch_CIC_kernel<complexDoubleDevice>(complexDoubleDevice*,
 template void launch_CIC_kernel<complexFloatDevice>(complexFloatDevice*,
                                                     const float3*, int, float,
                                                     MPIDist, int, int);
+
+__global__ void update_positions_kernel(float3* d_pos, const float3* d_vel, float prefactor, float ng, int nlocal){
+    int idx = threadIdx.x+blockDim.x*blockIdx.x;
+    if (idx >= (nlocal))return;
+
+    d_pos[idx] = fmod((d_pos[idx] + d_vel[idx] * prefactor) + ng,ng);
+}
+
+void launch_update_positions_kernel(float3* d_pos, const float3* d_vel, float prefactor, float ng, int nlocal, int numBlocks, int blockSize){
+    gpuLaunch(update_positions_kernel,numBlocks,blockSize,d_pos,d_vel,prefactor,ng,nlocal);
+}
