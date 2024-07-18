@@ -16,6 +16,13 @@ class SimpleParticles : public Particles<float3> {
 
     void update_positions();
     void update_velocities(const Grid& grid);
+
+    float3* pos();
+    const float3* pos() const;
+
+    float3* vel();
+    const float3* vel() const;
+
 };
 
 #endif

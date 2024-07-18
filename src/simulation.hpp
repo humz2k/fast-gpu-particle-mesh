@@ -204,6 +204,12 @@ template <class T> class Particles {
      * @param grid The grid data used to update particle velocities.
      */
     virtual void update_velocities(const Grid& grid) = 0;
+
+    virtual T* pos() = 0;
+    virtual const T* pos() const = 0;
+
+    virtual T* vel() = 0;
+    virtual const T* vel() const = 0;
 };
 
 #endif

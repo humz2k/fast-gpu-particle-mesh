@@ -24,3 +24,9 @@ SimpleParticles::~SimpleParticles() {
 void SimpleParticles::update_positions() {}
 
 void SimpleParticles::update_velocities(const Grid& grid) {}
+
+float3* SimpleParticles::pos(){return m_pos;}
+const float3* SimpleParticles::pos() const{return m_pos;}
+
+float3* SimpleParticles::vel(){return m_vel;}
+const float3* SimpleParticles::vel() const{return m_vel;}
