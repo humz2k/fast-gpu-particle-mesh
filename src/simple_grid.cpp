@@ -3,6 +3,7 @@
 #include "common.hpp"
 #include "initializer.hpp"
 #include "particle_actions.hpp"
+#include "solver.hpp"
 #include "pk_bins.hpp"
 
 template <class fft_t>
@@ -11,7 +12,7 @@ SimpleGrid<fft_t>::SimpleGrid(const Params& params, int ng)
     m_size = m_ng * m_ng * m_ng;
 
     gpu_allocator.alloc(&m_d_grad, m_size * sizeof(float3));
-    gpu_allocator.alloc(&m_d_greens, m_size * sizeof(float));
+    //gpu_allocator.alloc(&m_d_greens, m_size * sizeof(float));
     gpu_allocator.alloc(&m_d_grid, m_size * sizeof(fft_t));
     gpu_allocator.alloc(&m_d_x, m_size * sizeof(fft_t));
     gpu_allocator.alloc(&m_d_y, m_size * sizeof(fft_t));
@@ -20,14 +21,27 @@ SimpleGrid<fft_t>::SimpleGrid(const Params& params, int ng)
 
 template <class fft_t> SimpleGrid<fft_t>::~SimpleGrid() {
     gpu_allocator.free(m_d_grad);
-    gpu_allocator.free(m_d_greens);
+    //gpu_allocator.free(m_d_greens);
     gpu_allocator.free(m_d_grid);
     gpu_allocator.free(m_d_x);
     gpu_allocator.free(m_d_y);
     gpu_allocator.free(m_d_z);
 }
 
-template <class fft_t> void SimpleGrid<fft_t>::solve_gradient() {}
+template <class fft_t> void SimpleGrid<fft_t>::solve_gradient() {
+
+    int blockSize = BLOCKSIZE;
+    int numBlocks = (m_dist.local_grid_size() + (blockSize - 1)) / blockSize;
+
+    fft.forward(m_d_grid);
+    launch_kspace_solve_gradient(m_d_grid,m_d_x,m_d_y,m_d_z,m_dist,numBlocks,blockSize);
+
+    fft.backward(m_d_x);
+    fft.backward(m_d_y);
+    fft.backward(m_d_z);
+
+    launch_combine_vectors(m_d_grad,m_d_x,m_d_y,m_d_z,m_dist,numBlocks,blockSize);
+}
 
 template <class fft_t> void SimpleGrid<fft_t>::solve() {}
 
@@ -73,6 +87,7 @@ void SimpleGrid<fft_t>::generate_displacement_ic(Cosmo& cosmo, Timestepper& ts,
     generate_fourier_amplitudes(cosmo);
     float delta = cosmo.delta(ts.z());
     ts.reverse_half_step();
+    float fscal = ts.fscal();
     float dot_delta = cosmo.dot_delta(ts.z());
     ts.advance_half_step();
 
@@ -89,7 +104,7 @@ void SimpleGrid<fft_t>::generate_displacement_ic(Cosmo& cosmo, Timestepper& ts,
 
     launch_place_particles(particles.pos(), particles.vel(), m_d_grad, delta,
                            dot_delta, m_params.rl(), ts.a(), ts.deltaT(),
-                           ts.fscal(), m_params.ng(), m_dist, numBlocks,
+                           fscal, m_params.ng(), m_dist, numBlocks,
                            blockSize);
 }
 
@@ -113,6 +128,10 @@ template <class fft_t> void SimpleGrid<fft_t>::forward() {
 
 template <class fft_t> void SimpleGrid<fft_t>::backward() {
     fft.backward(m_d_grid);
+};
+
+template <class fft_t> const float3* SimpleGrid<fft_t>::grad() const {
+    return m_d_grad;
 };
 
 template <class fft_t>

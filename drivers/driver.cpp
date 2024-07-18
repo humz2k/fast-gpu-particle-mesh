@@ -6,6 +6,7 @@
 #include "simple_particles.hpp"
 #include "simulation.hpp"
 #include "timestepper.hpp"
+#include <string.h>
 
 int main() {
     gpuCall(gpuFree(0));
@@ -19,22 +20,35 @@ int main() {
     cosmo.initial_pk().to_csv("test.csv");
 
     SimpleParticles particles(params, cosmo, ts);
-    particles.dump("particles.csv");
+    //particles.dump("particles.csv");
     SimpleGrid<complexDoubleDevice> grid(params, params.ng());
     grid.CIC(particles);
     grid.forward();
-    // grid.generate_fourier_amplitudes(cosmo);
-
     PowerSpectrum ic_power(grid, 10);
     ic_power.to_csv("test2.csv");
 
-    particles.update_positions(ts,0.5f);
-    grid.CIC(particles);
+    for (int i = 0; i < 5; i++){
 
-    //grid.forward();
+        particles.update_positions(ts,0.5f);
+        grid.CIC(particles);
+        grid.solve_gradient();
 
-    //PowerSpectrum power2(grid, 10);
-    //power2.to_csv("test3.csv");
+        ts.advance_half_step();
+
+        particles.update_velocities(grid,ts,1.0f);
+
+        ts.advance_half_step();
+
+        particles.update_positions(ts,0.5f);
+
+        grid.CIC(particles);
+        grid.forward();
+        PowerSpectrum power(grid, 10);
+        power.to_csv("step" + std::to_string(i) + ".csv");
+
+    }
+
+    //particles.dump("particles1.csv");
 
     LOG_MINIMAL("done!");
     return 0;

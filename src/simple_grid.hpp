@@ -34,6 +34,7 @@ template <class fft_t> class SimpleGrid : public Grid {
     double k_max() const;
     void forward();
     void backward();
+    const float3* grad() const;
 };
 
 #endif

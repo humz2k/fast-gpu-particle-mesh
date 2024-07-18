@@ -165,6 +165,8 @@ class Grid {
 
     virtual void forward() = 0;
     virtual void backward() = 0;
+
+    virtual const float3* grad() const = 0;
 };
 
 /**
@@ -206,7 +208,7 @@ template <class T> class Particles {
      *
      * @param grid The grid data used to update particle velocities.
      */
-    virtual void update_velocities(const Grid& grid) = 0;
+    virtual void update_velocities(const Grid& grid, Timestepper& ts, float frac) = 0;
 
     virtual T* pos() = 0;
     virtual const T* pos() const = 0;

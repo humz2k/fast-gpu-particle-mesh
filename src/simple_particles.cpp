@@ -29,7 +29,13 @@ void SimpleParticles::update_positions(Timestepper& ts, float frac) {
     launch_update_positions_kernel(m_pos,m_vel,prefactor,m_params.ng(),nlocal(),numBlocks,blockSize);
 }
 
-void SimpleParticles::update_velocities(const Grid& grid) {}
+void SimpleParticles::update_velocities(const Grid& grid, Timestepper& ts, float frac) {
+    int blockSize = BLOCKSIZE;
+    int numBlocks = (nlocal() + (blockSize - 1))/blockSize;
+    float deltaT = ts.deltaT() * frac;
+    LOG_INFO("fscal = %g",ts.fscal());
+    launch_update_velocities_kernel(m_vel,m_pos,grid.grad(),deltaT,ts.fscal(),nlocal(),grid.dist(),numBlocks,blockSize);
+}
 
 float3* SimpleParticles::pos() { return m_pos; }
 const float3* SimpleParticles::pos() const { return m_pos; }

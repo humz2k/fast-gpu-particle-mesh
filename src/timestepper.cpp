@@ -8,7 +8,7 @@ Timestepper::Timestepper(const Params& _params)
     m_deltaT =
         (((1.0 / (m_params.z_fin() + 1.0)) - (1.0 / (m_params.z_ini() + 1.0))) /
          (double)m_params.nsteps());
-    LOG_INFO("a = %g, z = %g", a(), z());
+    LOG_INFO("a = %g, z = %g, deltaT = %g", a(), z(), m_deltaT);
 }
 
 double Timestepper::omega_nu_massive() const {
@@ -34,12 +34,14 @@ double Timestepper::adot() const {
 }
 
 double Timestepper::fscal() const {
-    float dtdy = m_a / (m_a * adot());
+    float dtdy = a() / (a() * adot());
     double phiscal =
         1.5 *
         m_params
             .omega_cb(); // Poisson equation is grad^2 phi = 3/2 omega_m (rho-1)
-    return phiscal * dtdy * (1.0 / m_a);
+    float out = phiscal * dtdy * (1.0 / m_a);
+    LOG_INFO("a = %g, adot = %g, dtdy = %g, phiscal = %g,fscal = %g",a(),adot(),dtdy,phiscal,out);
+    return out;
 }
 
 double Timestepper::deltaT() const { return m_deltaT; }
