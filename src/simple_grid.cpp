@@ -2,8 +2,8 @@
 #include "allocators.hpp"
 #include "common.hpp"
 #include "initializer.hpp"
-#include "pk_bins.hpp"
 #include "particle_actions.hpp"
+#include "pk_bins.hpp"
 
 template <class fft_t>
 SimpleGrid<fft_t>::SimpleGrid(const Params& params, int ng)
@@ -37,13 +37,13 @@ void SimpleGrid<fft_t>::CIC(const Particles<float3>& particles) {
     int blockSize = BLOCKSIZE;
     int numBlocks = (n_particles + (blockSize - 1)) / blockSize;
 
-    float gpscale = ((float)m_params.ng())/((float)m_params.np());
+    float gpscale = ((float)m_params.ng()) / ((float)m_params.np());
     float mass = gpscale * gpscale * gpscale;
 
-    launch_CIC_kernel(m_d_grid,particles.pos(),n_particles,mass,m_dist,numBlocks,blockSize);
+    launch_CIC_kernel(m_d_grid, particles.pos(), n_particles, mass, m_dist,
+                      numBlocks, blockSize);
 
     fft.forward(m_d_grid);
-
 }
 
 template <class fft_t>
@@ -77,9 +77,9 @@ void SimpleGrid<fft_t>::generate_displacement_ic(Cosmo& cosmo, Timestepper& ts,
     float dot_delta = cosmo.dot_delta(ts.z());
     ts.advance_half_step();
 
-    launch_transform_density_field(m_d_grid, m_d_x, m_d_y, m_d_z,
-                                   delta, m_params.rl(), ts.a(),
-                                   m_dist, numBlocks, blockSize);
+    launch_transform_density_field(m_d_grid, m_d_x, m_d_y, m_d_z, delta,
+                                   m_params.rl(), ts.a(), m_dist, numBlocks,
+                                   blockSize);
 
     fft.backward(m_d_x);
     fft.backward(m_d_y);
@@ -88,10 +88,10 @@ void SimpleGrid<fft_t>::generate_displacement_ic(Cosmo& cosmo, Timestepper& ts,
     launch_combine_density_vectors(m_d_grad, m_d_x, m_d_y, m_d_z, m_dist,
                                    numBlocks, blockSize);
 
-    launch_place_particles(particles.pos(), particles.vel(), m_d_grad,
-                           delta, dot_delta,
-                           m_params.rl(), ts.a(), ts.deltaT(), ts.fscal(),
-                           m_params.ng(), m_dist, numBlocks, blockSize);
+    launch_place_particles(particles.pos(), particles.vel(), m_d_grad, delta,
+                           dot_delta, m_params.rl(), ts.a(), ts.deltaT(),
+                           ts.fscal(), m_params.ng(), m_dist, numBlocks,
+                           blockSize);
 }
 
 template <class fft_t> MPIDist SimpleGrid<fft_t>::dist() const {

@@ -20,11 +20,11 @@ int main() {
 
     SimpleParticles particles(params, cosmo, ts);
     particles.dump("particles.csv");
-    SimpleGrid<complexDoubleDevice> grid(params,params.ng());
+    SimpleGrid<complexDoubleDevice> grid(params, params.ng());
     grid.CIC(particles);
-    //grid.generate_fourier_amplitudes(cosmo);
+    // grid.generate_fourier_amplitudes(cosmo);
 
-    PowerSpectrum ic_power(grid,10);
+    PowerSpectrum ic_power(grid, 10);
     ic_power.to_csv("test2.csv");
 
     LOG_MINIMAL("done!");

@@ -44,13 +44,13 @@ static double calc_dot_delta(double a, double OmM, double OmL, double h) {
 
 double Cosmo::delta(double z) const {
     double OmM = m_params.omega_matter();
-    double OmL = 1.0 - (OmM);// + m_params.omega_nu());
+    double OmL = 1.0 - (OmM);
     return calc_delta(z2a(z), OmM, OmL);
 }
 
 double Cosmo::dot_delta(double z) const {
     double OmM = m_params.omega_matter();
-    double OmL = 1.0 - (OmM);// + m_params.omega_nu());
+    double OmL = 1.0 - (OmM);
     return calc_dot_delta(z2a(z), OmM, OmL, 0.0001);
 }
 
