@@ -23,6 +23,8 @@ class SimpleParticles : public Particles<float3> {
     float3* vel();
     const float3* vel() const;
 
+    void dump(std::string filename) const;
+
 };
 
 #endif

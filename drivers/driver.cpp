@@ -19,7 +19,8 @@ int main() {
     cosmo.initial_pk().to_csv("test.csv");
 
     SimpleParticles particles(params, cosmo, ts);
-    SimpleGrid<complexDoubleDevice> grid(params,params.ng());
+    particles.dump("particles.csv");
+    //SimpleGrid<complexDoubleDevice> grid(params,params.ng());
 
     LOG_MINIMAL("done!");
     return 0;

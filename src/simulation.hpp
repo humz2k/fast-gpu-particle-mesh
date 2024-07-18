@@ -210,6 +210,8 @@ template <class T> class Particles {
 
     virtual T* vel() = 0;
     virtual const T* vel() const = 0;
+
+    virtual void dump(std::string filename) const = 0;
 };
 
 #endif

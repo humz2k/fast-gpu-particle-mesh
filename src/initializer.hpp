@@ -101,4 +101,6 @@ template <class T>
 void launch_combine_density_vectors(float3* d_grad, T* d_x, T* d_y, T* d_z,
                                     MPIDist dist, int numBlocks, int blockSize);
 
+void launch_place_particles(float3* d_pos, float3* d_vel, const float3* d_grad, double delta, double dot_delta, double rl, double a, double deltaT, double fscal, int ng, MPIDist dist, int numBlocks, int blockSize);
+
 #endif

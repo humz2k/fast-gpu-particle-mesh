@@ -202,3 +202,25 @@ template void launch_combine_density_vectors<complexDoubleDevice>(
 template void launch_combine_density_vectors<complexFloatDevice>(
     float3*, complexFloatDevice*, complexFloatDevice*, complexFloatDevice*,
     MPIDist, int, int);
+
+__global__ void place_particles(float3* d_pos, float3* d_vel, const float3* d_grad, double delta, double dot_delta, double rl, double a, double deltaT, double fscal, int ng, MPIDist dist){
+    int idx = blockDim.x * blockIdx.x + threadIdx.x;
+    if (idx >= dist.local_grid_size())return;
+
+    int3 local_coords = dist.local_coords(idx);
+
+    float3 S = d_grad[idx];
+
+    float3 pos = fmod((make_float3(local_coords.x,local_coords.y,local_coords.z) + (S * delta)) * (((float)ng)/(float)dist.ng()),(float)ng);
+
+    float vel_a = a - (deltaT * 0.5f);
+    float vel_mul = (vel_a * vel_a * dot_delta * fscal);
+    float3 vel = S * vel_mul;
+
+    d_pos[idx] = pos;
+    d_vel[idx] = vel;
+}
+
+void launch_place_particles(float3* d_pos, float3* d_vel, const float3* d_grad, double delta, double dot_delta, double rl, double a, double deltaT, double fscal, int ng, MPIDist dist, int numBlocks, int blockSize){
+    gpuLaunch(place_particles,numBlocks,blockSize,d_pos,d_vel,d_grad,delta,dot_delta,rl,a,deltaT,fscal,ng,dist);
+}
