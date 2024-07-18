@@ -224,7 +224,7 @@ __global__ void place_particles(float3* d_pos, float3* d_vel,
 
     float vel_a = a - (deltaT * 0.5f);
     float vel_mul = (vel_a * vel_a * dot_delta * fscal);
-    float3 vel = S * vel_mul;
+    float3 vel = S * vel_mul * (((float)ng) / (float)dist.ng());
 
     d_pos[idx] = pos;
     d_vel[idx] = vel;
