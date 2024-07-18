@@ -3,6 +3,7 @@
 #include "common.hpp"
 #include "initializer.hpp"
 #include "pk_bins.hpp"
+#include "particle_actions.hpp"
 
 template <class fft_t>
 SimpleGrid<fft_t>::SimpleGrid(const Params& params, int ng)
@@ -31,7 +32,19 @@ template <class fft_t> void SimpleGrid<fft_t>::solve_gradient() {}
 template <class fft_t> void SimpleGrid<fft_t>::solve() {}
 
 template <class fft_t>
-void SimpleGrid<fft_t>::CIC(const Particles<float3>& particles) {}
+void SimpleGrid<fft_t>::CIC(const Particles<float3>& particles) {
+    int n_particles = particles.nlocal();
+    int blockSize = BLOCKSIZE;
+    int numBlocks = (n_particles + (blockSize - 1)) / blockSize;
+
+    float gpscale = ((float)m_params.ng())/((float)m_params.np());
+    float mass = gpscale * gpscale * gpscale;
+
+    launch_CIC_kernel(m_d_grid,particles.pos(),n_particles,mass,m_dist,numBlocks,blockSize);
+
+    fft.forward(m_d_grid);
+
+}
 
 template <class fft_t>
 void SimpleGrid<fft_t>::generate_fourier_amplitudes(Cosmo& cosmo) {
@@ -59,10 +72,13 @@ void SimpleGrid<fft_t>::generate_displacement_ic(Cosmo& cosmo, Timestepper& ts,
     int numBlocks = (m_size + (blockSize - 1)) / blockSize;
 
     generate_fourier_amplitudes(cosmo);
+    float delta = cosmo.delta(ts.z());
     ts.reverse_half_step();
+    float dot_delta = cosmo.dot_delta(ts.z());
+    ts.advance_half_step();
 
     launch_transform_density_field(m_d_grid, m_d_x, m_d_y, m_d_z,
-                                   cosmo.delta(ts.z()), m_params.rl(), ts.a(),
+                                   delta, m_params.rl(), ts.a(),
                                    m_dist, numBlocks, blockSize);
 
     fft.backward(m_d_x);
@@ -73,7 +89,7 @@ void SimpleGrid<fft_t>::generate_displacement_ic(Cosmo& cosmo, Timestepper& ts,
                                    numBlocks, blockSize);
 
     launch_place_particles(particles.pos(), particles.vel(), m_d_grad,
-                           cosmo.delta(ts.z()), cosmo.dot_delta(ts.z()),
+                           delta, dot_delta,
                            m_params.rl(), ts.a(), ts.deltaT(), ts.fscal(),
                            m_params.ng(), m_dist, numBlocks, blockSize);
 }

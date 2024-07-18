@@ -212,6 +212,8 @@ template <class T> class Particles {
     virtual const T* vel() const = 0;
 
     virtual void dump(std::string filename) const = 0;
+
+    virtual int nlocal() const = 0;
 };
 
 #endif

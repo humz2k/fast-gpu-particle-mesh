@@ -24,6 +24,8 @@ class SimpleParticles : public Particles<float3> {
     const float3* vel() const;
 
     void dump(std::string filename) const;
+
+    int nlocal() const;
 };
 
 #endif

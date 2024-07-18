@@ -134,7 +134,7 @@ __global__ void transform_density_field(const T* d_grid, T* d_x, T* d_y, T* d_z,
     if (idx >= dist.local_grid_size())
         return;
 
-    float3 kmodes = dist.kmodes(idx, (2.0 * M_PI) / rl);
+    float3 kmodes = dist.kmodes(idx, (2.0 * M_PI) / dist.ng());
 
     double k2 = len2(kmodes);
     double k2mul = (k2 == 0.0) ? 0.0 : (1.0 / k2);

@@ -64,3 +64,7 @@ void SimpleParticles::dump(std::string filename) const {
     cpu_allocator.free(h_pos);
     cpu_allocator.free(h_vel);
 }
+
+int SimpleParticles::nlocal() const{
+    return m_params.np() * m_params.np() * m_params.np();
+}

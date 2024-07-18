@@ -77,7 +77,6 @@ class GPUAllocator {
 
         LOG_INFO("GPU Allocations (total = %lu bytes, current = %lu bytes)",
                  total_size, current_size);
-        events.gpu_allocation.log(current_size);
     }
 
     /**
