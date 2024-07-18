@@ -72,7 +72,10 @@ void SimpleGrid<fft_t>::generate_displacement_ic(Cosmo& cosmo, Timestepper& ts,
     launch_combine_density_vectors(m_d_grad, m_d_x, m_d_y, m_d_z, m_dist,
                                    numBlocks, blockSize);
 
-    launch_place_particles(particles.pos(),particles.vel(),m_d_grad,cosmo.delta(ts.z()),cosmo.dot_delta(ts.z()),m_params.rl(),ts.a(),ts.deltaT(),ts.fscal(),m_params.ng(),m_dist,numBlocks,blockSize);
+    launch_place_particles(particles.pos(), particles.vel(), m_d_grad,
+                           cosmo.delta(ts.z()), cosmo.dot_delta(ts.z()),
+                           m_params.rl(), ts.a(), ts.deltaT(), ts.fscal(),
+                           m_params.ng(), m_dist, numBlocks, blockSize);
 }
 
 template <class fft_t> MPIDist SimpleGrid<fft_t>::dist() const {

@@ -20,7 +20,7 @@ int main() {
 
     SimpleParticles particles(params, cosmo, ts);
     particles.dump("particles.csv");
-    //SimpleGrid<complexDoubleDevice> grid(params,params.ng());
+    // SimpleGrid<complexDoubleDevice> grid(params,params.ng());
 
     LOG_MINIMAL("done!");
     return 0;

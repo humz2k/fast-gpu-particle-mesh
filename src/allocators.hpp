@@ -1,9 +1,9 @@
 #ifndef _FGPM_ALLOCATORS_HPP_
 #define _FGPM_ALLOCATORS_HPP_
 
+#include "event_logger.hpp"
 #include "gpu.hpp"
 #include "logging.hpp"
-#include "event_logger.hpp"
 #include <cassert>
 #include <cstdio>
 #include <iostream>
