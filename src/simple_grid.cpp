@@ -43,7 +43,6 @@ void SimpleGrid<fft_t>::CIC(const Particles<float3>& particles) {
     launch_CIC_kernel(m_d_grid, particles.pos(), n_particles, mass, m_dist,
                       numBlocks, blockSize);
 
-    fft.forward(m_d_grid);
 }
 
 template <class fft_t>
@@ -106,6 +105,14 @@ template <class fft_t> double SimpleGrid<fft_t>::k_max() const {
     double d = (2.0 * M_PI) / m_params.rl();
     double ng = m_dist.ng();
     return sqrt(3.0 * (ng / 2.0) * (ng / 2.0) * d * d);
+};
+
+template <class fft_t> void SimpleGrid<fft_t>::forward() {
+    fft.forward(m_d_grid);
+};
+
+template <class fft_t> void SimpleGrid<fft_t>::backward() {
+    fft.backward(m_d_grid);
 };
 
 template <class fft_t>

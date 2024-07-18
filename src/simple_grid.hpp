@@ -32,6 +32,8 @@ template <class fft_t> class SimpleGrid : public Grid {
     std::vector<double> bin(int nbins) const;
     double k_min() const;
     double k_max() const;
+    void forward();
+    void backward();
 };
 
 #endif

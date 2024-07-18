@@ -22,6 +22,7 @@ int main() {
     particles.dump("particles.csv");
     SimpleGrid<complexDoubleDevice> grid(params, params.ng());
     grid.CIC(particles);
+    grid.forward();
     // grid.generate_fourier_amplitudes(cosmo);
 
     PowerSpectrum ic_power(grid, 10);

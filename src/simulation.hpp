@@ -162,6 +162,9 @@ class Grid {
      * @return The maximum k value.
      */
     virtual double k_max() const = 0;
+
+    virtual void forward() = 0;
+    virtual void backward() = 0;
 };
 
 /**
