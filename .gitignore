@@ -36,4 +36,5 @@ build
 
 test.csv
 test2.csv
+*.csv
 test.ipynb

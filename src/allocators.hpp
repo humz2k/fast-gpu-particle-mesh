@@ -3,6 +3,7 @@
 
 #include "gpu.hpp"
 #include "logging.hpp"
+#include "event_logger.hpp"
 #include <cassert>
 #include <cstdio>
 #include <iostream>
@@ -76,6 +77,7 @@ class GPUAllocator {
 
         LOG_INFO("GPU Allocations (total = %lu bytes, current = %lu bytes)",
                  total_size, current_size);
+        events.gpu_allocation.log(current_size);
     }
 
     /**
@@ -89,6 +91,7 @@ class GPUAllocator {
      * @return 0 on success.
      */
     template <class T> inline int alloc(T** ptr, size_t sz) {
+        events.gpu_allocation.log(current_size);
         gpuCall(gpuMalloc(ptr, sz));
         LOG_DEBUG("allocated %lu bytes on GPU for %p", sz, (void*)*ptr);
         gpu_allocations[*ptr] = sz;
@@ -100,6 +103,8 @@ class GPUAllocator {
 
         LOG_DEBUG("GPU Allocations (total = %lu bytes, current = %lu bytes)",
                   total_size, current_size);
+
+        events.gpu_allocation.log(current_size);
 
         return 0;
     }
@@ -114,6 +119,8 @@ class GPUAllocator {
      * @return 0 on success.
      */
     template <class T> inline int free(T* ptr) {
+        events.gpu_allocation.log(current_size);
+
         size_t sz = gpu_allocations[ptr];
 
         LOG_DEBUG("freeing GPU pointer %p (previous size %lu bytes)",
@@ -127,6 +134,9 @@ class GPUAllocator {
 
         LOG_DEBUG("GPU Allocations (total = %lu bytes, current = %lu bytes)",
                   total_size, current_size);
+
+        events.gpu_allocation.log(current_size);
+
         return 0;
     }
 };

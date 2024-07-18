@@ -49,8 +49,6 @@ const std::vector<double>& PowerSpectrum::h_values() const {
 void PowerSpectrum::to_csv(std::string filename) const {
     std::ofstream output(filename);
 
-    std::cout << "k_min = " << m_k_min << ", k_max = " << m_k_max << std::endl;
-
     output << "k,v\n";
 
     for (int i = 0; i < m_k_bins; i++) {
