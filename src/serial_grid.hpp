@@ -25,6 +25,9 @@ template <class fft_t> class SerialGrid : public Grid {
     SerialFFT<fft_t> fft;   ///< FFT object for performing Fourier transforms.
     MPIDist m_dist; ///< MPI distribution object for handling grid distribution.
 
+  protected:
+    fft_t* grid();
+
   public:
     /**
      * @brief Constructs a SerialGrid object with the given parameters and grid
@@ -43,12 +46,12 @@ template <class fft_t> class SerialGrid : public Grid {
     /**
      * @brief Solves for rho on the grid.
      */
-    virtual void solve();
+    virtual void solve() = 0;
 
     /**
      * @brief Solves for grad rho on the grid.
      */
-    virtual void solve_gradient();
+    virtual void solve_gradient() = 0;
 
     /**
      * @brief Assigns particle positions to the grid using Cloud-In-Cell (CIC)
@@ -75,7 +78,7 @@ template <class fft_t> class SerialGrid : public Grid {
      * to be generated.
      */
     virtual void generate_displacement_ic(Cosmo& cosmo, Timestepper& ts,
-                                          Particles<float3>& particles);
+                                          Particles<float3>& particles) = 0;
 
     /**
      * @brief Returns the MPI distribution of the grid.
@@ -83,6 +86,20 @@ template <class fft_t> class SerialGrid : public Grid {
      * @return The MPI distribution.
      */
     MPIDist dist() const;
+
+    /**
+     * @brief Returns the size of the grid.
+     *
+     * @return The size of the grid.
+     */
+    size_t size() const;
+
+    /**
+     * @brief Returns the params object of the grid.
+     *
+     * @return The params object.
+     */
+    const Params& params() const;
 
     /**
      * @brief Bins rho.
@@ -117,11 +134,28 @@ template <class fft_t> class SerialGrid : public Grid {
     void backward();
 
     /**
+     * @brief Performs a forward FFT in place.
+     */
+    void forward(fft_t* ptr);
+
+    /**
+     * @brief Performs a backward FFT in place.
+     */
+    void backward(fft_t* ptr);
+
+    /**
      * @brief Returns the gradient of the grid.
      *
      * @return Pointer to the gradient of the grid.
      */
     const float3* grad() const;
+
+    /**
+     * @brief Returns the gradient of the grid.
+     *
+     * @return Pointer to the gradient of the grid.
+     */
+    float3* grad();
 };
 
 #endif

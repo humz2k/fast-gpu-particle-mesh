@@ -19,7 +19,7 @@ template <class fft_t> SerialGrid<fft_t>::~SerialGrid() {
     gpu_allocator.free(m_d_grad);
     gpu_allocator.free(m_d_grid);
 }
-
+/*
 template <class fft_t> void SerialGrid<fft_t>::solve_gradient() {
 
     int blockSize = BLOCKSIZE;
@@ -51,6 +51,8 @@ template <class fft_t> void SerialGrid<fft_t>::solve_gradient() {
 
 template <class fft_t> void SerialGrid<fft_t>::solve() {}
 
+*/
+
 template <class fft_t>
 void SerialGrid<fft_t>::CIC(const Particles<float3>& particles) {
     int n_particles = particles.nlocal();
@@ -80,7 +82,7 @@ void SerialGrid<fft_t>::generate_fourier_amplitudes(Cosmo& cosmo) {
                                               m_params.rl(), m_dist, numBlocks,
                                               blockSize);
 }
-
+/*
 template <class fft_t>
 void SerialGrid<fft_t>::generate_displacement_ic(Cosmo& cosmo, Timestepper& ts,
                                                  Particles<float3>& particles) {
@@ -122,6 +124,7 @@ void SerialGrid<fft_t>::generate_displacement_ic(Cosmo& cosmo, Timestepper& ts,
                            dot_delta, m_params.rl(), ts.a(), ts.deltaT(), fscal,
                            m_params.ng(), m_dist, numBlocks, blockSize);
 }
+*/
 
 template <class fft_t> MPIDist SerialGrid<fft_t>::dist() const {
     return m_dist;
@@ -145,8 +148,33 @@ template <class fft_t> void SerialGrid<fft_t>::backward() {
     fft.backward(m_d_grid);
 };
 
+template <class fft_t> void SerialGrid<fft_t>::forward(fft_t* ptr) {
+    fft.forward(ptr);
+};
+
+template <class fft_t> void SerialGrid<fft_t>::backward(fft_t* ptr) {
+    fft.backward(ptr);
+};
+
+
 template <class fft_t> const float3* SerialGrid<fft_t>::grad() const {
     return m_d_grad;
+};
+
+template <class fft_t> float3* SerialGrid<fft_t>::grad() {
+    return m_d_grad;
+};
+
+template <class fft_t> size_t SerialGrid<fft_t>::size() const {
+    return m_size;
+};
+
+template <class fft_t> const Params& SerialGrid<fft_t>::params() const {
+    return m_params;
+};
+
+template <class fft_t> fft_t* SerialGrid<fft_t>::grid() {
+    return m_d_grid;
 };
 
 template <class fft_t>

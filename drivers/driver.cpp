@@ -3,7 +3,7 @@
 #include "event_logger.hpp"
 #include "logging.hpp"
 #include "params.hpp"
-#include "serial_grid.hpp"
+#include "simple_grid.hpp"
 #include "simple_particles.hpp"
 #include "simulation.hpp"
 #include "timestepper.hpp"
@@ -28,7 +28,7 @@ int main() {
 
     events.timers["dinit"].end();
 
-    SerialGrid<complexDoubleDevice> grid(params, params.ng());
+    SimpleGrid<complexDoubleDevice> grid(params, params.ng());
     grid.CIC(particles);
     grid.forward();
     PowerSpectrum ic_power(grid, params.pk_n_bins());

@@ -2,7 +2,7 @@
 #include "allocators.hpp"
 #include "gpu.hpp"
 #include "particle_actions.hpp"
-#include "serial_grid.hpp"
+#include "simple_grid.hpp"
 
 SimpleParticles::SimpleParticles(const Params& params, Cosmo& cosmo,
                                  Timestepper& ts)
@@ -12,7 +12,7 @@ SimpleParticles::SimpleParticles(const Params& params, Cosmo& cosmo,
     gpu_allocator.alloc(&m_vel, sizeof(float3) * m_params.np() * m_params.np() *
                                     m_params.np());
 
-    SerialGrid<complexDoubleDevice> ic_grid(m_params, m_params.np());
+    SimpleGrid<complexDoubleDevice> ic_grid(m_params, m_params.np());
 
     ic_grid.generate_displacement_ic(cosmo, ts, *this);
 }
