@@ -191,8 +191,32 @@ __forceinline__ __host__ __device__ double2 operator*(double2 l, double r) {
     return make_double2(l.x * r, l.y * r);
 }
 
-__forceinline__ __host__ __device__ float2 operator*(float2 l, double r) {
+__forceinline__ __host__ __device__ float2 operator*(float2 l, float r) {
     return make_float2(l.x * r, l.y * r);
+}
+
+__forceinline__ __host__ __device__ double2 operator*(double l, double2 r) {
+    return make_double2(l * r.x, l * r.y);
+}
+
+__forceinline__ __host__ __device__ float2 operator*(float l, float2 r) {
+    return make_float2(l * r.x, l * r.y);
+}
+
+__forceinline__ __device__ float2 swap(float2 v) {
+    return make_float2(v.y, v.x);
+}
+
+__forceinline__ __device__ double2 swap(double2 v) {
+    return make_double2(v.y, v.x);
+}
+
+__forceinline__ __device__ float2 flip_phase(float2 v) {
+    return make_float2(-v.y, v.x);
+}
+
+__forceinline__ __device__ double2 flip_phase(double2 v) {
+    return make_double2(-v.y, v.x);
 }
 
 #endif

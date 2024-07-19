@@ -75,6 +75,21 @@ class MPIDist {
     }
 
     /**
+     * @brief Checks if the local index is the global origin.
+     *
+     * This method converts a linear local index to 3D global coordinates and
+     * then checks if it is the global origin.
+     *
+     * @param local_idx The local index.
+     * @return If the index is the global origin.
+     */
+    __forceinline__ __host__ __device__ bool
+    is_global_origin(int local_idx) const {
+        int3 global = global_coords(local_idx);
+        return (global.x == 0) && (global.y == 0) && (global.z == 0);
+    }
+
+    /**
      * @brief Calculates the global index from a local index.
      *
      * This method converts a linear local index to a linear global index.

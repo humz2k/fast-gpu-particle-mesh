@@ -4,19 +4,10 @@
 #include "solver.hpp"
 
 __forceinline__ __device__ float calc_greens(int idx, MPIDist dist) {
-    int3 global_coords = dist.global_coords(idx);
-    if ((global_coords.x == 0) && (global_coords.y == 0) &&
-        (global_coords.z == 0))
+    if (dist.is_global_origin(idx))
         return 0.0;
-
     float ng = dist.ng();
-
-    float d = (2.0f * M_PI) / ng;
-    float3 idx3d =
-        make_float3(global_coords.x, global_coords.y, global_coords.z);
-
-    float3 c = cos(idx3d * d);
-
+    float3 c = cos(to_float3(dist.global_coords(idx)) * ((2.0f * M_PI) / ng));
     return (0.5f / (ng * ng * ng)) / (c.x + c.y + c.z - 3.0f);
 }
 
@@ -34,22 +25,11 @@ __global__ void kspace_solve_gradient(const T* grid, T* d_x, T* d_y, T* d_z,
 
     float3 c = sin(dist.kmodes(idx, d)) * greens;
 
-    T rho = grid[idx];
+    T i_rho = flip_phase(grid[idx]);
 
-    T out_x;
-    out_x.x = -c.x * rho.y;
-    out_x.y = c.x * rho.x;
-
-    d_x[idx] = out_x;
-    T out_y;
-    out_y.x = -c.y * rho.y;
-    out_y.y = c.y * rho.x;
-    d_y[idx] = out_y;
-
-    T out_z;
-    out_z.x = -c.z * rho.y;
-    out_z.y = c.z * rho.x;
-    d_z[idx] = out_z;
+    d_x[idx] = c.x * i_rho;
+    d_y[idx] = c.y * i_rho;
+    d_z[idx] = c.z * i_rho;
 }
 
 template <class T>

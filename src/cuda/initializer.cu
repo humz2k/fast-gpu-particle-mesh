@@ -143,27 +143,13 @@ __global__ void transform_density_field(const T* __restrict d_grid,
     float3 kmodes = dist.kmodes(idx, (2.0 * M_PI) / dist.ng());
 
     double k2 = len2(kmodes);
-    double k2mul = (k2 == 0.0) ? 0.0 : (1.0 / k2);
-    double mul = (1.0 / delta) * k2mul;
 
-    T current = d_grid[idx] * mul;
-    T sx = current * kmodes.x;
-    T sy = current * kmodes.y;
-    T sz = current * kmodes.z;
+    T current =
+        d_grid[idx] * ((1.0 / delta) * ((k2 == 0.0) ? 0.0 : (1.0 / k2)));
 
-    T out_x;
-    out_x.x = sx.y;
-    out_x.y = -sx.x;
-    T out_y;
-    out_y.x = sy.y;
-    out_y.y = -sy.x;
-    T out_z;
-    out_z.x = sz.y;
-    out_z.y = -sz.x;
-
-    d_x[idx] = out_x;
-    d_y[idx] = out_y;
-    d_z[idx] = out_z;
+    d_x[idx] = flip_phase(current * kmodes.x) * -1.0;
+    d_y[idx] = flip_phase(current * kmodes.y) * -1.0;
+    d_z[idx] = flip_phase(current * kmodes.z) * -1.0;
 }
 
 template <class T>
@@ -211,6 +197,7 @@ void launch_combine_density_vectors(float3* d_grad, const T* d_x, const T* d_y,
 template void launch_combine_density_vectors<complexDoubleDevice>(
     float3*, const complexDoubleDevice*, const complexDoubleDevice*,
     const complexDoubleDevice*, MPIDist, int, int);
+
 template void launch_combine_density_vectors<complexFloatDevice>(
     float3*, const complexFloatDevice*, const complexFloatDevice*,
     const complexFloatDevice*, MPIDist, int, int);
