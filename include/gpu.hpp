@@ -7,85 +7,13 @@
 #include "common.hpp"
 #include "logging.hpp"
 
+#include "operators.hpp"
+
 typedef cufftDoubleComplex complexDoubleDevice;
 typedef cufftComplex complexFloatDevice;
 
-__forceinline__ __host__ __device__ int3 operator+(int3 l, int3 r) {
-    return make_int3(l.x + r.x, l.y + r.y, l.z + r.z);
-}
-
-__forceinline__ __host__ __device__ int3 operator-(int3 l, int3 r) {
-    return make_int3(l.x - r.x, l.y - r.y, l.z - r.z);
-}
-
-__forceinline__ __host__ __device__ int3 operator*(int3 l, int3 r) {
-    return make_int3(l.x * r.x, l.y * r.y, l.z * r.z);
-}
-
-__forceinline__ __host__ __device__ int3 operator/(int3 l, int3 r) {
-    return make_int3(l.x / r.x, l.y / r.y, l.z / r.z);
-}
-
-__forceinline__ __host__ __device__ float3 operator*(float3 l, float r) {
-    return make_float3(l.x * r, l.y * r, l.z * r);
-}
-
-__forceinline__ __host__ __device__ float3 operator+(float3 l, float3 r) {
-    return make_float3(l.x + r.x, l.y + r.y, l.z + r.z);
-}
-
-__forceinline__ __host__ __device__ float3 operator+(float3 l, float r) {
-    return make_float3(l.x + r, l.y + r, l.z + r);
-}
-
-__forceinline__ __host__ __device__ float3 fmod(float3 l, float r) {
-    return make_float3(fmod(l.x, r), fmod(l.y, r), fmod(l.z, r));
-}
-
-__forceinline__ __host__ __device__ float len2(float3 v) {
-    return v.x * v.x + v.y * v.y + v.z * v.z;
-}
-
-__forceinline__ __host__ __device__ float len(float3 v) {
-    return sqrtf(len2(v));
-}
-
-__forceinline__ __host__ __device__ double len2(complexDoubleDevice v) {
-    return v.x * v.x + v.y * v.y;
-}
-
-__forceinline__ __host__ __device__ float len2(complexFloatDevice v) {
-    return v.x * v.x + v.y * v.y;
-}
-
-__forceinline__ __host__ __device__ float3 cos(float3 v) {
-    return make_float3(cos(v.x), cos(v.y), cos(v.z));
-}
-
-__forceinline__ __host__ __device__ double3 cos(double3 v) {
-    return make_double3(cos(v.x), cos(v.y), cos(v.z));
-}
-
-__forceinline__ __host__ __device__ float3 sin(float3 v) {
-    return make_float3(sin(v.x), sin(v.y), sin(v.z));
-}
-
-__forceinline__ __host__ __device__ double3 sin(double3 v) {
-    return make_double3(sin(v.x), sin(v.y), sin(v.z));
-}
-
 #define make_complexDoubleDevice make_cuDoubleComplex
 #define make_complexFloatDevice make_cuFloatComplex
-
-__forceinline__ __host__ __device__ complexDoubleDevice
-operator*(complexDoubleDevice l, double r) {
-    return make_complexDoubleDevice(l.x * r, l.y * r);
-}
-
-__forceinline__ __host__ __device__ complexFloatDevice
-operator*(complexFloatDevice l, double r) {
-    return make_complexFloatDevice(l.x * r, l.y * r);
-}
 
 typedef cufftHandle gpufftHandle;
 
