@@ -1,5 +1,5 @@
-#ifndef _FGPM_GRID_HPP_
-#define _FGPM_GRID_HPP_
+#ifndef _FGPM_SERIAL_GRID_HPP_
+#define _FGPM_SERIAL_GRID_HPP_
 
 #include "mpi_distribution.hpp"
 #include "serial_fft.hpp"

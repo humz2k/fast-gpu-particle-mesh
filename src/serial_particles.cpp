@@ -1,10 +1,10 @@
-#include "simple_particles.hpp"
+#include "serial_particles.hpp"
 #include "allocators.hpp"
 #include "gpu.hpp"
 #include "particle_actions.hpp"
 #include "simple_grid.hpp"
 
-SimpleParticles::SimpleParticles(const Params& params, Cosmo& cosmo,
+SerialParticles::SerialParticles(const Params& params, Cosmo& cosmo,
                                  Timestepper& ts)
     : m_params(params) {
     gpu_allocator.alloc(&m_pos, sizeof(float3) * m_params.np() * m_params.np() *
@@ -12,17 +12,14 @@ SimpleParticles::SimpleParticles(const Params& params, Cosmo& cosmo,
     gpu_allocator.alloc(&m_vel, sizeof(float3) * m_params.np() * m_params.np() *
                                     m_params.np());
 
-    SimpleGrid<complexDoubleDevice> ic_grid(m_params, m_params.np());
-
-    ic_grid.generate_displacement_ic(cosmo, ts, *this);
 }
 
-SimpleParticles::~SimpleParticles() {
+SerialParticles::~SerialParticles() {
     gpu_allocator.free(m_pos);
     gpu_allocator.free(m_vel);
 }
 
-void SimpleParticles::update_positions(Timestepper& ts, float frac) {
+void SerialParticles::update_positions(Timestepper& ts, float frac) {
     int blockSize = BLOCKSIZE;
     int numBlocks = (nlocal() + (blockSize - 1)) / blockSize;
     float prefactor = ((ts.deltaT()) / (ts.a() * ts.a() * ts.adot())) * frac;
@@ -30,7 +27,7 @@ void SimpleParticles::update_positions(Timestepper& ts, float frac) {
                                    nlocal(), numBlocks, blockSize);
 }
 
-void SimpleParticles::update_velocities(const Grid& grid, Timestepper& ts,
+void SerialParticles::update_velocities(const Grid& grid, Timestepper& ts,
                                         float frac) {
     int blockSize = BLOCKSIZE;
     int numBlocks = (nlocal() + (blockSize - 1)) / blockSize;
@@ -41,15 +38,15 @@ void SimpleParticles::update_velocities(const Grid& grid, Timestepper& ts,
                                     numBlocks, blockSize);
 }
 
-float3* SimpleParticles::pos() { return m_pos; }
+float3* SerialParticles::pos() { return m_pos; }
 
-const float3* SimpleParticles::pos() const { return m_pos; }
+const float3* SerialParticles::pos() const { return m_pos; }
 
-float3* SimpleParticles::vel() { return m_vel; }
+float3* SerialParticles::vel() { return m_vel; }
 
-const float3* SimpleParticles::vel() const { return m_vel; }
+const float3* SerialParticles::vel() const { return m_vel; }
 
-void SimpleParticles::dump(std::string filename) const {
+void SerialParticles::dump(std::string filename) const {
     float3* h_pos;
     cpu_allocator.alloc(&h_pos, sizeof(float3) * m_params.np() * m_params.np() *
                                     m_params.np());
@@ -83,6 +80,10 @@ void SimpleParticles::dump(std::string filename) const {
     cpu_allocator.free(h_vel);
 }
 
-int SimpleParticles::nlocal() const {
+int SerialParticles::nlocal() const {
     return m_params.np() * m_params.np() * m_params.np();
+}
+
+const Params& SerialParticles::params() const {
+    return m_params;
 }

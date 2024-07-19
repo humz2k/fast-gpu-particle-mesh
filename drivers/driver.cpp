@@ -84,7 +84,5 @@ int main() {
 
     events.timers["dtot"].end();
 
-    // std::cout << "init: " << events.timers["init"].mean() << std::endl;
-
     return 0;
 }

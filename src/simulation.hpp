@@ -179,6 +179,13 @@ class Grid {
      * @return Pointer to the gradient of the grid.
      */
     virtual const float3* grad() const = 0;
+
+    /**
+     * @brief Returns raw GPU pointer to gradient of the grid.
+     *
+     * @return The raw GPU pointer to the gradient of the grid.
+     */
+    virtual float3* grad() = 0;
 };
 
 /**
@@ -264,6 +271,13 @@ template <class T> class Particles {
      * @return The number of local particles.
      */
     virtual int nlocal() const = 0;
+
+    /**
+     * @brief Returns the params of the particles.
+     *
+     * @return The params of the particles.
+     */
+    virtual const Params& params() const = 0;
 };
 
 #endif
