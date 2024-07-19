@@ -30,15 +30,13 @@ double Timestepper::adot() const {
          (1.0 + m_params.f_nu_massless()) * m_params.omega_radiation()) *
             pp1;
 
-    return sqrt(tmp);
+    return sqrt(tmp/m_a);
 }
 
 double Timestepper::fscal() const {
     float dtdy = a() / (a() * adot());
     double phiscal =
-        1.5 *
-        m_params
-            .omega_cb(); // Poisson equation is grad^2 phi = 3/2 omega_m (rho-1)
+        1.5 * m_params.omega_cb(); // Poisson equation is grad^2 phi = 3/2 omega_m (rho-1)
     float out = phiscal * dtdy * (1.0 / m_a);
     LOG_INFO("a = %g, adot = %g, dtdy = %g, phiscal = %g,fscal = %g",a(),adot(),dtdy,phiscal,out);
     return out;
