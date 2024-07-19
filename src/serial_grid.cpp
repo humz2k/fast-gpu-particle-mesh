@@ -52,49 +52,49 @@ void SerialGrid<fft_t>::generate_fourier_amplitudes(Cosmo& cosmo) {
 
 template <class fft_t> MPIDist SerialGrid<fft_t>::dist() const {
     return m_dist;
-};
+}
 
 template <class fft_t> double SerialGrid<fft_t>::k_min() const {
     return (2.0 * M_PI) / m_params.rl();
-};
+}
 
 template <class fft_t> double SerialGrid<fft_t>::k_max() const {
     double d = (2.0 * M_PI) / m_params.rl();
     double ng = m_dist.ng();
     return sqrt(3.0 * (ng / 2.0) * (ng / 2.0) * d * d);
-};
+}
 
 template <class fft_t> void SerialGrid<fft_t>::forward() {
     fft.forward(m_d_grid);
-};
+}
 
 template <class fft_t> void SerialGrid<fft_t>::backward() {
     fft.backward(m_d_grid);
-};
+}
 
 template <class fft_t> void SerialGrid<fft_t>::forward(fft_t* ptr) {
     fft.forward(ptr);
-};
+}
 
 template <class fft_t> void SerialGrid<fft_t>::backward(fft_t* ptr) {
     fft.backward(ptr);
-};
+}
 
 template <class fft_t> const float3* SerialGrid<fft_t>::grad() const {
     return m_d_grad;
-};
+}
 
-template <class fft_t> float3* SerialGrid<fft_t>::grad() { return m_d_grad; };
+template <class fft_t> float3* SerialGrid<fft_t>::grad() { return m_d_grad; }
 
 template <class fft_t> size_t SerialGrid<fft_t>::size() const {
     return m_size;
-};
+}
 
 template <class fft_t> const Params& SerialGrid<fft_t>::params() const {
     return m_params;
-};
+}
 
-template <class fft_t> fft_t* SerialGrid<fft_t>::grid() { return m_d_grid; };
+template <class fft_t> fft_t* SerialGrid<fft_t>::grid() { return m_d_grid; }
 
 template <class fft_t>
 std::vector<double> SerialGrid<fft_t>::bin(int nbins) const {
@@ -123,7 +123,7 @@ std::vector<double> SerialGrid<fft_t>::bin(int nbins) const {
     }
     cpu_allocator.free(h_bins);
     return out;
-};
+}
 
 template class SerialGrid<complexDoubleDevice>;
 template class SerialGrid<complexFloatDevice>;
