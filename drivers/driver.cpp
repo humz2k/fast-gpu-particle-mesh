@@ -3,6 +3,7 @@
 #include "logging.hpp"
 #include "params.hpp"
 #include "simple_grid.hpp"
+#include "memory_minimizing_grid.hpp"
 #include "simple_particles.hpp"
 #include "simulation.hpp"
 #include "timestepper.hpp"
@@ -63,7 +64,10 @@ int main() {
         events.timers["dpos"].end();
 
         if (params.pk_dump(step)) {
+            LOG_MINIMAL("dumping pk");
             events.timers["dpk"].start();
+            grid.CIC(particles);
+            grid.forward();
             PowerSpectrum(grid, params.pk_n_bins())
                 .to_csv("steps/step" + std::to_string(step) + ".csv");
             events.timers["dpk"].end();
