@@ -8,6 +8,8 @@
 #include <string>
 #include <vector>
 
+//#define LOG_FUNC_CALL() events.function_calls.log(__func__)
+
 template <class T> class EventLogger {
   private:
     CPUTimer_t m_start;
@@ -39,6 +41,7 @@ class Events {
 
   public:
     EventLogger<size_t> gpu_allocation;
+    //EventLogger<std::string> function_calls;
     Events() : m_start(CPUTimer()), gpu_allocation(m_start) {}
     ~Events() { gpu_allocation.to_csv("gpu_allocations.csv"); }
 };
