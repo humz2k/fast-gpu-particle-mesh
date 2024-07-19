@@ -30,22 +30,13 @@ __global__ void CIC_kernel(T* d_grid, const float3* d_pos, int n_particles,
                 int nx = (i + x) % ng;
                 int ny = (j + y) % ng;
                 int nz = (k + z) % ng;
-                int indx = (nx)*ng * ng + (ny)*ng + nz;
+                int indx = (nx * ng + ny) * ng + nz;
 
-                float dx = diffx;
-                if (x == 0) {
-                    dx = 1 - dx;
-                }
-                float dy = diffy;
-                if (y == 0) {
-                    dy = 1 - dy;
-                }
-                float dz = diffz;
-                if (z == 0) {
-                    dz = 1 - dz;
-                }
+                float dx = (x == 0) ? (1 - diffx) : diffx;
+                float dy = (y == 0) ? (1 - diffy) : diffy;
+                float dz = (z == 0) ? (1 - diffz) : diffz;
 
-                float mul = dx * dy * dz * mass; //* (1.0f/(ng*ng*ng));
+                float mul = dx * dy * dz * mass;
 
                 atomicAdd(&d_grid[indx].x, mul);
             }
@@ -118,38 +109,17 @@ __global__ void update_velocities_kernel(float3* d_vel, const float3* d_pos,
                 int nx = (i + x) % ng;
                 int ny = (j + y) % ng;
                 int nz = (k + z) % ng;
-                int indx = (nx)*ng * ng + (ny)*ng + nz;
+                int indx = (nx * ng + ny) * ng + nz;
 
-                float dx = diffx;
-                if (x == 0) {
-                    dx = 1 - dx;
-                }
-                float dy = diffy;
-                if (y == 0) {
-                    dy = 1 - dy;
-                }
-                float dz = diffz;
-                if (z == 0) {
-                    dz = 1 - dz;
-                }
+                float dx = (x == 0) ? (1 - diffx) : diffx;
+                float dy = (y == 0) ? (1 - diffy) : diffy;
+                float dz = (z == 0) ? (1 - diffz) : diffz;
 
-                float3 grad = d_grad[indx];
-                // printf("grad: %g %g %g\n",grad.x,grad.y,grad.z);
-                // float gp_scale = np/(float)ng;
-                float mul = dx * dy * dz * deltaT *
-                            fscal; // * gp_scale * gp_scale * gp_scale;//*
-                                   // (1.0f/((double)(ng*ng*ng)));//
-                                   // (1.0f/((double)(ng*ng*ng)));// * deltaT *
-                                   // fscal * (1.0f/((double)(ng*ng*ng)));
-                my_deltaV.x += mul * grad.x;
-                my_deltaV.y += mul * grad.y;
-                my_deltaV.z += mul * grad.z;
-
-                // atomicAdd(&grid[indx].x,(double)mul);
+                my_deltaV =
+                    my_deltaV + d_grad[indx] * (dx * dy * dz * deltaT * fscal);
             }
         }
     }
-    // printf("%g %g %g\n",my_deltaV.x,my_deltaV.y,my_deltaV.z);
     d_vel[idx] = d_vel[idx] + my_deltaV;
 }
 
