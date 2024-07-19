@@ -1,9 +1,9 @@
+#include "serial_grid.hpp"
 #include "allocators.hpp"
 #include "common.hpp"
 #include "initializer.hpp"
 #include "particle_actions.hpp"
 #include "pk_bins.hpp"
-#include "serial_grid.hpp"
 #include "solver.hpp"
 
 template <class fft_t>
@@ -19,39 +19,6 @@ template <class fft_t> SerialGrid<fft_t>::~SerialGrid() {
     gpu_allocator.free(m_d_grad);
     gpu_allocator.free(m_d_grid);
 }
-/*
-template <class fft_t> void SerialGrid<fft_t>::solve_gradient() {
-
-    int blockSize = BLOCKSIZE;
-    int numBlocks = (m_dist.local_grid_size() + (blockSize - 1)) / blockSize;
-
-    fft.forward(m_d_grid);
-
-    fft_t* d_x;
-    gpu_allocator.alloc(&d_x, sizeof(fft_t) * m_size);
-    fft_t* d_y;
-    gpu_allocator.alloc(&d_y, sizeof(fft_t) * m_size);
-    fft_t* d_z;
-    gpu_allocator.alloc(&d_z, sizeof(fft_t) * m_size);
-
-    launch_kspace_solve_gradient(m_d_grid, d_x, d_y, d_z, m_dist, numBlocks,
-                                 blockSize);
-
-    fft.backward(d_x);
-    fft.backward(d_y);
-    fft.backward(d_z);
-
-    launch_combine_vectors(m_d_grad, d_x, d_y, d_z, m_dist, numBlocks,
-                           blockSize);
-
-    gpu_allocator.free(d_x);
-    gpu_allocator.free(d_y);
-    gpu_allocator.free(d_z);
-}
-
-template <class fft_t> void SerialGrid<fft_t>::solve() {}
-
-*/
 
 template <class fft_t>
 void SerialGrid<fft_t>::CIC(const Particles<float3>& particles) {
@@ -82,49 +49,6 @@ void SerialGrid<fft_t>::generate_fourier_amplitudes(Cosmo& cosmo) {
                                               m_params.rl(), m_dist, numBlocks,
                                               blockSize);
 }
-/*
-template <class fft_t>
-void SerialGrid<fft_t>::generate_displacement_ic(Cosmo& cosmo, Timestepper& ts,
-                                                 Particles<float3>& particles) {
-    LOG_INFO("generating displacement ic");
-
-    int blockSize = BLOCKSIZE;
-    int numBlocks = (m_size + (blockSize - 1)) / blockSize;
-
-    generate_fourier_amplitudes(cosmo);
-    float delta = cosmo.delta(ts.z());
-    ts.reverse_half_step();
-    float fscal = ts.fscal();
-    float dot_delta = cosmo.dot_delta(ts.z());
-    ts.advance_half_step();
-
-    fft_t* d_x;
-    gpu_allocator.alloc(&d_x, sizeof(fft_t) * m_size);
-    fft_t* d_y;
-    gpu_allocator.alloc(&d_y, sizeof(fft_t) * m_size);
-    fft_t* d_z;
-    gpu_allocator.alloc(&d_z, sizeof(fft_t) * m_size);
-
-    launch_transform_density_field(m_d_grid, d_x, d_y, d_z, delta,
-                                   m_params.rl(), ts.a(), m_dist, numBlocks,
-                                   blockSize);
-
-    fft.backward(d_x);
-    fft.backward(d_y);
-    fft.backward(d_z);
-
-    launch_combine_density_vectors(m_d_grad, d_x, d_y, d_z, m_dist, numBlocks,
-                                   blockSize);
-
-    gpu_allocator.free(d_x);
-    gpu_allocator.free(d_y);
-    gpu_allocator.free(d_z);
-
-    launch_place_particles(particles.pos(), particles.vel(), m_d_grad, delta,
-                           dot_delta, m_params.rl(), ts.a(), ts.deltaT(), fscal,
-                           m_params.ng(), m_dist, numBlocks, blockSize);
-}
-*/
 
 template <class fft_t> MPIDist SerialGrid<fft_t>::dist() const {
     return m_dist;
@@ -156,14 +80,11 @@ template <class fft_t> void SerialGrid<fft_t>::backward(fft_t* ptr) {
     fft.backward(ptr);
 };
 
-
 template <class fft_t> const float3* SerialGrid<fft_t>::grad() const {
     return m_d_grad;
 };
 
-template <class fft_t> float3* SerialGrid<fft_t>::grad() {
-    return m_d_grad;
-};
+template <class fft_t> float3* SerialGrid<fft_t>::grad() { return m_d_grad; };
 
 template <class fft_t> size_t SerialGrid<fft_t>::size() const {
     return m_size;
@@ -173,9 +94,7 @@ template <class fft_t> const Params& SerialGrid<fft_t>::params() const {
     return m_params;
 };
 
-template <class fft_t> fft_t* SerialGrid<fft_t>::grid() {
-    return m_d_grid;
-};
+template <class fft_t> fft_t* SerialGrid<fft_t>::grid() { return m_d_grid; };
 
 template <class fft_t>
 std::vector<double> SerialGrid<fft_t>::bin(int nbins) const {
