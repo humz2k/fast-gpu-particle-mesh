@@ -12,18 +12,18 @@ jobs:
       strategy:
         matrix:
           mpi: [ 'mpich', 'openmpi' ]
-      name: ${{ matrix.mpi }} example
+      name: ${{ matrix.mpi }} build
       steps:
       - uses: actions/checkout@v3
       - uses: mpi4py/setup-mpi@v1
-      - uses: Jimver/cuda-toolkit@v0.2.16
-        id: cuda-toolkit
-        with:
-          cuda: '12.1.0'
       - name: Setup MPI
         uses: mpi4py/setup-mpi@v1
         with:
           mpi: ${{ matrix.mpi }}
+      - uses: Jimver/cuda-toolkit@v0.2.16
+        id: cuda-toolkit
+        with:
+          cuda: '12.1.0'
 #      - name: find cufft
 #        run: cd $CUDA_PATH/bin/../targets/x86_64-linux/include; ls; cd $CUDA_PATH/include; ls; cd /usr/local/cuda/include; ls
       - name: make
