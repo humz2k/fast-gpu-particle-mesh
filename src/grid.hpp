@@ -22,9 +22,6 @@ template <class fft_t> class SimpleGrid : public Grid {
     const Params& m_params; ///< Reference to the simulation parameters.
     float3* m_d_grad;       ///< Pointer to the gradient data on the device.
     fft_t* m_d_grid;        ///< Pointer to the grid data on the device.
-    fft_t* m_d_x; ///< Pointer to the x-component of the transformed grid data.
-    fft_t* m_d_y; ///< Pointer to the y-component of the transformed grid data.
-    fft_t* m_d_z; ///< Pointer to the z-component of the transformed grid data.
     SerialFFT<fft_t> fft; ///< FFT object for performing Fourier transforms.
     MPIDist m_dist; ///< MPI distribution object for handling grid distribution.
 
@@ -46,12 +43,12 @@ template <class fft_t> class SimpleGrid : public Grid {
     /**
      * @brief Solves for rho on the grid.
      */
-    void solve();
+    virtual void solve();
 
     /**
      * @brief Solves for grad rho on the grid.
      */
-    void solve_gradient();
+    virtual void solve_gradient();
 
     /**
      * @brief Assigns particle positions to the grid using Cloud-In-Cell (CIC)
@@ -77,8 +74,8 @@ template <class fft_t> class SimpleGrid : public Grid {
      * @param particles The particles whose displacement initial conditions are
      * to be generated.
      */
-    void generate_displacement_ic(Cosmo& cosmo, Timestepper& ts,
-                                  Particles<float3>& particles);
+    virtual void generate_displacement_ic(Cosmo& cosmo, Timestepper& ts,
+                                          Particles<float3>& particles);
 
     /**
      * @brief Returns the MPI distribution of the grid.

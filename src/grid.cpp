@@ -13,17 +13,11 @@ SimpleGrid<fft_t>::SimpleGrid(const Params& params, int ng)
 
     gpu_allocator.alloc(&m_d_grad, m_size * sizeof(float3));
     gpu_allocator.alloc(&m_d_grid, m_size * sizeof(fft_t));
-    gpu_allocator.alloc(&m_d_x, m_size * sizeof(fft_t));
-    gpu_allocator.alloc(&m_d_y, m_size * sizeof(fft_t));
-    gpu_allocator.alloc(&m_d_z, m_size * sizeof(fft_t));
 }
 
 template <class fft_t> SimpleGrid<fft_t>::~SimpleGrid() {
     gpu_allocator.free(m_d_grad);
     gpu_allocator.free(m_d_grid);
-    gpu_allocator.free(m_d_x);
-    gpu_allocator.free(m_d_y);
-    gpu_allocator.free(m_d_z);
 }
 
 template <class fft_t> void SimpleGrid<fft_t>::solve_gradient() {
@@ -32,15 +26,27 @@ template <class fft_t> void SimpleGrid<fft_t>::solve_gradient() {
     int numBlocks = (m_dist.local_grid_size() + (blockSize - 1)) / blockSize;
 
     fft.forward(m_d_grid);
-    launch_kspace_solve_gradient(m_d_grid, m_d_x, m_d_y, m_d_z, m_dist,
-                                 numBlocks, blockSize);
 
-    fft.backward(m_d_x);
-    fft.backward(m_d_y);
-    fft.backward(m_d_z);
+    fft_t* d_x;
+    gpu_allocator.alloc(&d_x, sizeof(fft_t) * m_size);
+    fft_t* d_y;
+    gpu_allocator.alloc(&d_y, sizeof(fft_t) * m_size);
+    fft_t* d_z;
+    gpu_allocator.alloc(&d_z, sizeof(fft_t) * m_size);
 
-    launch_combine_vectors(m_d_grad, m_d_x, m_d_y, m_d_z, m_dist, numBlocks,
+    launch_kspace_solve_gradient(m_d_grid, d_x, d_y, d_z, m_dist, numBlocks,
+                                 blockSize);
+
+    fft.backward(d_x);
+    fft.backward(d_y);
+    fft.backward(d_z);
+
+    launch_combine_vectors(m_d_grad, d_x, d_y, d_z, m_dist, numBlocks,
                            blockSize);
+
+    gpu_allocator.free(d_x);
+    gpu_allocator.free(d_y);
+    gpu_allocator.free(d_z);
 }
 
 template <class fft_t> void SimpleGrid<fft_t>::solve() {}
@@ -90,16 +96,27 @@ void SimpleGrid<fft_t>::generate_displacement_ic(Cosmo& cosmo, Timestepper& ts,
     float dot_delta = cosmo.dot_delta(ts.z());
     ts.advance_half_step();
 
-    launch_transform_density_field(m_d_grid, m_d_x, m_d_y, m_d_z, delta,
+    fft_t* d_x;
+    gpu_allocator.alloc(&d_x, sizeof(fft_t) * m_size);
+    fft_t* d_y;
+    gpu_allocator.alloc(&d_y, sizeof(fft_t) * m_size);
+    fft_t* d_z;
+    gpu_allocator.alloc(&d_z, sizeof(fft_t) * m_size);
+
+    launch_transform_density_field(m_d_grid, d_x, d_y, d_z, delta,
                                    m_params.rl(), ts.a(), m_dist, numBlocks,
                                    blockSize);
 
-    fft.backward(m_d_x);
-    fft.backward(m_d_y);
-    fft.backward(m_d_z);
+    fft.backward(d_x);
+    fft.backward(d_y);
+    fft.backward(d_z);
 
-    launch_combine_density_vectors(m_d_grad, m_d_x, m_d_y, m_d_z, m_dist,
-                                   numBlocks, blockSize);
+    launch_combine_density_vectors(m_d_grad, d_x, d_y, d_z, m_dist, numBlocks,
+                                   blockSize);
+
+    gpu_allocator.free(d_x);
+    gpu_allocator.free(d_y);
+    gpu_allocator.free(d_z);
 
     launch_place_particles(particles.pos(), particles.vel(), m_d_grad, delta,
                            dot_delta, m_params.rl(), ts.a(), ts.deltaT(), fscal,
