@@ -6,13 +6,18 @@
 #include "simple_particles.hpp"
 #include "simulation.hpp"
 #include "timestepper.hpp"
+#include "event_logger.hpp"
 #include <string.h>
 
 int main() {
+    events.timers["dtot"].start();
+
     gpuCall(gpuFree(0));
 
     LOG_MINIMAL("git hash = %s", TOSTRING(GIT_HASH));
     LOG_MINIMAL("git modified = %s", TOSTRING(GIT_MODIFIED));
+
+    events.timers["dinit"].start();
 
     Params params("test.params");
     Timestepper ts(params);
@@ -20,6 +25,9 @@ int main() {
     cosmo.initial_pk().to_csv("test.csv");
 
     SimpleParticles particles(params, cosmo, ts);
+
+    events.timers["dinit"].end();
+
     SimpleGrid<complexDoubleDevice> grid(params, params.ng());
     grid.CIC(particles);
     grid.forward();
@@ -27,23 +35,41 @@ int main() {
     ic_power.to_csv("test2.csv");
 
     for (int step = 0; step < params.nsteps(); step++) {
+        LOG_MINIMAL("STEP %d",step);
+        events.timers["dstep"].start();
 
+        events.timers["dpos"].start();
         particles.update_positions(ts, 0.5f);
+        events.timers["dpos"].end();
+
+        events.timers["dcic"].start();
         grid.CIC(particles);
+        events.timers["dcic"].end();
+
+        events.timers["dgrad"].start();
         grid.solve_gradient();
+        events.timers["dgrad"].end();
 
         ts.advance_half_step();
 
+        events.timers["dvel"].start();
         particles.update_velocities(grid, ts, 1.0f);
+        events.timers["dvel"].end();
 
         ts.advance_half_step();
 
+        events.timers["dpos"].start();
         particles.update_positions(ts, 0.5f);
+        events.timers["dpos"].end();
 
         if (params.pk_dump(step)) {
+            events.timers["dpk"].start();
             PowerSpectrum(grid, params.pk_n_bins())
                 .to_csv("steps/step" + std::to_string(step) + ".csv");
+            events.timers["dpk"].end();
         }
+
+        events.timers["dstep"].end();
     }
 
     grid.CIC(particles);
@@ -52,5 +78,10 @@ int main() {
     power.to_csv("final.csv");
 
     LOG_MINIMAL("done!");
+
+    events.timers["dtot"].end();
+
+    //std::cout << "init: " << events.timers["init"].mean() << std::endl;
+
     return 0;
 }

@@ -6,6 +6,7 @@
 #include <curand.h>
 #include <curand_kernel.h>
 #include <vector>
+#include "event_logger.hpp"
 
 template <class T>
 __global__ void generate_real_random(T* __restrict grid, int seed,
@@ -27,7 +28,9 @@ __global__ void generate_real_random(T* __restrict grid, int seed,
 template <class T>
 void launch_generate_real_random(T* d_grid, int seed, const MPIDist dist,
                                  int numBlocks, int blockSize) {
+    events.timers["kernel_generate_real_random"].start();
     gpuLaunch(generate_real_random, numBlocks, blockSize, d_grid, seed, dist);
+    events.timers["kernel_generate_real_random"].end();
 }
 
 template void
@@ -95,6 +98,7 @@ void launch_scale_amplitudes_by_power_spectrum(T* grid,
                                                const PowerSpectrum& initial_pk,
                                                double rl, const MPIDist dist,
                                                int numBlocks, int blockSize) {
+    events.timers["kernel_scale_amplitudes_by_power_spectrum"].start();
     const double* h_values = initial_pk.h_values().data();
 
     double max_k =
@@ -116,6 +120,7 @@ void launch_scale_amplitudes_by_power_spectrum(T* grid,
               d_values, initial_pk.k_delta(), initial_pk.k_min(), rl, dist);
 
     gpu_allocator.free(d_values);
+    events.timers["kernel_scale_amplitudes_by_power_spectrum"].end();
 }
 
 template void launch_scale_amplitudes_by_power_spectrum<complexDoubleDevice>(
@@ -165,8 +170,10 @@ void launch_transform_density_field(T* d_grid, T* d_x, T* d_y, T* d_z,
                                     double delta, double rl, double a,
                                     MPIDist dist, int numBlocks,
                                     int blockSize) {
+    events.timers["kernel_transform_density_field"].start();
     gpuLaunch(transform_density_field, numBlocks, blockSize, d_grid, d_x, d_y,
               d_z, delta, rl, a, dist);
+    events.timers["kernel_transform_density_field"].end();
 }
 
 template void launch_transform_density_field<complexDoubleDevice>(
@@ -192,8 +199,10 @@ template <class T>
 void launch_combine_density_vectors(float3* d_grad, T* d_x, T* d_y, T* d_z,
                                     MPIDist dist, int numBlocks,
                                     int blockSize) {
+    events.timers["kernel_combine_density_vectors"].start();
     gpuLaunch(combine_density_vectors, numBlocks, blockSize, d_grad, d_x, d_y,
               d_z, dist);
+    events.timers["kernel_combine_density_vectors"].end();
 }
 
 template void launch_combine_density_vectors<complexDoubleDevice>(
@@ -235,6 +244,8 @@ void launch_place_particles(float3* d_pos, float3* d_vel, const float3* d_grad,
                             double delta, double dot_delta, double rl, double a,
                             double deltaT, double fscal, int ng, MPIDist dist,
                             int numBlocks, int blockSize) {
+    events.timers["kernel_place_particles"].start();
     gpuLaunch(place_particles, numBlocks, blockSize, d_pos, d_vel, d_grad,
               delta, dot_delta, rl, a, deltaT, fscal, ng, dist);
+    events.timers["kernel_place_particles"].end();
 }

@@ -1,6 +1,7 @@
 #include "gpu.hpp"
 #include "mpi_distribution.hpp"
 #include "solver.hpp"
+#include "event_logger.hpp"
 
 __forceinline__ __device__ float calc_greens(int idx, MPIDist dist) {
     int3 global_coords = dist.global_coords(idx);
@@ -58,8 +59,10 @@ __global__ void kspace_solve_gradient(const T* grid, T* d_x, T* d_y, T* d_z,
 template <class T>
 void launch_kspace_solve_gradient(const T* grid, T* d_x, T* d_y, T* d_z,
                                   MPIDist dist, int numBlocks, int blockSize) {
+    events.timers["kernel_kspace_solve_gradient"].start();
     gpuLaunch(kspace_solve_gradient, numBlocks, blockSize, grid, d_x, d_y, d_z,
               dist);
+    events.timers["kernel_kspace_solve_gradient"].end();
 }
 
 template void launch_kspace_solve_gradient<complexDoubleDevice>(
@@ -84,8 +87,10 @@ template <class T>
 void launch_combine_vectors(float3* d_grad, const T* d_x, const T* d_y,
                             const T* d_z, MPIDist dist, int numBlocks,
                             int blockSize) {
+    events.timers["kernel_combine_vectors"].start();
     gpuLaunch(combine_vectors, numBlocks, blockSize, d_grad, d_x, d_y, d_z,
               dist);
+    events.timers["kernel_combine_vectors"].end();
 }
 
 template void launch_combine_vectors<complexDoubleDevice>(

@@ -3,6 +3,7 @@
 #include "logging.hpp"
 #include "mpi_distribution.hpp"
 #include "particle_actions.hpp"
+#include "event_logger.hpp"
 
 template <class T>
 __global__ void CIC_kernel(T* d_grid, const float3* d_pos, int n_particles,
@@ -55,9 +56,14 @@ __global__ void CIC_kernel(T* d_grid, const float3* d_pos, int n_particles,
 template <class T>
 void launch_CIC_kernel(T* d_grid, const float3* d_pos, int n_particles,
                        float mass, MPIDist dist, int numBlocks, int blockSize) {
+    events.timers["kernel_cic_memset"].start();
     gpuCall(gpuMemset(d_grid, 0, sizeof(T) * dist.local_grid_size()));
+    events.timers["kernel_cic_memset"].end();
+
+    events.timers["kernel_cic"].start();
     gpuLaunch(CIC_kernel, numBlocks, blockSize, d_grid, d_pos, n_particles,
               mass, dist);
+    events.timers["kernel_cic"].end();
 }
 
 template void launch_CIC_kernel<complexDoubleDevice>(complexDoubleDevice*,
@@ -79,8 +85,10 @@ __global__ void update_positions_kernel(float3* d_pos, const float3* d_vel,
 void launch_update_positions_kernel(float3* d_pos, const float3* d_vel,
                                     float prefactor, float ng, int nlocal,
                                     int numBlocks, int blockSize) {
+    events.timers["kernel_update_positions"].start();
     gpuLaunch(update_positions_kernel, numBlocks, blockSize, d_pos, d_vel,
               prefactor, ng, nlocal);
+    events.timers["kernel_update_positions"].end();
 }
 
 __global__ void update_velocities_kernel(float3* d_vel, const float3* d_pos,
@@ -149,6 +157,8 @@ void launch_update_velocities_kernel(float3* d_vel, const float3* d_pos,
                                      const float3* d_grad, double deltaT,
                                      double fscal, int nlocal, MPIDist dist,
                                      int numBlocks, int blockSize) {
+    events.timers["kernel_update_velocities"].start();
     gpuLaunch(update_velocities_kernel, numBlocks, blockSize, d_vel, d_pos,
               d_grad, deltaT, fscal, nlocal, dist);
+    events.timers["kernel_update_velocities"].end();
 }

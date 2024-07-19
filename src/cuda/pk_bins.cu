@@ -4,6 +4,7 @@
 #include "mpi_distribution.hpp"
 #include "pk_bins.hpp"
 #include "power_spectrum.hpp"
+#include "event_logger.hpp"
 #include <cassert>
 #include <stdio.h>
 #include <vector>
@@ -74,9 +75,14 @@ template <class T>
 void launch_bin_power(const T* d_grid, double2* d_bins, double k_min,
                       double k_delta, int n_k_bins, double rl, MPIDist dist,
                       int numBlocks, int blockSize) {
+    events.timers["kernel_bin_power_memset"].start();
     gpuMemset(d_bins, 0, sizeof(double2) * n_k_bins);
+    events.timers["kernel_bin_power_memset"].end();
+
+    events.timers["kernel_bin_power"].start();
     gpuLaunch(bin_power, numBlocks, blockSize, d_grid, d_bins, k_min, k_delta,
               n_k_bins, rl, dist);
+    events.timers["kernel_bin_power"].end();
 }
 
 template void launch_bin_power<complexDoubleDevice>(const complexDoubleDevice*,

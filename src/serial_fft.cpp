@@ -1,5 +1,6 @@
 #include "serial_fft.hpp"
 #include "gpu.hpp"
+#include "event_logger.hpp"
 
 static inline const char* cufftResult_to_string(gpufftResult error) {
     switch (error) {
@@ -76,19 +77,27 @@ template <class T> void SerialFFT<T>::fft(T* in, T* out, int direction) {
 }
 
 template <class T> void SerialFFT<T>::forward(T* in, T* out) {
+    events.timers["fft_forward_op"].start();
     this->fft(in, out, GPUFFT_FORWARD);
+    events.timers["fft_forward_op"].end();
 }
 
 template <class T> void SerialFFT<T>::backward(T* in, T* out) {
+    events.timers["fft_backward_op"].start();
     this->fft(in, out, GPUFFT_INVERSE);
+    events.timers["fft_backward_op"].end();
 }
 
 template <class T> void SerialFFT<T>::forward(T* in) {
+    events.timers["fft_forward_ip"].start();
     this->fft(in, in, GPUFFT_FORWARD);
+    events.timers["fft_forward_ip"].end();
 }
 
 template <class T> void SerialFFT<T>::backward(T* in) {
+    events.timers["fft_backward_ip"].start();
     this->fft(in, in, GPUFFT_INVERSE);
+    events.timers["fft_backward_ip"].end();
 }
 
 template <class T> int SerialFFT<T>::ng() const { return m_ng; }

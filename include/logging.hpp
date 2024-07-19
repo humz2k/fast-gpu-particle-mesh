@@ -30,7 +30,7 @@
 #define LOG_TEXT_BOLDWHITE "\033[1m\033[37m"   /* Bold White */
 
 #ifndef LOGLEVEL
-#define LOGLEVEL 3
+#define LOGLEVEL 2
 #endif
 
 #define _LOG(msg, msg_color, text_color, ...)                                  \
