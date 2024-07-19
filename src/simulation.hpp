@@ -163,9 +163,21 @@ class Grid {
      */
     virtual double k_max() const = 0;
 
+    /**
+     * @brief Performs a forward FFT on the grid.
+     */
     virtual void forward() = 0;
+
+    /**
+     * @brief Performs a backward FFT on the grid.
+     */
     virtual void backward() = 0;
 
+    /**
+     * @brief Returns the gradient of the grid.
+     *
+     * @return Pointer to the gradient of the grid.
+     */
     virtual const float3* grad() const = 0;
 };
 
@@ -211,14 +223,46 @@ template <class T> class Particles {
     virtual void update_velocities(const Grid& grid, Timestepper& ts,
                                    float frac) = 0;
 
+    /**
+     * @brief Returns the positions of the particles.
+     *
+     * @return Pointer to the positions of the particles.
+     */
     virtual T* pos() = 0;
+
+    /**
+     * @brief Returns the positions of the particles (const version).
+     *
+     * @return Pointer to the positions of the particles.
+     */
     virtual const T* pos() const = 0;
 
+    /**
+     * @brief Returns the velocities of the particles.
+     *
+     * @return Pointer to the velocities of the particles.
+     */
     virtual T* vel() = 0;
+
+    /**
+     * @brief Returns the velocities of the particles (const version).
+     *
+     * @return Pointer to the velocities of the particles.
+     */
     virtual const T* vel() const = 0;
 
+    /**
+     * @brief Dumps the particle data to a file (as csv).
+     *
+     * @param filename The name of the file to dump the data to.
+     */
     virtual void dump(std::string filename) const = 0;
 
+    /**
+     * @brief Returns the number of local particles.
+     *
+     * @return The number of local particles.
+     */
     virtual int nlocal() const = 0;
 };
 

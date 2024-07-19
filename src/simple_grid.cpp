@@ -12,7 +12,6 @@ SimpleGrid<fft_t>::SimpleGrid(const Params& params, int ng)
     m_size = m_ng * m_ng * m_ng;
 
     gpu_allocator.alloc(&m_d_grad, m_size * sizeof(float3));
-    // gpu_allocator.alloc(&m_d_greens, m_size * sizeof(float));
     gpu_allocator.alloc(&m_d_grid, m_size * sizeof(fft_t));
     gpu_allocator.alloc(&m_d_x, m_size * sizeof(fft_t));
     gpu_allocator.alloc(&m_d_y, m_size * sizeof(fft_t));
@@ -21,7 +20,6 @@ SimpleGrid<fft_t>::SimpleGrid(const Params& params, int ng)
 
 template <class fft_t> SimpleGrid<fft_t>::~SimpleGrid() {
     gpu_allocator.free(m_d_grad);
-    // gpu_allocator.free(m_d_greens);
     gpu_allocator.free(m_d_grid);
     gpu_allocator.free(m_d_x);
     gpu_allocator.free(m_d_y);
