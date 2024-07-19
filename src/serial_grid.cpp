@@ -86,9 +86,7 @@ template <class fft_t> const float3* SerialGrid<fft_t>::grad() const {
 
 template <class fft_t> float3* SerialGrid<fft_t>::grad() { return m_d_grad; }
 
-template <class fft_t> size_t SerialGrid<fft_t>::size() const {
-    return m_size;
-}
+template <class fft_t> size_t SerialGrid<fft_t>::size() const { return m_size; }
 
 template <class fft_t> const Params& SerialGrid<fft_t>::params() const {
     return m_params;
