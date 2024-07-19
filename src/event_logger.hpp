@@ -41,7 +41,7 @@ class Events {
 
   public:
     EventLogger<size_t> gpu_allocation;
-    //EventLogger<std::string> function_calls;
+    // EventLogger<std::string> function_calls;
     Events() : m_start(CPUTimer()), gpu_allocation(m_start) {}
     ~Events() { gpu_allocation.to_csv("gpu_allocations.csv"); }
 };

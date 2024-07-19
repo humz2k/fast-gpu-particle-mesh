@@ -219,7 +219,8 @@ __global__ void place_particles(float3* d_pos, float3* d_vel,
     float3 pos =
         fmod((make_float3(local_coords.x, local_coords.y, local_coords.z) +
               (S * delta)) *
-                 (((float)ng) / (float)dist.ng()) + (float)ng,
+                     (((float)ng) / (float)dist.ng()) +
+                 (float)ng,
              (float)ng);
 
     float vel_a = a - (deltaT * 0.5f);

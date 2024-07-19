@@ -46,7 +46,8 @@ class Params {
     double m_f_nu_massive;    /**< Fraction of massive neutrinos. */
 
     int m_pk_folds = 0; /**< Number of folds for power spectrum calculation. */
-    int m_pk_n_bins = 100; /**< Number of bins for power spectrum calculation. */
+    int m_pk_n_bins =
+        100; /**< Number of bins for power spectrum calculation. */
 
     std::string m_output_prefix = "run"; /**< Prefix for output files. */
     std::string m_ipk;                   /**< Input power spectrum file. */

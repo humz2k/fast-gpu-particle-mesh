@@ -26,24 +26,24 @@ int main() {
     PowerSpectrum ic_power(grid, params.pk_n_bins());
     ic_power.to_csv("test2.csv");
 
-    for (int step = 0; step < params.nsteps(); step++){
+    for (int step = 0; step < params.nsteps(); step++) {
 
-        particles.update_positions(ts,0.5f);
+        particles.update_positions(ts, 0.5f);
         grid.CIC(particles);
         grid.solve_gradient();
 
         ts.advance_half_step();
 
-        particles.update_velocities(grid,ts,1.0f);
+        particles.update_velocities(grid, ts, 1.0f);
 
         ts.advance_half_step();
 
-        particles.update_positions(ts,0.5f);
+        particles.update_positions(ts, 0.5f);
 
-        if (params.pk_dump(step)){
-            PowerSpectrum(grid, params.pk_n_bins()).to_csv("steps/step" + std::to_string(step) + ".csv");
+        if (params.pk_dump(step)) {
+            PowerSpectrum(grid, params.pk_n_bins())
+                .to_csv("steps/step" + std::to_string(step) + ".csv");
         }
-
     }
 
     grid.CIC(particles);

@@ -58,20 +58,20 @@ __forceinline__ __host__ __device__ float len2(complexFloatDevice v) {
     return v.x * v.x + v.y * v.y;
 }
 
-__forceinline__ __host__ __device__ float3 cos(float3 v){
-    return make_float3(cos(v.x),cos(v.y),cos(v.z));
+__forceinline__ __host__ __device__ float3 cos(float3 v) {
+    return make_float3(cos(v.x), cos(v.y), cos(v.z));
 }
 
-__forceinline__ __host__ __device__ double3 cos(double3 v){
-    return make_double3(cos(v.x),cos(v.y),cos(v.z));
+__forceinline__ __host__ __device__ double3 cos(double3 v) {
+    return make_double3(cos(v.x), cos(v.y), cos(v.z));
 }
 
-__forceinline__ __host__ __device__ float3 sin(float3 v){
-    return make_float3(sin(v.x),sin(v.y),sin(v.z));
+__forceinline__ __host__ __device__ float3 sin(float3 v) {
+    return make_float3(sin(v.x), sin(v.y), sin(v.z));
 }
 
-__forceinline__ __host__ __device__ double3 sin(double3 v){
-    return make_double3(sin(v.x),sin(v.y),sin(v.z));
+__forceinline__ __host__ __device__ double3 sin(double3 v) {
+    return make_double3(sin(v.x), sin(v.y), sin(v.z));
 }
 
 #define make_complexDoubleDevice make_cuDoubleComplex
