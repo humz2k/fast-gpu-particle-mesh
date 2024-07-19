@@ -4,7 +4,7 @@
 
 int main() {
 
-    run_simulation<SimpleParticles, SimpleGrid<complexDoubleDevice>>(
+    run_simulation<SimpleParticles, SimpleGrid<complexFloatDevice>>(
         "test.params");
 
     return 0;
