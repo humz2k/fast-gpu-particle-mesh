@@ -2,7 +2,7 @@
 #include "allocators.hpp"
 #include "gpu.hpp"
 #include "particle_actions.hpp"
-#include "simple_grid.hpp"
+#include "grid.hpp"
 
 SimpleParticles::SimpleParticles(const Params& params, Cosmo& cosmo,
                                  Timestepper& ts)

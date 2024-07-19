@@ -1,4 +1,4 @@
-#include "simple_grid.hpp"
+#include "grid.hpp"
 #include "allocators.hpp"
 #include "common.hpp"
 #include "initializer.hpp"
