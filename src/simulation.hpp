@@ -2,10 +2,10 @@
 #define _FGPM_SIMULATION_HPP_
 
 #include "cosmo.hpp"
+#include "event_logger.hpp"
 #include "mpi_distribution.hpp"
 #include "params.hpp"
 #include "timestepper.hpp"
-#include "event_logger.hpp"
 #include <cuda_runtime.h>
 #include <cufft.h>
 
@@ -281,8 +281,8 @@ template <class T> class Particles {
     virtual const Params& params() const = 0;
 };
 
-template<class ParticleType, class GridType>
-void run_simulation(std::string params_file){
+template <class ParticleType, class GridType>
+void run_simulation(std::string params_file) {
     events.timers["dtot"].start();
 
     gpuCall(gpuFree(0));

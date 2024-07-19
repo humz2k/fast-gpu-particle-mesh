@@ -10,7 +10,6 @@ SerialParticles::SerialParticles(const Params& params, Cosmo& cosmo,
                                     m_params.np());
     gpu_allocator.alloc(&m_vel, sizeof(float3) * m_params.np() * m_params.np() *
                                     m_params.np());
-
 }
 
 SerialParticles::~SerialParticles() {
@@ -83,6 +82,4 @@ int SerialParticles::nlocal() const {
     return m_params.np() * m_params.np() * m_params.np();
 }
 
-const Params& SerialParticles::params() const {
-    return m_params;
-}
+const Params& SerialParticles::params() const { return m_params; }

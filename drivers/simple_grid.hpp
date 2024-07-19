@@ -12,7 +12,7 @@ template <class fft_t> class SimpleGrid : public SerialGrid<fft_t> {
     using SerialGrid<fft_t>::SerialGrid;
 
     void solve(){
-
+        // not implemented
     };
 
     void solve_gradient() {
