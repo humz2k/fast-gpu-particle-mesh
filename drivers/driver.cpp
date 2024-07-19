@@ -24,10 +24,10 @@ int main() {
     SimpleGrid<complexDoubleDevice> grid(params, params.ng());
     grid.CIC(particles);
     grid.forward();
-    PowerSpectrum ic_power(grid, 221);
+    PowerSpectrum ic_power(grid, params.pk_n_bins());
     ic_power.to_csv("test2.csv");
 
-    for (int i = 0; i < params.nsteps(); i++){
+    for (int step = 0; step < params.nsteps(); step++){
 
         particles.update_positions(ts,0.5f);
         grid.CIC(particles);
@@ -41,18 +41,16 @@ int main() {
 
         particles.update_positions(ts,0.5f);
 
-        if ((i % 50) == 0){
-            PowerSpectrum(grid, 221).to_csv("steps/step" + std::to_string(i) + ".csv");
+        if (params.pk_dump(step)){
+            PowerSpectrum(grid, params.pk_n_bins()).to_csv("steps/step" + std::to_string(step) + ".csv");
         }
 
     }
 
     grid.CIC(particles);
     grid.forward();
-    PowerSpectrum power(grid, 221);
+    PowerSpectrum power(grid, params.pk_n_bins());
     power.to_csv("final.csv");
-
-    //particles.dump("particles1.csv");
 
     LOG_MINIMAL("done!");
     return 0;

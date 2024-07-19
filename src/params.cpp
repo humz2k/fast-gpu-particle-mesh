@@ -196,3 +196,7 @@ double Params::omega_matter() const { return m_omega_matter; }
 double Params::omega_nu() const { return m_omega_nu; }
 
 const std::string& Params::ipk() const { return m_ipk; }
+
+int Params::pk_n_bins() const {return m_pk_n_bins; }
+
+bool Params::pk_dump(int step) { return m_pk_dumps[step]; }

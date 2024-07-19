@@ -46,6 +46,7 @@ class Params {
     double m_f_nu_massive;    /**< Fraction of massive neutrinos. */
 
     int m_pk_folds = 0; /**< Number of folds for power spectrum calculation. */
+    int m_pk_n_bins = 100; /**< Number of bins for power spectrum calculation. */
 
     std::string m_output_prefix = "run"; /**< Prefix for output files. */
     std::string m_ipk;                   /**< Input power spectrum file. */
@@ -65,6 +66,14 @@ class Params {
      * @brief Outputs the current parameter settings.
      */
     void dump();
+
+    /**
+     * @brief Checks if should dump power spectrum.
+     *
+     * @param step the step we are on
+     * @return if we should dump power spectrum
+     */
+    bool pk_dump(int step);
 
     /**
      * @brief Gets the number of grid points.
@@ -164,5 +173,12 @@ class Params {
      * @return The input power spectrum file.
      */
     const std::string& ipk() const;
+
+    /**
+     * @brief Gets num power spectrum bins.
+     *
+     * @return Num power spectrum bins.
+     */
+    int pk_n_bins() const;
 };
 #endif
