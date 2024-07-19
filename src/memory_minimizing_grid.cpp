@@ -12,9 +12,6 @@ MemoryMinGrid<fft_t>::MemoryMinGrid(const Params& params, int ng)
     : m_ng(ng), m_params(params), m_d_grad(NULL), m_d_grid(NULL), fft(m_ng),
       m_dist(ng) {
     m_size = m_ng * m_ng * m_ng;
-
-    // gpu_allocator.alloc(&m_d_grad, m_size * sizeof(float3));
-    // gpu_allocator.alloc(&m_d_grid, m_size * sizeof(fft_t));
 }
 
 template <class fft_t> MemoryMinGrid<fft_t>::~MemoryMinGrid() {
