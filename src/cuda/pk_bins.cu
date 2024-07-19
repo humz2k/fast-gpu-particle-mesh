@@ -9,38 +9,29 @@
 #include <stdio.h>
 #include <vector>
 
+template <class T> __forceinline__ __device__ T sqr(T v) { return v * v; }
+
+__forceinline__ __device__ float3 rcp(float3 v) {
+    return make_float3(__frcp_rn(v.x), __frcp_rn(v.y), __frcp_rn(v.z));
+}
+
 __forceinline__ __device__ double get_pk_cic_filter(int idx, MPIDist dist) {
     double d = ((2 * M_PI) / (((double)(dist.ng()))));
     float3 kmodes = dist.kmodes(idx, d);
-    float filt1 = sinf(0.5f * kmodes.x) / (0.5 * kmodes.x);
-    filt1 = filt1 * filt1;
-    filt1 = __frcp_rn(filt1 * filt1);
-    if (kmodes.x == 0) {
-        filt1 = 1.0;
-    }
 
-    float filt2 = sinf(0.5f * kmodes.y) / (0.5 * kmodes.y);
-    filt2 = filt2 * filt2;
-    filt2 = __frcp_rn(filt2 * filt2);
-    if (kmodes.y == 0) {
-        filt2 = 1.0;
-    }
+    float3 filt = rcp(sqr(sqr(sin(0.5f * kmodes) / (0.5f * kmodes))));
 
-    float filt3 = sinf(0.5f * kmodes.z) / (0.5 * kmodes.z);
-    filt3 = filt3 * filt3;
-    filt3 = __frcp_rn(filt3 * filt3);
-    if (kmodes.z == 0) {
-        filt3 = 1.0;
-    }
-    double filter = filt1 * filt2 * filt3;
+    float filt1 = (kmodes.x == 0) ? 1.0f : filt.x;
+    float filt2 = (kmodes.y == 0) ? 1.0f : filt.y;
+    float filt3 = (kmodes.z == 0) ? 1.0f : filt.z;
 
-    return filter;
+    return filt1 * filt2 * filt3;
 }
 
 template <class T>
-__global__ void bin_power(const T* d_grid, double2* d_bins, double k_min,
-                          double k_delta, int n_k_bins, double rl,
-                          MPIDist dist) {
+__global__ void
+bin_power(const T* __restrict d_grid, double2* __restrict d_bins, double k_min,
+          double k_delta, int n_k_bins, double rl, MPIDist dist) {
     int idx = blockDim.x * blockIdx.x + threadIdx.x;
     if (idx >= dist.local_grid_size())
         return;

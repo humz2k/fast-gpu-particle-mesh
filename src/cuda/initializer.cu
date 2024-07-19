@@ -132,9 +132,10 @@ template void launch_scale_amplitudes_by_power_spectrum<complexFloatDevice>(
     int, int);
 
 template <class T>
-__global__ void transform_density_field(const T* d_grid, T* d_x, T* d_y, T* d_z,
-                                        double delta, double rl, double a,
-                                        MPIDist dist) {
+__global__ void transform_density_field(const T* __restrict d_grid,
+                                        T* __restrict d_x, T* __restrict d_y,
+                                        T* __restrict d_z, double delta,
+                                        double rl, double a, MPIDist dist) {
     int idx = blockDim.x * blockIdx.x + threadIdx.x;
     if (idx >= dist.local_grid_size())
         return;
@@ -166,7 +167,7 @@ __global__ void transform_density_field(const T* d_grid, T* d_x, T* d_y, T* d_z,
 }
 
 template <class T>
-void launch_transform_density_field(T* d_grid, T* d_x, T* d_y, T* d_z,
+void launch_transform_density_field(const T* d_grid, T* d_x, T* d_y, T* d_z,
                                     double delta, double rl, double a,
                                     MPIDist dist, int numBlocks,
                                     int blockSize) {
@@ -177,15 +178,17 @@ void launch_transform_density_field(T* d_grid, T* d_x, T* d_y, T* d_z,
 }
 
 template void launch_transform_density_field<complexDoubleDevice>(
-    complexDoubleDevice*, complexDoubleDevice*, complexDoubleDevice*,
+    const complexDoubleDevice*, complexDoubleDevice*, complexDoubleDevice*,
     complexDoubleDevice*, double, double, double, MPIDist, int, int);
 template void launch_transform_density_field<complexFloatDevice>(
-    complexFloatDevice*, complexFloatDevice*, complexFloatDevice*,
+    const complexFloatDevice*, complexFloatDevice*, complexFloatDevice*,
     complexFloatDevice*, double, double, double, MPIDist, int, int);
 
 template <class T>
-__global__ void combine_density_vectors(float3* d_grad, T* d_x, T* d_y, T* d_z,
-                                        MPIDist dist) {
+__global__ void combine_density_vectors(float3* __restrict d_grad,
+                                        const T* __restrict d_x,
+                                        const T* __restrict d_y,
+                                        const T* __restrict d_z, MPIDist dist) {
     int idx = blockDim.x * blockIdx.x + threadIdx.x;
     if (idx >= dist.local_grid_size())
         return;
@@ -196,8 +199,8 @@ __global__ void combine_density_vectors(float3* d_grad, T* d_x, T* d_y, T* d_z,
 }
 
 template <class T>
-void launch_combine_density_vectors(float3* d_grad, T* d_x, T* d_y, T* d_z,
-                                    MPIDist dist, int numBlocks,
+void launch_combine_density_vectors(float3* d_grad, const T* d_x, const T* d_y,
+                                    const T* d_z, MPIDist dist, int numBlocks,
                                     int blockSize) {
     events.timers["kernel_combine_density_vectors"].start();
     gpuLaunch(combine_density_vectors, numBlocks, blockSize, d_grad, d_x, d_y,
@@ -206,14 +209,15 @@ void launch_combine_density_vectors(float3* d_grad, T* d_x, T* d_y, T* d_z,
 }
 
 template void launch_combine_density_vectors<complexDoubleDevice>(
-    float3*, complexDoubleDevice*, complexDoubleDevice*, complexDoubleDevice*,
-    MPIDist, int, int);
+    float3*, const complexDoubleDevice*, const complexDoubleDevice*,
+    const complexDoubleDevice*, MPIDist, int, int);
 template void launch_combine_density_vectors<complexFloatDevice>(
-    float3*, complexFloatDevice*, complexFloatDevice*, complexFloatDevice*,
-    MPIDist, int, int);
+    float3*, const complexFloatDevice*, const complexFloatDevice*,
+    const complexFloatDevice*, MPIDist, int, int);
 
-__global__ void place_particles(float3* d_pos, float3* d_vel,
-                                const float3* d_grad, double delta,
+__global__ void place_particles(float3* __restrict d_pos,
+                                float3* __restrict d_vel,
+                                const float3* __restrict d_grad, double delta,
                                 double dot_delta, double rl, double a,
                                 double deltaT, double fscal, int ng,
                                 MPIDist dist) {

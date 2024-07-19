@@ -16,7 +16,8 @@ typedef unsigned long long CPUTimer_t; ///< Type definition for CPU timer.
  * is provided, it returns the elapsed time since the start time.
  *
  * @param start The start time in microseconds. Defaults to 0.
- * @return The current CPU time in microseconds, or the elapsed time since the start time.
+ * @return The current CPU time in microseconds, or the elapsed time since the
+ * start time.
  */
 static inline unsigned long long CPUTimer(unsigned long long start = 0) {
     timeval tv;

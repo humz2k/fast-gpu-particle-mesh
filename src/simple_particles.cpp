@@ -1,8 +1,8 @@
 #include "simple_particles.hpp"
 #include "allocators.hpp"
 #include "gpu.hpp"
-#include "particle_actions.hpp"
 #include "grid.hpp"
+#include "particle_actions.hpp"
 
 SimpleParticles::SimpleParticles(const Params& params, Cosmo& cosmo,
                                  Timestepper& ts)

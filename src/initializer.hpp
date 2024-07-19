@@ -73,7 +73,7 @@ void launch_scale_amplitudes_by_power_spectrum(T* grid,
  * @param blockSize The size of each block to use in the CUDA kernel launch.
  */
 template <class T>
-void launch_transform_density_field(T* d_grid, T* d_x, T* d_y, T* d_z,
+void launch_transform_density_field(const T* d_grid, T* d_x, T* d_y, T* d_z,
                                     double delta, double rl, double a,
                                     MPIDist dist, int numBlocks, int blockSize);
 
@@ -98,8 +98,9 @@ void launch_transform_density_field(T* d_grid, T* d_x, T* d_y, T* d_z,
  * @param blockSize The size of each block to use in the CUDA kernel launch.
  */
 template <class T>
-void launch_combine_density_vectors(float3* d_grad, T* d_x, T* d_y, T* d_z,
-                                    MPIDist dist, int numBlocks, int blockSize);
+void launch_combine_density_vectors(float3* d_grad, const T* d_x, const T* d_y,
+                                    const T* d_z, MPIDist dist, int numBlocks,
+                                    int blockSize);
 
 /**
  * @brief Launches a CUDA kernel to place particles in the simulation grid.

@@ -18,9 +18,7 @@ __global__ void CIC_kernel(T* d_grid, const float3* d_pos, int n_particles,
     int j = my_particle.y;
     int k = my_particle.z;
 
-    float diffx = (my_particle.x - (float)i);
-    float diffy = (my_particle.y - (float)j);
-    float diffz = (my_particle.z - (float)k);
+    float3 diff = my_particle - floor(my_particle);
 
     int ng = dist.ng();
 
@@ -32,9 +30,9 @@ __global__ void CIC_kernel(T* d_grid, const float3* d_pos, int n_particles,
                 int nz = (k + z) % ng;
                 int indx = (nx * ng + ny) * ng + nz;
 
-                float dx = (x == 0) ? (1 - diffx) : diffx;
-                float dy = (y == 0) ? (1 - diffy) : diffy;
-                float dz = (z == 0) ? (1 - diffz) : diffz;
+                float dx = (x == 0) ? (1.0f - diff.x) : diff.x;
+                float dy = (y == 0) ? (1.0f - diff.y) : diff.y;
+                float dz = (z == 0) ? (1.0f - diff.z) : diff.z;
 
                 float mul = dx * dy * dz * mass;
 
@@ -95,13 +93,12 @@ __global__ void update_velocities_kernel(float3* d_vel, const float3* d_pos,
     float3 my_particle = d_pos[idx];
 
     float3 my_deltaV = make_float3(0.0, 0.0, 0.0);
+
     int i = my_particle.x;
     int j = my_particle.y;
     int k = my_particle.z;
 
-    float diffx = (my_particle.x - (float)i);
-    float diffy = (my_particle.y - (float)j);
-    float diffz = (my_particle.z - (float)k);
+    float3 diff = my_particle - floor(my_particle);
 
     for (int x = 0; x < 2; x++) {
         for (int y = 0; y < 2; y++) {
@@ -111,16 +108,15 @@ __global__ void update_velocities_kernel(float3* d_vel, const float3* d_pos,
                 int nz = (k + z) % ng;
                 int indx = (nx * ng + ny) * ng + nz;
 
-                float dx = (x == 0) ? (1 - diffx) : diffx;
-                float dy = (y == 0) ? (1 - diffy) : diffy;
-                float dz = (z == 0) ? (1 - diffz) : diffz;
+                float dx = (x == 0) ? (1.0f - diff.x) : diff.x;
+                float dy = (y == 0) ? (1.0f - diff.y) : diff.y;
+                float dz = (z == 0) ? (1.0f - diff.z) : diff.z;
 
-                my_deltaV =
-                    my_deltaV + d_grad[indx] * (dx * dy * dz * deltaT * fscal);
+                my_deltaV += d_grad[indx] * (dx * dy * dz * deltaT * fscal);
             }
         }
     }
-    d_vel[idx] = d_vel[idx] + my_deltaV;
+    d_vel[idx] += my_deltaV;
 }
 
 void launch_update_velocities_kernel(float3* d_vel, const float3* d_pos,
