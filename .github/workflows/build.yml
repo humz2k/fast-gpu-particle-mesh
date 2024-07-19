@@ -11,11 +11,10 @@ jobs:
       runs-on: ubuntu-20.04
       steps:
       - uses: actions/checkout@v2
-      - uses: Jimver/cuda-toolkit@v0.2.11
+      - uses: Jimver/cuda-toolkit@v0.2.16
         id: cuda-toolkit
         with:
           cuda: '12.1.0'
-          method: 'local'
       - name: install mpi
         run: sudo apt-get install openmpi-bin openmpi-common libopenmpi-dev libgtk2.0-dev
       - name: See NVCC
