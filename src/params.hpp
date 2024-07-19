@@ -63,6 +63,8 @@ class Params {
      */
     Params(std::string filename);
 
+    const std::string& output_prefix() const;
+
     /**
      * @brief Outputs the current parameter settings.
      */

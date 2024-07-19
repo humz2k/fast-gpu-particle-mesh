@@ -312,7 +312,7 @@ static void run_simulation(std::string params_file) {
     Params params(params_file);
     Timestepper ts(params);
     Cosmo cosmo(params);
-    cosmo.initial_pk().to_csv("test.csv");
+    cosmo.initial_pk().to_csv(params.output_prefix() + "input_power_spectrum.csv");
 
     ParticleType particles(params, cosmo, ts);
 
@@ -322,7 +322,7 @@ static void run_simulation(std::string params_file) {
     grid.CIC(particles);
     grid.forward();
     PowerSpectrum ic_power(grid, params.pk_n_bins());
-    ic_power.to_csv("test2.csv");
+    ic_power.to_csv(params.output_prefix() + "init_power_spectrum.csv");
 
     for (int step = 0; step < params.nsteps(); step++) {
         LOG_MINIMAL("STEP %d", step);
@@ -358,7 +358,7 @@ static void run_simulation(std::string params_file) {
             grid.CIC(particles);
             grid.forward();
             PowerSpectrum(grid, params.pk_n_bins())
-                .to_csv("steps/step" + std::to_string(step) + ".csv");
+                .to_csv(params.output_prefix() + "step" + std::to_string(step) + "_power_spectrum.csv");
             events.timers["dpk"].end();
         }
 
@@ -368,11 +368,13 @@ static void run_simulation(std::string params_file) {
     grid.CIC(particles);
     grid.forward();
     PowerSpectrum power(grid, params.pk_n_bins());
-    power.to_csv("final.csv");
+    power.to_csv(params.output_prefix() + "final_power_spectrum.csv");
 
     LOG_MINIMAL("done!");
 
     events.timers["dtot"].end();
+
+    events.dump(params.output_prefix());
 
     MPI_Finalize();
 }

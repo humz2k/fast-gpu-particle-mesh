@@ -184,9 +184,13 @@ class Events {
      * @brief Destructor for Events. Exports logged data to CSV files.
      */
     ~Events() {
-        gpu_allocation.to_csv("gpu_allocations.csv");
 
-        std::ofstream output("timers.csv");
+    }
+
+    inline void dump(const std::string& prefix){
+        gpu_allocation.to_csv(prefix + "gpu_allocations.csv");
+
+        std::ofstream output(prefix + "timers.csv");
 
         output << "timer,mean,min,max,freq,total\n";
 

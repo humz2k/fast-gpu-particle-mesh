@@ -80,7 +80,7 @@ Params::Params(std::string filename) : m_params_filename(filename) {
         } else if (tokens[0] == "N_EFF_MASSIVE") {
             m_neff_massive = std::stof(tokens[1]);
         } else if (tokens[0] == "OUTPUT_BASE_NAME") {
-            m_output_prefix = tokens[0];
+            m_output_prefix = tokens[1];
         } else if (tokens[0] == "PK_DUMP") {
             for (size_t i = 1; i < tokens.size(); i++) {
                 m_pk_dumps[std::stoi(tokens[i])] = true;
@@ -200,3 +200,5 @@ const std::string& Params::ipk() const { return m_ipk; }
 int Params::pk_n_bins() const { return m_pk_n_bins; }
 
 bool Params::pk_dump(int step) { return m_pk_dumps[step]; }
+
+const std::string& Params::output_prefix() const { return m_output_prefix; }
