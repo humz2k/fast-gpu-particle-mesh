@@ -16,7 +16,6 @@ __forceinline__ __device__ float calc_greens(int idx, MPIDist dist) {
         make_float3(global_coords.x, global_coords.y, global_coords.z);
 
     float3 c = cos(idx3d * d);
-    // float3 kmodes = dist.kmodes(idx,d);
 
     return (0.5f / (ng * ng * ng)) / (c.x + c.y + c.z - 3.0f);
 }
@@ -42,17 +41,14 @@ __global__ void kspace_solve_gradient(const T* grid, T* d_x, T* d_y, T* d_z,
     out_x.y = c.x * rho.x;
 
     d_x[idx] = out_x;
-
     T out_y;
     out_y.x = -c.y * rho.y;
     out_y.y = c.y * rho.x;
-
     d_y[idx] = out_y;
 
     T out_z;
     out_z.x = -c.z * rho.y;
     out_z.y = c.z * rho.x;
-
     d_z[idx] = out_z;
 }
 
@@ -68,6 +64,7 @@ void launch_kspace_solve_gradient(const T* grid, T* d_x, T* d_y, T* d_z,
 template void launch_kspace_solve_gradient<complexDoubleDevice>(
     const complexDoubleDevice*, complexDoubleDevice*, complexDoubleDevice*,
     complexDoubleDevice*, MPIDist, int, int);
+
 template void launch_kspace_solve_gradient<complexFloatDevice>(
     const complexFloatDevice*, complexFloatDevice*, complexFloatDevice*,
     complexFloatDevice*, MPIDist, int, int);
@@ -78,8 +75,6 @@ __global__ void combine_vectors(float3* d_grad, const T* d_x, const T* d_y,
     int idx = blockDim.x * blockIdx.x + threadIdx.x;
     if (idx >= dist.local_grid_size())
         return;
-    // printf("grad: %g + %gi, %g + %gi, %g +
-    // %gi\n",d_x[idx].x,d_x[idx].y,d_y[idx].x,d_y[idx].y,d_z[idx].x,d_z[idx].y);
     d_grad[idx] = make_float3(d_x[idx].x, d_y[idx].x, d_z[idx].x);
 }
 
@@ -96,6 +91,7 @@ void launch_combine_vectors(float3* d_grad, const T* d_x, const T* d_y,
 template void launch_combine_vectors<complexDoubleDevice>(
     float3*, const complexDoubleDevice*, const complexDoubleDevice*,
     const complexDoubleDevice*, MPIDist, int, int);
+
 template void launch_combine_vectors<complexFloatDevice>(
     float3*, const complexFloatDevice*, const complexFloatDevice*,
     const complexFloatDevice*, MPIDist, int, int);
