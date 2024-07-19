@@ -5,6 +5,7 @@
 #include "mpi_distribution.hpp"
 #include "params.hpp"
 #include "timestepper.hpp"
+#include "event_logger.hpp"
 #include <cuda_runtime.h>
 #include <cufft.h>
 
@@ -279,5 +280,82 @@ template <class T> class Particles {
      */
     virtual const Params& params() const = 0;
 };
+
+template<class ParticleType, class GridType>
+void run_simulation(std::string params_file){
+    events.timers["dtot"].start();
+
+    gpuCall(gpuFree(0));
+
+    LOG_MINIMAL("git hash = %s", TOSTRING(GIT_HASH));
+    LOG_MINIMAL("git modified = %s", TOSTRING(GIT_MODIFIED));
+
+    events.timers["dinit"].start();
+
+    Params params(params_file);
+    Timestepper ts(params);
+    Cosmo cosmo(params);
+    cosmo.initial_pk().to_csv("test.csv");
+
+    ParticleType particles(params, cosmo, ts);
+
+    events.timers["dinit"].end();
+
+    GridType grid(params, params.ng());
+    grid.CIC(particles);
+    grid.forward();
+    PowerSpectrum ic_power(grid, params.pk_n_bins());
+    ic_power.to_csv("test2.csv");
+
+    for (int step = 0; step < params.nsteps(); step++) {
+        LOG_MINIMAL("STEP %d", step);
+        events.timers["dstep"].start();
+
+        events.timers["dpos"].start();
+        particles.update_positions(ts, 0.5f);
+        events.timers["dpos"].end();
+
+        events.timers["dcic"].start();
+        grid.CIC(particles);
+        events.timers["dcic"].end();
+
+        events.timers["dgrad"].start();
+        grid.solve_gradient();
+        events.timers["dgrad"].end();
+
+        ts.advance_half_step();
+
+        events.timers["dvel"].start();
+        particles.update_velocities(grid, ts, 1.0f);
+        events.timers["dvel"].end();
+
+        ts.advance_half_step();
+
+        events.timers["dpos"].start();
+        particles.update_positions(ts, 0.5f);
+        events.timers["dpos"].end();
+
+        if (params.pk_dump(step)) {
+            LOG_MINIMAL("dumping pk");
+            events.timers["dpk"].start();
+            grid.CIC(particles);
+            grid.forward();
+            PowerSpectrum(grid, params.pk_n_bins())
+                .to_csv("steps/step" + std::to_string(step) + ".csv");
+            events.timers["dpk"].end();
+        }
+
+        events.timers["dstep"].end();
+    }
+
+    grid.CIC(particles);
+    grid.forward();
+    PowerSpectrum power(grid, params.pk_n_bins());
+    power.to_csv("final.csv");
+
+    LOG_MINIMAL("done!");
+
+    events.timers["dtot"].end();
+}
 
 #endif

@@ -4,8 +4,6 @@
 #include "allocators.hpp"
 #include "common.hpp"
 #include "initializer.hpp"
-#include "particle_actions.hpp"
-#include "pk_bins.hpp"
 #include "serial_grid.hpp"
 #include "solver.hpp"
 

@@ -2,7 +2,6 @@
 #include "allocators.hpp"
 #include "gpu.hpp"
 #include "particle_actions.hpp"
-#include "simple_grid.hpp"
 
 SerialParticles::SerialParticles(const Params& params, Cosmo& cosmo,
                                  Timestepper& ts)
