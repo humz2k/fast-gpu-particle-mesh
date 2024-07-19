@@ -107,9 +107,12 @@ void launch_combine_density_vectors(float3* d_grad, T* d_x, T* d_y, T* d_z,
  * This function launches a CUDA kernel that calculates the positions and
  * velocities of particles based on the gradient field and other parameters.
  *
- * @param d_pos Pointer to the device memory where the particle positions will be stored.
- * @param d_vel Pointer to the device memory where the particle velocities will be stored.
- * @param d_grad Pointer to the device memory where the gradient field is stored.
+ * @param d_pos Pointer to the device memory where the particle positions will
+ * be stored.
+ * @param d_vel Pointer to the device memory where the particle velocities will
+ * be stored.
+ * @param d_grad Pointer to the device memory where the gradient field is
+ * stored.
  * @param delta The delta value used in the transformation.
  * @param dot_delta The dot product of delta and some other parameter.
  * @param rl The size of the simulation box.
