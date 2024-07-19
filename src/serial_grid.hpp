@@ -6,39 +6,39 @@
 #include "simulation.hpp"
 
 /**
- * @class SimpleGrid
+ * @class SerialGrid
  * @brief Manages grid data and operations in the simulation.
  *
- * The SimpleGrid class provides an implementation of the Grid class for
+ * The SerialGrid class provides an implementation of the Grid class for
  * managing grid data, performing operations such as solving equations,
  * calculating gradients, and interacting with particles within the simulation.
  *
  * @tparam fft_t The type used for FFT operations (e.g., complexDoubleDevice).
  */
-template <class fft_t> class SimpleGrid : public Grid {
+template <class fft_t> class SerialGrid : public Grid {
   private:
     int m_ng;               ///< The size of the grid.
     size_t m_size;          ///< The total size of the grid.
     const Params& m_params; ///< Reference to the simulation parameters.
     float3* m_d_grad;       ///< Pointer to the gradient data on the device.
     fft_t* m_d_grid;        ///< Pointer to the grid data on the device.
-    SerialFFT<fft_t> fft; ///< FFT object for performing Fourier transforms.
+    SerialFFT<fft_t> fft;   ///< FFT object for performing Fourier transforms.
     MPIDist m_dist; ///< MPI distribution object for handling grid distribution.
 
   public:
     /**
-     * @brief Constructs a SimpleGrid object with the given parameters and grid
+     * @brief Constructs a SerialGrid object with the given parameters and grid
      * size.
      *
      * @param params The simulation parameters.
      * @param ng The size of the grid.
      */
-    SimpleGrid(const Params& params, int ng);
+    SerialGrid(const Params& params, int ng);
 
     /**
-     * @brief Destructor for SimpleGrid.
+     * @brief Destructor for SerialGrid.
      */
-    ~SimpleGrid();
+    ~SerialGrid();
 
     /**
      * @brief Solves for rho on the grid.

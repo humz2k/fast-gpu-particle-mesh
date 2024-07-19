@@ -1,9 +1,9 @@
 #include "allocators.hpp"
 #include "cosmo.hpp"
 #include "event_logger.hpp"
-#include "grid.hpp"
 #include "logging.hpp"
 #include "params.hpp"
+#include "serial_grid.hpp"
 #include "simple_particles.hpp"
 #include "simulation.hpp"
 #include "timestepper.hpp"
@@ -28,7 +28,7 @@ int main() {
 
     events.timers["dinit"].end();
 
-    SimpleGrid<complexDoubleDevice> grid(params, params.ng());
+    SerialGrid<complexDoubleDevice> grid(params, params.ng());
     grid.CIC(particles);
     grid.forward();
     PowerSpectrum ic_power(grid, params.pk_n_bins());

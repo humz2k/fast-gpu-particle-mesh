@@ -1,13 +1,13 @@
-#include "grid.hpp"
 #include "allocators.hpp"
 #include "common.hpp"
 #include "initializer.hpp"
 #include "particle_actions.hpp"
 #include "pk_bins.hpp"
+#include "serial_grid.hpp"
 #include "solver.hpp"
 
 template <class fft_t>
-SimpleGrid<fft_t>::SimpleGrid(const Params& params, int ng)
+SerialGrid<fft_t>::SerialGrid(const Params& params, int ng)
     : m_ng(ng), m_params(params), fft(m_ng), m_dist(ng) {
     m_size = m_ng * m_ng * m_ng;
 
@@ -15,12 +15,12 @@ SimpleGrid<fft_t>::SimpleGrid(const Params& params, int ng)
     gpu_allocator.alloc(&m_d_grid, m_size * sizeof(fft_t));
 }
 
-template <class fft_t> SimpleGrid<fft_t>::~SimpleGrid() {
+template <class fft_t> SerialGrid<fft_t>::~SerialGrid() {
     gpu_allocator.free(m_d_grad);
     gpu_allocator.free(m_d_grid);
 }
 
-template <class fft_t> void SimpleGrid<fft_t>::solve_gradient() {
+template <class fft_t> void SerialGrid<fft_t>::solve_gradient() {
 
     int blockSize = BLOCKSIZE;
     int numBlocks = (m_dist.local_grid_size() + (blockSize - 1)) / blockSize;
@@ -49,10 +49,10 @@ template <class fft_t> void SimpleGrid<fft_t>::solve_gradient() {
     gpu_allocator.free(d_z);
 }
 
-template <class fft_t> void SimpleGrid<fft_t>::solve() {}
+template <class fft_t> void SerialGrid<fft_t>::solve() {}
 
 template <class fft_t>
-void SimpleGrid<fft_t>::CIC(const Particles<float3>& particles) {
+void SerialGrid<fft_t>::CIC(const Particles<float3>& particles) {
     int n_particles = particles.nlocal();
     int blockSize = BLOCKSIZE;
     int numBlocks = (n_particles + (blockSize - 1)) / blockSize;
@@ -65,7 +65,7 @@ void SimpleGrid<fft_t>::CIC(const Particles<float3>& particles) {
 }
 
 template <class fft_t>
-void SimpleGrid<fft_t>::generate_fourier_amplitudes(Cosmo& cosmo) {
+void SerialGrid<fft_t>::generate_fourier_amplitudes(Cosmo& cosmo) {
     LOG_INFO("generating fourier amplitudes");
 
     int blockSize = BLOCKSIZE;
@@ -82,7 +82,7 @@ void SimpleGrid<fft_t>::generate_fourier_amplitudes(Cosmo& cosmo) {
 }
 
 template <class fft_t>
-void SimpleGrid<fft_t>::generate_displacement_ic(Cosmo& cosmo, Timestepper& ts,
+void SerialGrid<fft_t>::generate_displacement_ic(Cosmo& cosmo, Timestepper& ts,
                                                  Particles<float3>& particles) {
     LOG_INFO("generating displacement ic");
 
@@ -123,34 +123,34 @@ void SimpleGrid<fft_t>::generate_displacement_ic(Cosmo& cosmo, Timestepper& ts,
                            m_params.ng(), m_dist, numBlocks, blockSize);
 }
 
-template <class fft_t> MPIDist SimpleGrid<fft_t>::dist() const {
+template <class fft_t> MPIDist SerialGrid<fft_t>::dist() const {
     return m_dist;
 };
 
-template <class fft_t> double SimpleGrid<fft_t>::k_min() const {
+template <class fft_t> double SerialGrid<fft_t>::k_min() const {
     return (2.0 * M_PI) / m_params.rl();
 };
 
-template <class fft_t> double SimpleGrid<fft_t>::k_max() const {
+template <class fft_t> double SerialGrid<fft_t>::k_max() const {
     double d = (2.0 * M_PI) / m_params.rl();
     double ng = m_dist.ng();
     return sqrt(3.0 * (ng / 2.0) * (ng / 2.0) * d * d);
 };
 
-template <class fft_t> void SimpleGrid<fft_t>::forward() {
+template <class fft_t> void SerialGrid<fft_t>::forward() {
     fft.forward(m_d_grid);
 };
 
-template <class fft_t> void SimpleGrid<fft_t>::backward() {
+template <class fft_t> void SerialGrid<fft_t>::backward() {
     fft.backward(m_d_grid);
 };
 
-template <class fft_t> const float3* SimpleGrid<fft_t>::grad() const {
+template <class fft_t> const float3* SerialGrid<fft_t>::grad() const {
     return m_d_grad;
 };
 
 template <class fft_t>
-std::vector<double> SimpleGrid<fft_t>::bin(int nbins) const {
+std::vector<double> SerialGrid<fft_t>::bin(int nbins) const {
     int blockSize = BLOCKSIZE;
     int numBlocks = (m_size + (blockSize - 1)) / blockSize;
 
@@ -178,5 +178,5 @@ std::vector<double> SimpleGrid<fft_t>::bin(int nbins) const {
     return out;
 };
 
-template class SimpleGrid<complexDoubleDevice>;
-template class SimpleGrid<complexFloatDevice>;
+template class SerialGrid<complexDoubleDevice>;
+template class SerialGrid<complexFloatDevice>;
