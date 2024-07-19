@@ -312,7 +312,8 @@ static void run_simulation(std::string params_file) {
     Params params(params_file);
     Timestepper ts(params);
     Cosmo cosmo(params);
-    cosmo.initial_pk().to_csv(params.output_prefix() + "input_power_spectrum.csv");
+    cosmo.initial_pk().to_csv(params.output_prefix() +
+                              "input_power_spectrum.csv");
 
     ParticleType particles(params, cosmo, ts);
 
@@ -358,7 +359,8 @@ static void run_simulation(std::string params_file) {
             grid.CIC(particles);
             grid.forward();
             PowerSpectrum(grid, params.pk_n_bins())
-                .to_csv(params.output_prefix() + "step" + std::to_string(step) + "_power_spectrum.csv");
+                .to_csv(params.output_prefix() + "step" + std::to_string(step) +
+                        "_power_spectrum.csv");
             events.timers["dpk"].end();
         }
 
