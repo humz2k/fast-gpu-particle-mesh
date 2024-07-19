@@ -101,6 +101,26 @@ template <class T>
 void launch_combine_density_vectors(float3* d_grad, T* d_x, T* d_y, T* d_z,
                                     MPIDist dist, int numBlocks, int blockSize);
 
+/**
+ * @brief Launches a CUDA kernel to place particles in the simulation grid.
+ *
+ * This function launches a CUDA kernel that calculates the positions and
+ * velocities of particles based on the gradient field and other parameters.
+ *
+ * @param d_pos Pointer to the device memory where the particle positions will be stored.
+ * @param d_vel Pointer to the device memory where the particle velocities will be stored.
+ * @param d_grad Pointer to the device memory where the gradient field is stored.
+ * @param delta The delta value used in the transformation.
+ * @param dot_delta The dot product of delta and some other parameter.
+ * @param rl The size of the simulation box.
+ * @param a The scale factor.
+ * @param deltaT The time step size.
+ * @param fscal The scaling factor.
+ * @param ng The size of the grid.
+ * @param dist The MPIDist object containing distribution and grid information.
+ * @param numBlocks The number of blocks to use in the CUDA kernel launch.
+ * @param blockSize The size of each block to use in the CUDA kernel launch.
+ */
 void launch_place_particles(float3* d_pos, float3* d_vel, const float3* d_grad,
                             double delta, double dot_delta, double rl, double a,
                             double deltaT, double fscal, int ng, MPIDist dist,
