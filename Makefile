@@ -32,6 +32,9 @@ FGPM_INCLUDE_FILES := $(shell find $(FGPM_SRC_DIR) -name '*.hpp') $(shell find i
 
 main: build/driver
 
+test: build/driver
+	build/driver
+
 .secondary: $(FGPM_OUTPUTS) $(FGPM_DRIVER_OBJECTS)
 
 $(FGPM_BUILD_DIR)/%: $(FGPM_BUILD_DIR)/$(FGPM_DRIVERS)/%.o $(FGPM_OUTPUTS)
