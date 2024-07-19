@@ -282,8 +282,21 @@ template <class T> class Particles {
     virtual const Params& params() const = 0;
 };
 
+/**
+ * @brief Runs the simulation with the given parameters.
+ *
+ * NOTE: Don't call me twice!!!
+ *
+ * This function sets up and runs the simulation, including initializing
+ * MPI, reading parameters, creating particles and grid objects, and
+ * running the simulation loop.
+ *
+ * @tparam ParticleType The type of the particles in the simulation.
+ * @tparam GridType The type of the grid in the simulation.
+ * @param params_file The path to the parameter file.
+ */
 template <class ParticleType, class GridType>
-void run_simulation(std::string params_file) {
+static void run_simulation(std::string params_file) {
 
     MPI_Init(NULL, NULL);
 
