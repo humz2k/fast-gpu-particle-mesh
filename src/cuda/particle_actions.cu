@@ -1,9 +1,9 @@
 #include "allocators.hpp"
+#include "event_logger.hpp"
 #include "gpu.hpp"
 #include "logging.hpp"
 #include "mpi_distribution.hpp"
 #include "particle_actions.hpp"
-#include "event_logger.hpp"
 
 template <class T>
 __global__ void CIC_kernel(T* d_grid, const float3* d_pos, int n_particles,

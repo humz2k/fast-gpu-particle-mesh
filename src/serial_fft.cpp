@@ -1,6 +1,6 @@
 #include "serial_fft.hpp"
-#include "gpu.hpp"
 #include "event_logger.hpp"
+#include "gpu.hpp"
 
 static inline const char* cufftResult_to_string(gpufftResult error) {
     switch (error) {

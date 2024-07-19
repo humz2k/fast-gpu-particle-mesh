@@ -1,10 +1,10 @@
 #include "allocators.hpp"
+#include "event_logger.hpp"
 #include "gpu.hpp"
 #include "logging.hpp"
 #include "mpi_distribution.hpp"
 #include "pk_bins.hpp"
 #include "power_spectrum.hpp"
-#include "event_logger.hpp"
 #include <cassert>
 #include <stdio.h>
 #include <vector>

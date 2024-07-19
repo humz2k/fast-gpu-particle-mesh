@@ -1,4 +1,5 @@
 #include "allocators.hpp"
+#include "event_logger.hpp"
 #include "gpu.hpp"
 #include "initializer.hpp"
 #include "logging.hpp"
@@ -6,7 +7,6 @@
 #include <curand.h>
 #include <curand_kernel.h>
 #include <vector>
-#include "event_logger.hpp"
 
 template <class T>
 __global__ void generate_real_random(T* __restrict grid, int seed,

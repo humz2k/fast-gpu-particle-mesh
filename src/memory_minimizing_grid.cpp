@@ -9,16 +9,19 @@
 
 template <class fft_t>
 MemoryMinGrid<fft_t>::MemoryMinGrid(const Params& params, int ng)
-    : m_ng(ng), m_params(params), m_d_grad(NULL), m_d_grid(NULL), fft(m_ng), m_dist(ng) {
+    : m_ng(ng), m_params(params), m_d_grad(NULL), m_d_grid(NULL), fft(m_ng),
+      m_dist(ng) {
     m_size = m_ng * m_ng * m_ng;
 
-    //gpu_allocator.alloc(&m_d_grad, m_size * sizeof(float3));
-    //gpu_allocator.alloc(&m_d_grid, m_size * sizeof(fft_t));
+    // gpu_allocator.alloc(&m_d_grad, m_size * sizeof(float3));
+    // gpu_allocator.alloc(&m_d_grid, m_size * sizeof(fft_t));
 }
 
 template <class fft_t> MemoryMinGrid<fft_t>::~MemoryMinGrid() {
-    if (m_d_grad)gpu_allocator.free(m_d_grad);
-    if (m_d_grid)gpu_allocator.free(m_d_grid);
+    if (m_d_grad)
+        gpu_allocator.free(m_d_grad);
+    if (m_d_grid)
+        gpu_allocator.free(m_d_grid);
 }
 
 template <class fft_t> void MemoryMinGrid<fft_t>::solve_gradient() {
@@ -28,18 +31,21 @@ template <class fft_t> void MemoryMinGrid<fft_t>::solve_gradient() {
     int blockSize = BLOCKSIZE;
     int numBlocks = (m_dist.local_grid_size() + (blockSize - 1)) / blockSize;
 
-    if (m_d_grad){
+    if (m_d_grad) {
         gpu_allocator.free(m_d_grad);
         m_d_grad = NULL;
     }
 
-    fft_t* d_x; gpu_allocator.alloc(&d_x,m_size * sizeof(fft_t));
-    fft_t* d_y; gpu_allocator.alloc(&d_y,m_size * sizeof(fft_t));
-    fft_t* d_z; gpu_allocator.alloc(&d_z,m_size * sizeof(fft_t));
+    fft_t* d_x;
+    gpu_allocator.alloc(&d_x, m_size * sizeof(fft_t));
+    fft_t* d_y;
+    gpu_allocator.alloc(&d_y, m_size * sizeof(fft_t));
+    fft_t* d_z;
+    gpu_allocator.alloc(&d_z, m_size * sizeof(fft_t));
 
     fft.forward(m_d_grid);
-    launch_kspace_solve_gradient(m_d_grid, d_x, d_y, d_z, m_dist,
-                                 numBlocks, blockSize);
+    launch_kspace_solve_gradient(m_d_grid, d_x, d_y, d_z, m_dist, numBlocks,
+                                 blockSize);
 
     gpu_allocator.free(m_d_grid);
     m_d_grid = NULL;
@@ -48,8 +54,8 @@ template <class fft_t> void MemoryMinGrid<fft_t>::solve_gradient() {
     fft.backward(d_y);
     fft.backward(d_z);
 
-    if (!m_d_grad){
-        gpu_allocator.alloc(&m_d_grad,m_size * sizeof(float3));
+    if (!m_d_grad) {
+        gpu_allocator.alloc(&m_d_grad, m_size * sizeof(float3));
     }
 
     launch_combine_vectors(m_d_grad, d_x, d_y, d_z, m_dist, numBlocks,
@@ -71,13 +77,13 @@ void MemoryMinGrid<fft_t>::CIC(const Particles<float3>& particles) {
     float gpscale = ((float)m_params.ng()) / ((float)m_params.np());
     float mass = gpscale * gpscale * gpscale;
 
-    if (m_d_grad){
+    if (m_d_grad) {
         gpu_allocator.free(m_d_grad);
         m_d_grad = NULL;
     }
 
-    if (!m_d_grid){
-        gpu_allocator.alloc(&m_d_grid,m_size * sizeof(fft_t));
+    if (!m_d_grid) {
+        gpu_allocator.alloc(&m_d_grid, m_size * sizeof(fft_t));
     }
 
     launch_CIC_kernel(m_d_grid, particles.pos(), n_particles, mass, m_dist,
@@ -91,11 +97,11 @@ void MemoryMinGrid<fft_t>::generate_fourier_amplitudes(Cosmo& cosmo) {
     int blockSize = BLOCKSIZE;
     int numBlocks = (m_size + (blockSize - 1)) / blockSize;
 
-    if (!m_d_grid){
-        gpu_allocator.alloc(&m_d_grid,m_size * sizeof(fft_t));
+    if (!m_d_grid) {
+        gpu_allocator.alloc(&m_d_grid, m_size * sizeof(fft_t));
     }
 
-    if (m_d_grad){
+    if (m_d_grad) {
         gpu_allocator.free(m_d_grad);
         m_d_grad = NULL;
     }
@@ -111,8 +117,8 @@ void MemoryMinGrid<fft_t>::generate_fourier_amplitudes(Cosmo& cosmo) {
 }
 
 template <class fft_t>
-void MemoryMinGrid<fft_t>::generate_displacement_ic(Cosmo& cosmo, Timestepper& ts,
-                                                 Particles<float3>& particles) {
+void MemoryMinGrid<fft_t>::generate_displacement_ic(
+    Cosmo& cosmo, Timestepper& ts, Particles<float3>& particles) {
     LOG_INFO("generating displacement ic");
 
     int blockSize = BLOCKSIZE;
@@ -125,9 +131,12 @@ void MemoryMinGrid<fft_t>::generate_displacement_ic(Cosmo& cosmo, Timestepper& t
     float dot_delta = cosmo.dot_delta(ts.z());
     ts.advance_half_step();
 
-    fft_t* d_x; gpu_allocator.alloc(&d_x,m_size * sizeof(fft_t));
-    fft_t* d_y; gpu_allocator.alloc(&d_y,m_size * sizeof(fft_t));
-    fft_t* d_z; gpu_allocator.alloc(&d_z,m_size * sizeof(fft_t));
+    fft_t* d_x;
+    gpu_allocator.alloc(&d_x, m_size * sizeof(fft_t));
+    fft_t* d_y;
+    gpu_allocator.alloc(&d_y, m_size * sizeof(fft_t));
+    fft_t* d_z;
+    gpu_allocator.alloc(&d_z, m_size * sizeof(fft_t));
 
     launch_transform_density_field(m_d_grid, d_x, d_y, d_z, delta,
                                    m_params.rl(), ts.a(), m_dist, numBlocks,
@@ -140,12 +149,12 @@ void MemoryMinGrid<fft_t>::generate_displacement_ic(Cosmo& cosmo, Timestepper& t
     fft.backward(d_y);
     fft.backward(d_z);
 
-    if (!m_d_grad){
-        gpu_allocator.alloc(&m_d_grad,m_size * sizeof(float3));
+    if (!m_d_grad) {
+        gpu_allocator.alloc(&m_d_grad, m_size * sizeof(float3));
     }
 
-    launch_combine_density_vectors(m_d_grad, d_x, d_y, d_z, m_dist,
-                                   numBlocks, blockSize);
+    launch_combine_density_vectors(m_d_grad, d_x, d_y, d_z, m_dist, numBlocks,
+                                   blockSize);
 
     gpu_allocator.free(d_x);
     gpu_allocator.free(d_y);

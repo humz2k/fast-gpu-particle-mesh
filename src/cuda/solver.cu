@@ -1,7 +1,7 @@
+#include "event_logger.hpp"
 #include "gpu.hpp"
 #include "mpi_distribution.hpp"
 #include "solver.hpp"
-#include "event_logger.hpp"
 
 __forceinline__ __device__ float calc_greens(int idx, MPIDist dist) {
     int3 global_coords = dist.global_coords(idx);

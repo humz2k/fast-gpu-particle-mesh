@@ -1,13 +1,13 @@
 #include "allocators.hpp"
 #include "cosmo.hpp"
+#include "event_logger.hpp"
 #include "logging.hpp"
+#include "memory_minimizing_grid.hpp"
 #include "params.hpp"
 #include "simple_grid.hpp"
-#include "memory_minimizing_grid.hpp"
 #include "simple_particles.hpp"
 #include "simulation.hpp"
 #include "timestepper.hpp"
-#include "event_logger.hpp"
 #include <string.h>
 
 int main() {
@@ -36,7 +36,7 @@ int main() {
     ic_power.to_csv("test2.csv");
 
     for (int step = 0; step < params.nsteps(); step++) {
-        LOG_MINIMAL("STEP %d",step);
+        LOG_MINIMAL("STEP %d", step);
         events.timers["dstep"].start();
 
         events.timers["dpos"].start();
@@ -85,7 +85,7 @@ int main() {
 
     events.timers["dtot"].end();
 
-    //std::cout << "init: " << events.timers["init"].mean() << std::endl;
+    // std::cout << "init: " << events.timers["init"].mean() << std::endl;
 
     return 0;
 }
