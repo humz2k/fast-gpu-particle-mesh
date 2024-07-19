@@ -15,9 +15,11 @@ __global__ void generate_real_random(T* __restrict grid, int seed,
     if (idx >= dist.local_grid_size())
         return;
 
+    // Initialize the cuRAND state using *global* index
     curandState state;
     curand_init(seed, dist.global_idx(idx), 0, &state);
 
+    // Generate a random number with a normal distribution
     double amp = curand_normal_double(&state);
     T out;
     out.x = amp;
@@ -44,12 +46,9 @@ __forceinline__ __device__ double interp_power_spectrum(int idx, double* in,
                                                         double k_delta,
                                                         double k_min, double rl,
                                                         const MPIDist dist) {
-
-    int3 idx3d = dist.global_coords(idx);
-
-    // pole
-    if ((idx3d.x == 0) && (idx3d.y == 0) && (idx3d.z == 0))
-        return 0;
+    // handle origin
+    if (dist.is_global_origin(idx))
+        return 0.0;
 
     // k modes and magnitude
     float3 kmodes = dist.kmodes(idx, (2.0f * M_PI) / rl);
@@ -101,9 +100,11 @@ void launch_scale_amplitudes_by_power_spectrum(T* grid,
     events.timers["kernel_scale_amplitudes_by_power_spectrum"].start();
     const double* h_values = initial_pk.h_values().data();
 
+    // Calculate the maximum k value
     double max_k =
         sqrt(pow(((((double)dist.ng()) / 2.0) * 2.0 * M_PI) / rl, 3.0));
-    LOG_INFO("max k = %g", max_k);
+
+    // Check if the maximum k value exceeds the power spectrum range
     if (max_k > initial_pk.k_max()) {
         LOG_ERROR("input ipk only goes to %g", initial_pk.k_max());
         exit(1);
