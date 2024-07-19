@@ -26,6 +26,11 @@ template <class fft_t> class SerialGrid : public Grid {
     MPIDist m_dist; ///< MPI distribution object for handling grid distribution.
 
   protected:
+    /**
+     * @brief Gets the raw GPU pointer to the grid.
+     *
+     * @return The raw GPU pointer to the grid.
+     */
     fft_t* grid();
 
   public:
@@ -144,16 +149,16 @@ template <class fft_t> class SerialGrid : public Grid {
     void backward(fft_t* ptr);
 
     /**
-     * @brief Returns the gradient of the grid.
+     * @brief Returns raw GPU pointer to gradient of the grid.
      *
-     * @return Pointer to the gradient of the grid.
+     * @return The raw GPU pointer to the gradient of the grid.
      */
     const float3* grad() const;
 
     /**
-     * @brief Returns the gradient of the grid.
+     * @brief Returns raw GPU pointer to gradient of the grid.
      *
-     * @return Pointer to the gradient of the grid.
+     * @return The raw GPU pointer to the gradient of the grid.
      */
     float3* grad();
 };
