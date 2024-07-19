@@ -6,6 +6,7 @@
 #include "mpi_distribution.hpp"
 #include "params.hpp"
 #include "timestepper.hpp"
+#include <mpi.h>
 #include <cuda_runtime.h>
 #include <cufft.h>
 
@@ -283,6 +284,9 @@ template <class T> class Particles {
 
 template <class ParticleType, class GridType>
 void run_simulation(std::string params_file) {
+
+    MPI_Init(NULL,NULL);
+
     events.timers["dtot"].start();
 
     gpuCall(gpuFree(0));
@@ -356,6 +360,8 @@ void run_simulation(std::string params_file) {
     LOG_MINIMAL("done!");
 
     events.timers["dtot"].end();
+
+    MPI_Finalize();
 }
 
 #endif
