@@ -206,9 +206,14 @@ class Events {
         std::cout << std::left << std::setw(width) << std::setfill(' ') << t;
     }
 
+    void print_element(double t, const int& width) {
+        std::cout << std::left << std::setw(width) << std::setfill(' ')
+                  << std::scientific << std::setprecision(3) << t;
+    }
+
     inline void dump() {
-        int timer_width = 40;
-        int data_width = 9;
+        int timer_width = 45;
+        int data_width = 13;
         print_element("timer", timer_width);
         print_element("mean", data_width);
         print_element("min", data_width);

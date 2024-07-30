@@ -24,12 +24,12 @@
 template <template <class> class fft_wrapper_t, class fft_t>
 class SerialGrid : public Grid {
   private:
-    int m_ng;               ///< The size of the grid.
-    size_t m_size;          ///< The total size of the grid.
-    const Params& m_params; ///< Reference to the simulation parameters.
-    float3* m_d_grad;       ///< Pointer to the gradient data on the device.
-    fft_t* m_d_grid;        ///< Pointer to the grid data on the device.
-    SerialFFT<fft_t> fft;   ///< FFT object for performing Fourier transforms.
+    int m_ng;                 ///< The size of the grid.
+    size_t m_size;            ///< The total size of the grid.
+    const Params& m_params;   ///< Reference to the simulation parameters.
+    float3* m_d_grad;         ///< Pointer to the gradient data on the device.
+    fft_t* m_d_grid;          ///< Pointer to the grid data on the device.
+    fft_wrapper_t<fft_t> fft; ///< FFT object for performing Fourier transforms.
     MPIDist m_dist; ///< MPI distribution object for handling grid distribution.
 
   protected:
