@@ -2,7 +2,8 @@
 #define _FGPM_GPU_HPP_
 
 #include <cuda_runtime.h>
-#include <cufft.h>
+#include <cuda_fp16.h>
+#include <cufftXt.h>
 
 #include "common.hpp"
 #include "logging.hpp"
@@ -32,6 +33,14 @@ typedef cufftType gpufftType;
 #define GPUFFT_SUCCESS CUFFT_SUCCESS
 #define GPUFFT_FORWARD CUFFT_FORWARD
 #define GPUFFT_INVERSE CUFFT_INVERSE
+
+#define GPUFFT_INVALID_PLAN CUFFT_INVALID_PLAN
+#define GPUFFT_ALLOC_FAILED CUFFT_ALLOC_FAILED
+#define GPUFFT_INVALID_VALUE CUFFT_INVALID_VALUE
+#define GPUFFT_INTERNAL_ERROR CUFFT_INTERNAL_ERROR
+#define GPUFFT_SETUP_FAILED CUFFT_SETUP_FAILED
+#define GPUFFT_INVALID_SIZE CUFFT_INVALID_SIZE
+#define GPUFFT_SUCCESS CUFFT_SUCCESS
 
 #define gpufftExecZ2Z cufftExecZ2Z
 #define gpufftExecC2C cufftExecC2C
