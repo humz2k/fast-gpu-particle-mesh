@@ -7,7 +7,8 @@
 #include "serial_grid.hpp"
 #include "solver.hpp"
 
-template <template<class> class fft_wrapper_t, class fft_t> class SimpleGrid : public SerialGrid<fft_wrapper_t,fft_t> {
+template <template <class> class fft_wrapper_t, class fft_t>
+class SimpleGrid : public SerialGrid<fft_wrapper_t, fft_t> {
   public:
     using SerialGrid<fft_wrapper_t, fft_t>::SerialGrid;
 

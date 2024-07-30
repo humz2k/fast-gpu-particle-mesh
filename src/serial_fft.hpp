@@ -1,9 +1,9 @@
 #ifndef _FGPM_SERIAL_FFT_HPP_
 #define _FGPM_SERIAL_FFT_HPP_
 
+#include "cufft_wrapper.hpp"
 #include "gpu.hpp"
 #include "simulation.hpp"
-#include "cufft_wrapper.hpp"
 
 /**
  * @class SerialFFT

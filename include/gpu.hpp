@@ -1,8 +1,8 @@
 #ifndef _FGPM_GPU_HPP_
 #define _FGPM_GPU_HPP_
 
-#include <cuda_runtime.h>
 #include <cuda_fp16.h>
+#include <cuda_runtime.h>
 #include <cufftXt.h>
 
 #include "common.hpp"

@@ -4,11 +4,11 @@
 #include "common.hpp"
 #include "logging.hpp"
 #include <fstream>
+#include <iomanip>
 #include <iostream>
 #include <string>
 #include <unordered_map>
 #include <vector>
-#include <iomanip>
 
 /**
  * @class Timer
@@ -202,37 +202,37 @@ class Events {
         output.close();
     }
 
-    template<typename T> void print_element(T t, const int& width)
-    {
+    template <typename T> void print_element(T t, const int& width) {
         std::cout << std::left << std::setw(width) << std::setfill(' ') << t;
     }
 
-    inline void dump(){
+    inline void dump() {
         int timer_width = 40;
         int data_width = 9;
-        print_element("timer",timer_width);
-        print_element("mean",data_width);
-        print_element("min",data_width);
-        print_element("max",data_width);
-        print_element("freq",data_width);
-        print_element("total",data_width);
+        print_element("timer", timer_width);
+        print_element("mean", data_width);
+        print_element("min", data_width);
+        print_element("max", data_width);
+        print_element("freq", data_width);
+        print_element("total", data_width);
         std::cout << std::endl;
-        for (int i = 0; i < timer_width + data_width * 5; i++){
+        for (int i = 0; i < timer_width + data_width * 5; i++) {
             std::cout << "-";
         }
         std::cout << std::endl;
 
         for (auto i : timers) {
-            print_element(i.first,timer_width);
-            print_element(i.second.mean(),data_width);
-            print_element(i.second.min(),data_width);
-            print_element(i.second.max(),data_width);
-            print_element(i.second.freq(),data_width);
-            print_element(i.second.total(),data_width);
+            print_element(i.first, timer_width);
+            print_element(i.second.mean(), data_width);
+            print_element(i.second.min(), data_width);
+            print_element(i.second.max(), data_width);
+            print_element(i.second.freq(), data_width);
+            print_element(i.second.total(), data_width);
             std::cout << std::endl;
-            //std::cout << i.first << "," << i.second.mean() << "," << i.second.min()
-            //       << "," << i.second.max() << "," << i.second.freq() << ","
-            //       << i.second.total() << std::endl;
+            // std::cout << i.first << "," << i.second.mean() << "," <<
+            // i.second.min()
+            //        << "," << i.second.max() << "," << i.second.freq() << ","
+            //        << i.second.total() << std::endl;
         }
     }
 };
