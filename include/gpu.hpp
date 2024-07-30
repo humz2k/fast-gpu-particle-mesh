@@ -12,9 +12,12 @@
 
 typedef cufftDoubleComplex complexDoubleDevice;
 typedef cufftComplex complexFloatDevice;
+typedef half2 complexHalfDevice;
 
 #define make_complexDoubleDevice make_cuDoubleComplex
 #define make_complexFloatDevice make_cuFloatComplex
+
+#define gpufftCreate cufftCreate
 
 typedef cufftHandle gpufftHandle;
 
@@ -23,6 +26,10 @@ typedef cufftResult gpufftResult;
 #define gpufftPlan1d cufftPlan1d
 
 #define gpufftPlan3d cufftPlan3d
+
+#define gpufftXtMakePlanMany cufftXtMakePlanMany
+
+#define gpufftXtExec cufftXtExec
 
 #define gpufftDestroy cufftDestroy
 

@@ -12,10 +12,10 @@
  * The SerialGrid class provides an implementation of the Grid class for
  * managing grid data, performing operations such as solving equations,
  * calculating gradients, and interacting with particles within the simulation.
- *
+ * @tparam fft_wrapper_t The object used for FFT operations (e.g., SerialFFT).
  * @tparam fft_t The type used for FFT operations (e.g., complexDoubleDevice).
  */
-template <class fft_t> class SerialGrid : public Grid {
+template <template <class> class fft_wrapper_t,class fft_t> class SerialGrid : public Grid {
   private:
     int m_ng;               ///< The size of the grid.
     size_t m_size;          ///< The total size of the grid.

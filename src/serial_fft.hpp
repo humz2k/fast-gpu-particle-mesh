@@ -20,6 +20,7 @@ template <class T> class SerialFFT : public FFT<T> {
   private:
     int m_ng;            /**< Size of the grid. */
     gpufftHandle m_plan; /**< Handle for the FFT plan. */
+    const std::string fmt_type_name = std::string(typeid(T).name());
 
     /**
      * @brief Performs the FFT operation in a specified direction.
@@ -80,9 +81,9 @@ template <class T> class SerialFFT : public FFT<T> {
      * @param out Pointer to the output data.
      */
     void forward(T* in, T* out) {
-        events.timers["fft_forward_op"].start();
+        events.timers["fft_forward_op_" + fmt_type_name].start();
         this->fft(in, out, GPUFFT_FORWARD);
-        events.timers["fft_forward_op"].end();
+        events.timers["fft_forward_op_" + fmt_type_name].end();
     }
 
     /**
@@ -92,9 +93,9 @@ template <class T> class SerialFFT : public FFT<T> {
      * @param out Pointer to the output data.
      */
     void backward(T* in, T* out) {
-        events.timers["fft_backward_op"].start();
+        events.timers["fft_backward_op_" + fmt_type_name].start();
         this->fft(in, out, GPUFFT_INVERSE);
-        events.timers["fft_backward_op"].end();
+        events.timers["fft_backward_op_" + fmt_type_name].end();
     }
 
     /**
@@ -103,9 +104,9 @@ template <class T> class SerialFFT : public FFT<T> {
      * @param in Pointer to the data to transform.
      */
     void forward(T* in) {
-        events.timers["fft_forward_ip"].start();
+        events.timers["fft_forward_ip_" + fmt_type_name].start();
         this->fft(in, in, GPUFFT_FORWARD);
-        events.timers["fft_forward_ip"].end();
+        events.timers["fft_forward_ip_" + fmt_type_name].end();
     }
 
     /**
@@ -114,9 +115,9 @@ template <class T> class SerialFFT : public FFT<T> {
      * @param in Pointer to the data to transform.
      */
     void backward(T* in) {
-        events.timers["fft_backward_ip"].start();
+        events.timers["fft_backward_ip_" + fmt_type_name].start();
         this->fft(in, in, GPUFFT_INVERSE);
-        events.timers["fft_backward_ip"].end();
+        events.timers["fft_backward_ip_" + fmt_type_name].end();
     }
 
     /**

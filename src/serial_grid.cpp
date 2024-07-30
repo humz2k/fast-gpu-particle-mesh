@@ -6,8 +6,8 @@
 #include "pk_bins.hpp"
 #include "solver.hpp"
 
-template <class fft_t>
-SerialGrid<fft_t>::SerialGrid(const Params& params, int ng)
+template <template<class> class fft_wrapper_t, class fft_t>
+SerialGrid<fft_wrapper_t,fft_t>::SerialGrid(const Params& params, int ng)
     : m_ng(ng), m_params(params), fft(m_ng), m_dist(ng) {
     m_size = m_ng * m_ng * m_ng;
 
@@ -15,13 +15,13 @@ SerialGrid<fft_t>::SerialGrid(const Params& params, int ng)
     gpu_allocator.alloc(&m_d_grid, m_size * sizeof(fft_t));
 }
 
-template <class fft_t> SerialGrid<fft_t>::~SerialGrid() {
+template <template<class> class fft_wrapper_t, class fft_t> SerialGrid<fft_wrapper_t,fft_t>::~SerialGrid() {
     gpu_allocator.free(m_d_grad);
     gpu_allocator.free(m_d_grid);
 }
 
-template <class fft_t>
-void SerialGrid<fft_t>::CIC(const Particles<float3>& particles) {
+template <template<class> class fft_wrapper_t, class fft_t>
+void SerialGrid<fft_wrapper_t,fft_t>::CIC(const Particles<float3>& particles) {
     int n_particles = particles.nlocal();
     int blockSize = BLOCKSIZE;
     int numBlocks = (n_particles + (blockSize - 1)) / blockSize;
@@ -33,8 +33,8 @@ void SerialGrid<fft_t>::CIC(const Particles<float3>& particles) {
                       numBlocks, blockSize);
 }
 
-template <class fft_t>
-void SerialGrid<fft_t>::generate_fourier_amplitudes(Cosmo& cosmo) {
+template <template<class> class fft_wrapper_t, class fft_t>
+void SerialGrid<fft_wrapper_t,fft_t>::generate_fourier_amplitudes(Cosmo& cosmo) {
     LOG_INFO("generating fourier amplitudes");
 
     int blockSize = BLOCKSIZE;
@@ -50,52 +50,52 @@ void SerialGrid<fft_t>::generate_fourier_amplitudes(Cosmo& cosmo) {
                                               blockSize);
 }
 
-template <class fft_t> MPIDist SerialGrid<fft_t>::dist() const {
+template <template<class> class fft_wrapper_t, class fft_t> MPIDist SerialGrid<fft_wrapper_t,fft_t>::dist() const {
     return m_dist;
 }
 
-template <class fft_t> double SerialGrid<fft_t>::k_min() const {
+template <template<class> class fft_wrapper_t, class fft_t> double SerialGrid<fft_wrapper_t,fft_t>::k_min() const {
     return (2.0 * M_PI) / m_params.rl();
 }
 
-template <class fft_t> double SerialGrid<fft_t>::k_max() const {
+template <template<class> class fft_wrapper_t, class fft_t> double SerialGrid<fft_wrapper_t,fft_t>::k_max() const {
     double d = (2.0 * M_PI) / m_params.rl();
     double ng = m_dist.ng();
     return sqrt(3.0 * (ng / 2.0) * (ng / 2.0) * d * d);
 }
 
-template <class fft_t> void SerialGrid<fft_t>::forward() {
+template <template<class> class fft_wrapper_t, class fft_t> void SerialGrid<fft_wrapper_t,fft_t>::forward() {
     fft.forward(m_d_grid);
 }
 
-template <class fft_t> void SerialGrid<fft_t>::backward() {
+template <template<class> class fft_wrapper_t, class fft_t> void SerialGrid<fft_wrapper_t,fft_t>::backward() {
     fft.backward(m_d_grid);
 }
 
-template <class fft_t> void SerialGrid<fft_t>::forward(fft_t* ptr) {
+template <template<class> class fft_wrapper_t, class fft_t> void SerialGrid<fft_wrapper_t,fft_t>::forward(fft_t* ptr) {
     fft.forward(ptr);
 }
 
-template <class fft_t> void SerialGrid<fft_t>::backward(fft_t* ptr) {
+template <template<class> class fft_wrapper_t, class fft_t> void SerialGrid<fft_wrapper_t,fft_t>::backward(fft_t* ptr) {
     fft.backward(ptr);
 }
 
-template <class fft_t> const float3* SerialGrid<fft_t>::grad() const {
+template <template<class> class fft_wrapper_t, class fft_t> const float3* SerialGrid<fft_wrapper_t,fft_t>::grad() const {
     return m_d_grad;
 }
 
-template <class fft_t> float3* SerialGrid<fft_t>::grad() { return m_d_grad; }
+template <template<class> class fft_wrapper_t, class fft_t> float3* SerialGrid<fft_wrapper_t,fft_t>::grad() { return m_d_grad; }
 
-template <class fft_t> size_t SerialGrid<fft_t>::size() const { return m_size; }
+template <template<class> class fft_wrapper_t, class fft_t> size_t SerialGrid<fft_wrapper_t,fft_t>::size() const { return m_size; }
 
-template <class fft_t> const Params& SerialGrid<fft_t>::params() const {
+template <template<class> class fft_wrapper_t, class fft_t> const Params& SerialGrid<fft_wrapper_t,fft_t>::params() const {
     return m_params;
 }
 
-template <class fft_t> fft_t* SerialGrid<fft_t>::grid() { return m_d_grid; }
+template <template<class> class fft_wrapper_t, class fft_t> fft_t* SerialGrid<fft_wrapper_t,fft_t>::grid() { return m_d_grid; }
 
-template <class fft_t>
-std::vector<double> SerialGrid<fft_t>::bin(int nbins) const {
+template <template<class> class fft_wrapper_t, class fft_t>
+std::vector<double> SerialGrid<fft_wrapper_t,fft_t>::bin(int nbins) const {
     int blockSize = BLOCKSIZE;
     int numBlocks = (m_size + (blockSize - 1)) / blockSize;
 
@@ -123,5 +123,5 @@ std::vector<double> SerialGrid<fft_t>::bin(int nbins) const {
     return out;
 }
 
-template class SerialGrid<complexDoubleDevice>;
-template class SerialGrid<complexFloatDevice>;
+template class SerialGrid<SerialFFT,complexDoubleDevice>;
+template class SerialGrid<SerialFFT,complexFloatDevice>;

@@ -14,7 +14,7 @@ class SimpleParticles : public SerialParticles {
          * arrays. So, we need to call generate_displacement_ic on some grid in
          * order to generate the initial conditions.
          */
-        SimpleGrid<complexDoubleDevice> ic_grid(this->params(),
+        SimpleGrid<SerialFFT, complexDoubleDevice> ic_grid(this->params(),
                                                 this->params().np());
         ic_grid.generate_displacement_ic(cosmo, ts, *this);
     }
