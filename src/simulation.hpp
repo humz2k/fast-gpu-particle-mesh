@@ -320,9 +320,7 @@ static void run_simulation(std::string params_file) {
     events.timers["dinit"].end();
 
     GridType grid(params, params.ng());
-    grid.CIC(particles);
-    grid.forward();
-    PowerSpectrum ic_power(grid, params.pk_n_bins());
+    PowerSpectrum ic_power(particles, grid, params.pk_n_bins());
     ic_power.to_csv(params.output_prefix() + "init_power_spectrum.csv");
 
     for (int step = 0; step < params.nsteps(); step++) {
@@ -356,9 +354,7 @@ static void run_simulation(std::string params_file) {
         if (params.pk_dump(step)) {
             LOG_MINIMAL("dumping pk");
             events.timers["dpk"].start();
-            grid.CIC(particles);
-            grid.forward();
-            PowerSpectrum(grid, params.pk_n_bins())
+            PowerSpectrum(particles, grid, params.pk_n_bins())
                 .to_csv(params.output_prefix() + "step" + std::to_string(step) +
                         "_power_spectrum.csv");
             events.timers["dpk"].end();
@@ -367,9 +363,7 @@ static void run_simulation(std::string params_file) {
         events.timers["dstep"].end();
     }
 
-    grid.CIC(particles);
-    grid.forward();
-    PowerSpectrum power(grid, params.pk_n_bins());
+    PowerSpectrum power(particles, grid, params.pk_n_bins());
     power.to_csv(params.output_prefix() + "final_power_spectrum.csv");
 
     LOG_MINIMAL("done!");

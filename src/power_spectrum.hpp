@@ -1,10 +1,14 @@
 #ifndef _FGPM_POWER_SPECTRUM_HPP_
 #define _FGPM_POWER_SPECTRUM_HPP_
 
+#include <cuda_runtime.h>
+#include <cufft.h>
 #include <string>
 #include <vector>
+//#include "simulation.hpp"
 
 class Grid;
+template <class T> class Particles;
 
 /**
  * @class PowerSpectrum
@@ -37,6 +41,15 @@ class PowerSpectrum {
      * @param nbins The number of bins in the resulting PowerSpectrum.
      */
     PowerSpectrum(const Grid& grid, int nbins);
+
+    /**
+     * @brief Constructs a PowerSpectrum object from a grid.
+     *
+     * @param grid The grid to construct from.
+     * @param nbins The number of bins in the resulting PowerSpectrum.
+     */
+    PowerSpectrum(const Particles<float3>& particles, Grid& grid, int nbins,
+                  int nfolds = 0);
 
     /**
      * @brief Gets the minimum wave number.
