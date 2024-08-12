@@ -42,3 +42,4 @@ steps
 *.log
 
 run.pk.*
+*.jpg
