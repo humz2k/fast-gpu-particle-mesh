@@ -156,14 +156,14 @@ class Grid {
      *
      * @return The minimum k value.
      */
-    virtual double k_min() const = 0;
+    virtual double k_min(int nfolds = 0) const = 0;
 
     /**
      * @brief Returns the maximum k value.
      *
      * @return The maximum k value.
      */
-    virtual double k_max() const = 0;
+    virtual double k_max(int nfolds = 0) const = 0;
 
     /**
      * @brief Performs a forward FFT on the grid.
@@ -280,6 +280,10 @@ template <class T> class Particles {
      * @return The params of the particles.
      */
     virtual const Params& params() const = 0;
+
+    virtual void fold(int nfolds) = 0;
+
+    virtual void unfold() = 0;
 };
 
 /**

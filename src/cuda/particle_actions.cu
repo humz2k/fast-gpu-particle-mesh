@@ -130,3 +130,32 @@ void launch_update_velocities_kernel(float3* d_vel, const float3* d_pos,
               d_grad, deltaT, fscal, nlocal, dist);
     events.timers["kernel_update_velocities"].end();
 }
+
+__global__ void fold_particles_kernel(float3* d_pos, int nfolds,
+                                      int n_particles, float ng) {
+    int idx = threadIdx.x + blockDim.x * blockIdx.x;
+    if (idx >= n_particles)
+        return;
+    float3 p = d_pos[idx];
+    p = p * pow(2, nfolds);
+    while (p.x > ng)
+        p.x -= ng;
+    while (p.y > ng)
+        p.y -= ng;
+    while (p.z > ng)
+        p.z -= ng;
+    d_pos[idx] = p;
+    /*float3 local_particle = d_pos[idx];
+    int3 offset = dist.local_grid_dims() * dist.rank_coords();
+    local_particle.x += offset.x;
+    local_particle.y += offset.y;
+    local_particle.z += offset.z;*/
+}
+
+void launch_fold_particles_kernel(float3* d_pos, int nfolds, int nparticles,
+                                  int ng, int numBlocks, int blockSize) {
+    events.timers["kernel_fold"].start();
+    gpuLaunch(fold_particles_kernel, numBlocks, blockSize, d_pos, nfolds,
+              nparticles, ng);
+    events.timers["kernel_fold"].end();
+}

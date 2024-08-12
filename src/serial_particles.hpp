@@ -17,6 +17,7 @@ class SerialParticles : public Particles<float3> {
     const Params& m_params; ///< Reference to the simulation parameters.
     float3* m_pos;          ///< Pointer to the particle positions.
     float3* m_vel;          ///< Pointer to the particle velocities.
+    float3* m_folded_copy = NULL;
 
   public:
     /**
@@ -98,6 +99,10 @@ class SerialParticles : public Particles<float3> {
      * @return The params of the particles.
      */
     const Params& params() const;
+
+    void fold(int nfolds);
+
+    void unfold();
 };
 
 #endif

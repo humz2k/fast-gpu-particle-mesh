@@ -71,4 +71,6 @@ void launch_update_velocities_kernel(float3* d_vel, const float3* d_pos,
                                      double fscal, int nlocal, MPIDist dist,
                                      int numBlocks, int blockSize);
 
+void launch_fold_particles_kernel(float3* d_pos, int nfolds, int nparticles,
+                                  int ng, int numBlocks, int blockSize);
 #endif

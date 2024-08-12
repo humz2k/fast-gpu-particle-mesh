@@ -98,7 +98,7 @@ class SerialGrid : public Grid {
      *
      * @param cosmo The cosmological parameters.
      */
-    void generate_fourier_amplitudes(Cosmo& cosmo) {
+    virtual void generate_fourier_amplitudes(Cosmo& cosmo) {
         LOG_INFO("generating fourier amplitudes");
 
         int blockSize = BLOCKSIZE;
@@ -186,15 +186,17 @@ class SerialGrid : public Grid {
      *
      * @return The minimum k value.
      */
-    double k_min() const { return (2.0 * M_PI) / m_params.rl(); }
+    double k_min(int nfolds = 0) const {
+        return (2.0 * M_PI) / (m_params.rl() / pow(2, nfolds));
+    }
 
     /**
      * @brief Returns the maximum k value.
      *
      * @return The maximum k value.
      */
-    double k_max() const {
-        double d = (2.0 * M_PI) / m_params.rl();
+    double k_max(int nfolds = 0) const {
+        double d = (2.0 * M_PI) / (m_params.rl() / pow(2, nfolds));
         double ng = m_dist.ng();
         return sqrt(3.0 * (ng / 2.0) * (ng / 2.0) * d * d);
     }

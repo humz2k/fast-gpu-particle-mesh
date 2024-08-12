@@ -83,3 +83,22 @@ int SerialParticles::nlocal() const {
 }
 
 const Params& SerialParticles::params() const { return m_params; }
+
+void SerialParticles::fold(int nfolds) {
+    int blockSize = BLOCKSIZE;
+    int numBlocks = (nlocal() + (blockSize - 1)) / blockSize;
+    assert(m_folded_copy == NULL);
+    gpu_allocator.alloc(&m_folded_copy, sizeof(float3) * nlocal());
+    gpuMemcpy(m_folded_copy, m_pos, sizeof(float3) * nlocal(),
+              gpuMemcpyDeviceToDevice);
+    launch_fold_particles_kernel(m_pos, nfolds, nlocal(), params().ng(),
+                                 numBlocks, blockSize);
+}
+
+void SerialParticles::unfold() {
+    assert(m_folded_copy != NULL);
+    gpuMemcpy(m_pos, m_folded_copy, sizeof(float3) * nlocal(),
+              gpuMemcpyDeviceToDevice);
+    gpu_allocator.free(m_folded_copy);
+    m_folded_copy = NULL;
+}

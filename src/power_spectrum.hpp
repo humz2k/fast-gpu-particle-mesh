@@ -48,7 +48,7 @@ class PowerSpectrum {
      * @param grid The grid to construct from.
      * @param nbins The number of bins in the resulting PowerSpectrum.
      */
-    PowerSpectrum(const Particles<float3>& particles, Grid& grid, int nbins,
+    PowerSpectrum(Particles<float3>& particles, Grid& grid, int nbins,
                   int nfolds = 0);
 
     /**

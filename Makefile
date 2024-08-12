@@ -33,8 +33,9 @@ FGPM_INCLUDE_FILES := $(shell find $(FGPM_SRC_DIR) -name '*.hpp') $(shell find $
 
 main: $(FGPM_DRIVERS)
 
-test: $(FGPM_BUILD_DIR)/driver
-	$(FGPM_BUILD_DIR)/driver
+.PHONY: test
+test: $(FGPM_BUILD_DIR)/testic
+	$(FGPM_BUILD_DIR)/testic
 
 .secondary: $(FGPM_OUTPUTS) $(FGPM_DRIVER_OBJECTS)
 
